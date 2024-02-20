@@ -25,18 +25,14 @@
             </li>
 
       <?php
-            if (!isset($_SESSION['user'])) {
+            if (isset($_SESSION['user'])) {
             echo '<li class="nav-item">
               <a class="nav-link" href="#">Turnos</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">Historial<br />Médico</a>
             </li>';
-        echo 'hola';
-        echo 'usuario no registrado';
-            }else{
-                echo'usuario ya registrado (agregar perfil)';
-                
+
             }
 
       ?>
