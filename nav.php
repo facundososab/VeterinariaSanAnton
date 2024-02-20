@@ -33,6 +33,7 @@
               <a class="nav-link" href="#">Historial<br />Médico</a>
             </li>';
         echo 'hola';
+        echo 'usuario no registrado';
             }else{
                 echo'usuario ya registrado (agregar perfil)';
                 
