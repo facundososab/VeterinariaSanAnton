@@ -48,7 +48,7 @@
           if (!isset($_SESSION['user'])) {
           echo '<div class="registro row col-lg-3 mx-auto">
             <a
-              href=""
+              href="./pagina-login/login.php"
               class="btn btn1-bg-color rounded-pill col-12 col-lg-5 me-lg-1 mb-2 mb-lg-0"
               >Ingresa</a
             ><a href="" class="btn btn2-bg-color rounded-pill col-12 col-lg-5"

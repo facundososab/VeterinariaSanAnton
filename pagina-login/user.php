@@ -7,15 +7,18 @@ class User extends DB{
 
 
     public function userExists($user, $pass){
-        $md5pass = md5($pass);
-        $query = $this->connect()->prepare('SELECT * FROM usuarios WHERE username = :user AND password = :pass');
-        $query->execute(['user' => $user, 'pass' => $md5pass]);
+        
+        $resultado = $this->connect()->prepare('SELECT * FROM usuarios WHERE username = :user ');
+        $resultado->execute(array(':user' => $user ));
 
-        if($query->rowCount()){
-            return true;
-        }else{
-            return false;
+        while ($registro = $resultado->fetch(PDO::FETCH_ASSOC)) {
+            if (password_verify($pass, $registro['password'])) {
+                return true;
+            }
         }
+
+        return false;
+        
     }
 
     public function setUser($user){

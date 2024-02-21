@@ -28,7 +28,7 @@ class DB{
             return $pdo;
 
         }catch(PDOException $e){
-            print_r('Error connection: ' . $e->getMessage());
+            echo('Error connection: ' . $e->getMessage());
         }   
     }
 

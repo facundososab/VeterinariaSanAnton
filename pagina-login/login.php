@@ -27,8 +27,8 @@
 <body>
 
 <?php
-include_once 'includes/user.php';
-include_once 'includes/user_session.php';
+include_once 'user.php';
+include_once 'user_session.php';
 
 
 $userSession = new UserSession();
@@ -37,7 +37,8 @@ $user = new User();
 if(isset($_SESSION['user'])){
     //echo "hay sesion";
     $user->setUser($userSession->getCurrentUser());
-    include_once 'vistas/home.php';
+    header("Location: ../index.php");
+    
 
 }else if(isset($_POST['username']) && isset($_POST['password'])){
     
@@ -54,45 +55,15 @@ if(isset($_SESSION['user'])){
     }else{
         //echo "No existe el usuario";
         $errorLogin = "Nombre de usuario y/o password incorrecto";
-        include_once 'vistas/login.php';
+        
     }
 }else{
-    //echo "login";
-    include_once 'vistas/login.php';
+  
+    include("formulario_login.html");
 }
 
 ?>
 
-    <section class="section-ing">
-        <div class="registro">
-            <h1>Hola!</h1>
-            <h5>Bienvenido a la veterinaria San Antón!</h5>
-            <form>
-                <div class="mb-3">
-                  <label for="exampleInputEmail1" class="form-label">Email address</label>
-                  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                  <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
-                </div>
-                <div class="mb-3"> 
-                  <label for="exampleInputPassword1" class="form-label">Password</label>
-                  <input type="password" class="form-control" id="exampleInputPassword1">
-                </div>
-                <div class="mb-3 form-check">
-                  <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                  <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-              </form>
-              <p class="">${errorLogin}</p>
-              <?php
-                if(isset($errorLogin)){
-                    echo $errorLogin;
-                }
-                ?>
-        </div>
-        <div class="imagen">
-            <img src="img/img_login.png" alt="">
-        </div>
-    </section>
+    
 </body>
 </html>
