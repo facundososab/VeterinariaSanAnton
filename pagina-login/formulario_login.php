@@ -9,7 +9,7 @@
   </head>
   <body class="min-vh-100">
     <?php
-    include_once("../nav.php");
+    //include_once("../nav.php");
     ?>
     <main><section class="section-ing vh-75 align-self-center">
       <div class="registro">

@@ -5,6 +5,8 @@ class User extends DB{
     public $nombre;
     public $email;
 
+    public $rol_id;
+
 
     public function userExists($email, $pass){
         
@@ -28,11 +30,17 @@ class User extends DB{
         foreach ($query as $currentUser) {
             $this->nombre = $currentUser['nombre'];
             $this->email = $currentUser['email'];
+            $this->rol_id = $currentUser['rol_id'];
         }
     }
 
     public function getNombre(){
         return $this->nombre;
+    }
+
+    public function getRol(){
+        return $this->rol_id;
+
     }
 }
 

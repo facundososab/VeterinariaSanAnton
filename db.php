@@ -15,7 +15,7 @@ class DB{
         $this->charset  = 'utf8mb4';
     }
 
-    function Connect(){
+    function connect(){
         try{
             
             $connection = "mysql:host=" . $this->host . ";dbname=" . $this->db . ";charset=" . $this->charset;
@@ -30,6 +30,12 @@ class DB{
         }catch(PDOException $e){
             echo('Error connection: ' . $e->getMessage());
         }   
+    }
+
+    function consulta($consulta){
+        $resultado = $this->connect()->prepare($consulta);
+        $resultado->execute();
+        return $resultado;
     }
 
 
