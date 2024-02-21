@@ -20,6 +20,7 @@
       href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@300;400;500&display=swap"
       rel="stylesheet"
     />
+    
     <link rel="stylesheet" href="login.css" />
     <link rel="icon" href="img/logo.svg" />
     <title>Ingreso</title>
@@ -40,9 +41,9 @@ if(isset($_SESSION['user'])){
     header("Location: ../index.php");
     
 
-}else if(isset($_POST['username']) && isset($_POST['password'])){
+}else if(isset($_POST['email']) && isset($_POST['password'])){
     
-    $userForm = $_POST['username'];
+    $userForm = $_POST['email'];
     $passForm = $_POST['password'];
 
     $user = new User();
@@ -50,16 +51,17 @@ if(isset($_SESSION['user'])){
         //echo "Existe el usuario";
         $userSession->setCurrentUser($userForm);
         $user->setUser($userForm);
+        echo "Nombre de usuario: " . $user->getNombre();
 
         
     }else{
-        //echo "No existe el usuario";
+        echo "No existe el usuario";
         $errorLogin = "Nombre de usuario y/o password incorrecto";
         
     }
 }else{
-  
-    include("formulario_login.html");
+    
+    include_once("formulario_login.php");
 }
 
 ?>

@@ -3,16 +3,16 @@ include '../db.php';
 
 class User extends DB{
     public $nombre;
-    public $username;
+    public $email;
 
 
-    public function userExists($user, $pass){
+    public function userExists($email, $pass){
         
-        $resultado = $this->connect()->prepare('SELECT * FROM usuarios WHERE username = :user ');
-        $resultado->execute(array(':user' => $user ));
+        $resultado = $this->connect()->prepare('SELECT * FROM clientes WHERE email = :email ');
+        $resultado->execute(array(':email' => $email ));
 
         while ($registro = $resultado->fetch(PDO::FETCH_ASSOC)) {
-            if (password_verify($pass, $registro['password'])) {
+            if ($pass==$registro['clave']) {
                 return true;
             }
         }
@@ -21,13 +21,13 @@ class User extends DB{
         
     }
 
-    public function setUser($user){
-        $query = $this->connect()->prepare('SELECT * FROM usuarios WHERE username = :user');
-        $query->execute(['user' => $user]);
+    public function setUser($email){
+        $query = $this->connect()->prepare('SELECT * FROM clientes WHERE email = :email');
+        $query->execute([':email' => $email]);
         
         foreach ($query as $currentUser) {
             $this->nombre = $currentUser['nombre'];
-            $this->username = $currentUser['username'];
+            $this->email = $currentUser['email'];
         }
     }
 

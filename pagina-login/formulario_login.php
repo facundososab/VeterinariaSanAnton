@@ -4,10 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="login.css" />
+    <link rel="stylesheet" href="../css/style.css" />
     <title>Ingreso</title>
   </head>
-  <body>
-    <section class="section-ing">
+  <body class="min-vh-100">
+    <?php
+    include_once("../nav.php");
+    ?>
+    <main><section class="section-ing vh-75 align-self-center">
       <div class="registro">
         <h1>Hola!</h1>
         <h5>Bienvenido a la veterinaria San Antón!</h5>
@@ -21,6 +25,7 @@
               class="form-control"
               id="exampleInputEmail1"
               aria-describedby="emailHelp"
+              name="email"
             />
             <div id="emailHelp" class="form-text">
               We'll never share your email with anyone else.
@@ -34,6 +39,7 @@
               type="password"
               class="form-control"
               id="exampleInputPassword1"
+              name="password"
             />
           </div>
           <div class="mb-3 form-check">
@@ -52,6 +58,7 @@
       <div class="imagen">
         <img src="../img/img_login.png" alt="" />
       </div>
-    </section>
+    </section></main>
+    
   </body>
 </html>
