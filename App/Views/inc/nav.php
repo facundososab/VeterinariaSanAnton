@@ -3,7 +3,7 @@
     >
       <div class="container">
         <a class="navbar-brand" href="#"
-          ><img src="img/logo.svg" alt="Veterinaria San Antón"
+          ><img src="./Views/img/logo.svg" alt="Veterinaria San Antón"
         /></a>
         <button
           class="navbar-toggler"

@@ -34,11 +34,11 @@ class User extends DB{
         }
     }
 
-    public function getNombre(){
+    protected function getNombre(){
         return $this->nombre;
     }
 
-    public function getRol(){
+    protected function getRol(){
         return $this->rol_id;
 
     }

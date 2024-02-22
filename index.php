@@ -19,7 +19,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Veterinaria San Antón</title>
+    <title><?php echo APP_NAME; ?></title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -36,12 +36,12 @@
       href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@300;400;500&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="css/style.css" />
-    <link rel="icon" href="img/logo.svg" />
+    <link rel="stylesheet" href="App/Views/css/style.css" />
+    <link rel="icon" href="App/Views/img/logo.svg" />
   </head>
   <body>
     <?php
-    include_once('nav.php');
+    include_once('./App/Views/inc/nav.php');
     
     echo '<main class="pt-5">
       <div
@@ -64,22 +64,22 @@
             <div
               class="reseñas bg-third-color border border-black rounded-4 mb-4 mt-1 w-50 align-items-center pt-2 align-self-lg-end"
             >
-              <img src="img/Avatars1.svg" alt="" class="col-12" />
+              <img src="./App/Views/img/Avatars1.svg" alt="" class="col-12" />
               <p class="fs-5 text-center col-12">+100 Reseñas</p>
             </div>
             <div
               class="ubicacion d-flex align-items-center mx-auto justify-content-center"
             >
-              <img src="img/garra_izq.svg" alt="" class="img-fluid" />
+              <img src="./App/Views/img/garra_izq.svg" alt="" class="img-fluid" />
               <h5 class="mx-2 text-center">
                 Ubicada en la ciudad de Rosario, Santa Fe
               </h5>
-              <img src="img/garra_der.svg" alt="" class="img-fluid" />
+              <img src="./App/Views/garra_der.svg" alt="" class="img-fluid" />
             </div>
           </article>
           <article class="img col-12 col-lg-6 d-flex">
             <img
-              src="img/dog 1.png"
+              src="./App/Views/img/dog 1.png"
               alt="Veterinaria San Antón"
               class="h-75 align-self-end img-fluid"
             />
@@ -89,7 +89,7 @@
     </main>';
 
 
-    include_once('footer.php');
+    include_once('./App/Views/inc/footer.php');
 
 
 
