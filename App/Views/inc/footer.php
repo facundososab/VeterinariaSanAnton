@@ -23,8 +23,10 @@
                   id="email"
                   name="email"
                   required
+                  // Habria que validar que lo que se ingrese sea un email con expresiones regulares
+  
                 />
-              </div>
+                              </div>
               <div class="col-2 align-self-end contact-submit">
                 <input type="submit" class="btn rounded-pill btn1-bg-color" />
               </div>
