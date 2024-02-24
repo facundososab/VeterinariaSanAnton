@@ -2,14 +2,10 @@
       class="navbar sticky-top navbar-expand-lg navbar-bg-color d-lg-flex justify-content-lg-between rounded-4 rounded-top-0 nav-shadow"
     >
       <div class="container">
-<<<<<<< HEAD:inc/header.php
+
         <a class="navbar-brand" href="index.php"
           ><img src="./img/logo.svg" alt="Veterinaria San Antón"
         /></a>
-=======
-        <a class="navbar-brand" href="#">
-        <img src="./img/logo.svg" alt="Veterinaria San Antón"/></a>
->>>>>>> 1c1a948d2ebb41c273c60843e473e005d06fdb5a:App/Views/inc/nav.php
         <button
           class="navbar-toggler"
           type="button"
