@@ -25,7 +25,7 @@
   </head>
   <body>
     <?php
-    include 'nav.php';
+    include 'inc/header.php';
 
     echo '<main>
       <div class="container pt-4">
@@ -88,7 +88,7 @@
       </div>
     </main>';
 
-    include 'footer.php';
+    include 'inc/footer.php';
 
     ?>
    

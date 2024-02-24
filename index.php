@@ -1,16 +1,7 @@
 <?php
 
-    require_once "./config/app.php";
-    require_once "./autoload.php";
-
-    /*---------- Iniciando sesion ----------*/
-    require_once "./app/views/inc/session_start.php";
-
-    if(isset($_GET['views'])){
-        $url=explode("/", $_GET['views']);
-    }else{
-        $url=["login"];
-    }
+require_once('./config/server.php');
+require_once('./config/app.php');
 
 ?>
 
@@ -36,12 +27,17 @@
       href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@300;400;500&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="App/Views/css/style.css" />
-    <link rel="icon" href="App/Views/img/logo.svg" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="icon" href="img/logo.svg" />
   </head>
   <body>
     <?php
-    include_once('./App/Views/inc/nav.php');
+    
+    include_once('./inc/header.php');
+/*     use App\Models\User;
+    $user = new User();
+
+    $consulta = $user->get_users(); */
     
     echo '<main class="pt-5">
       <div
@@ -64,22 +60,22 @@
             <div
               class="reseñas bg-third-color border border-black rounded-4 mb-4 mt-1 w-50 align-items-center pt-2 align-self-lg-end"
             >
-              <img src="./App/Views/img/Avatars1.svg" alt="" class="col-12" />
+              <img src="./img/Avatars1.svg" alt="" class="col-12" />
               <p class="fs-5 text-center col-12">+100 Reseñas</p>
             </div>
             <div
               class="ubicacion d-flex align-items-center mx-auto justify-content-center"
             >
-              <img src="./App/Views/img/garra_izq.svg" alt="" class="img-fluid" />
+              <img src="./img/garra_izq.svg" alt="" class="img-fluid" />
               <h5 class="mx-2 text-center">
                 Ubicada en la ciudad de Rosario, Santa Fe
               </h5>
-              <img src="./App/Views/garra_der.svg" alt="" class="img-fluid" />
+              <img src="./img/garra_der.svg" alt="" class="img-fluid" />
             </div>
           </article>
           <article class="img col-12 col-lg-6 d-flex">
             <img
-              src="./App/Views/img/dog 1.png"
+              src="./img/dog 1.png"
               alt="Veterinaria San Antón"
               class="h-75 align-self-end img-fluid"
             />
@@ -89,7 +85,7 @@
     </main>';
 
 
-    include_once('./App/Views/inc/footer.php');
+    include_once('./inc/footer.php');
 
 
 

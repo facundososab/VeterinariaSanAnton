@@ -25,7 +25,7 @@
   </head>
   <body>
    <?php
-    include_once('nav.php');
+    include('inc/header.php');
     echo ' <main>
       <div class="container service-text-color">
         <section class="row bg-service-color rounded-5 p-4 mt-4 mb-2">
@@ -163,7 +163,7 @@
     </main>
     ';
  
-    include_once('footer.php');
+    include_once('inc/footer.php');
 
     ?>
     <script

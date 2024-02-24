@@ -1,65 +1,113 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-      crossorigin="anonymous"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@300;400;500&display=swap"
-      rel="stylesheet"
-    />
-    
-    <link rel="stylesheet" href="login.css" />
-    <link rel="icon" href="img/logo.svg" />
-    <title>Ingreso</title>
-</head>
-<body>
-
 <?php
-include_once 'user.php';
-include_once 'user_session.php';
+    include_once './db.php';
 
+    session_start();
 
-$userSession = new UserSession();
-$user = new User();
+    if(isset($_GET['cerrar_sesion'])){
+        session_unset();
 
-if(isset($_SESSION['user'])){
-    //echo "hay sesion";
-    $user->setUser($userSession->getCurrentUser());
-    header("Location: ../index.php");
-    
-
-}else if(isset($_POST['email']) && isset($_POST['password'])){
-    
-    $userForm = $_POST['email'];
-    $passForm = $_POST['password'];
-
-    $user = new User();
-    if($user->userExists($userForm, $passForm)){
-        //echo "Existe el usuario";
-        $userSession->setCurrentUser($userForm);
-        $user->setUser($userForm);
-        echo "Nombre de usuario: " . $user->getNombre();
-
+        session_destroy();
         
-    }else{
-        echo "No existe el usuario";
-        $errorLogin = "Nombre de usuario y/o password incorrecto";
-        
+        header('../location:index.php');
     }
-}else{
+
+    if(isset($_SESSION['usuario'])){
+
+        header('../location:index.php');
+
+    }else if(isset($_POST['enviar'])){
+      
+        try {
+        $base = new PDO("mysql:host=localhost; dbname=veterinaria", "root", "");
+
+        $base->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        $sql = "SELECT * FROM personal WHERE email = :email AND clave = :clave";
+
+        $resultado = $base->prepare($sql);
+
+        $email = htmlentities(addslashes($_POST["email"]));
+
+        $clave = htmlentities(addslashes($_POST["password"]));
+
+        $resultado->bindValue(":email", $email);
+        $resultado->bindValue(":clave", $clave);
+
+        $resultado->execute();
+
+        $row = $resultado->fetch(PDO::FETCH_ASSOC);
+
+        if ($row) {
+            $rol = $row['rol'];
+            $_SESSION['rol_id'] = $rol;
+
+            switch($_SESSION['rol_id']){
+                case 1:
+                header('location:../admin.php');
+                break;
+    
+                case 2:
+                header('location:../veterinario.php');
+                break;
+                case 3:
+                header('location:../peluquero.php');
+                break;
+
+                case 4:
+                header('location:../cliente.php');
+                break;
+    
+                default:
+                header('location:../index.php');
+            }
+
+        } else {
+            //Redirige al login
+            //header("location:login.php");
+
+            echo "Error. Usuario o contraseña incorrecta.";
+        }
+
+    } catch (Exception $e) {
+        die("Error: " . $e->getMessage());
+    }
+
+        /* $db = new Database();
+        $query = $db->connect()->prepare('SELECT * FROM personal WHERE email = :email AND clave = :clave');
+        $query->execute(['email' => $email, 'clave' => $password]);
+
+        $row = $query->fetch(PDO::FETCH_ASSOC);
+        if($row){
+            // validar rol
+            $rol = $row['rol_id'];
+            $_SESSION['rol_id'] = $rol;
+
+            switch($_SESSION['rol_id']){
+                case 1:
+                header('../location:admin.php');
+                break;
+    
+                case 2:
+                header('../location:veterinario.php');
+                break;
+                
+                case 3:
+                header('../location:peluquero.php');
+                break;
+
+                case 4:
+                header('../location:cliente.php');
+                break;
+    
+                default:
+                header('location:index.php');
+            }
+        }else{
+            // no existe el usuario
+            echo "El usuario o contraseña son incorrectos";
+        }  */
+
+    }else{
     
     include_once("formulario_login.php");
 }
