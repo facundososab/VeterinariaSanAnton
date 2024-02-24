@@ -20,14 +20,14 @@
       href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@300;400;500&display=swap"
       rel="stylesheet"
     />
-    
     <link rel="stylesheet" href="login.css" />
+    <link rel="stylesheet" href="../css/style.css" />
     <link rel="icon" href="img/logo.svg" />
     <title>Ingreso</title>
 </head>
   <body class="min-vh-100">
     <?php
-    include("./inc/header.php");
+    include_once("../inc/header.php");
     ?>
     <main><section class="section-ing vh-75 align-self-center">
       <div class="registro">
@@ -77,6 +77,10 @@
         <img src="../img/img_login.png" alt="" />
       </div>
     </section></main>
+
+    <?php
+    include_once("../inc/footer.php");
+    ?>
 
 
 

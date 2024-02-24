@@ -26,7 +26,8 @@
             </li>
 
       <?php
-            if (isset($_SESSION['user']) && $_SESSION['rol_id'] == '4') {
+      /* NAV CLIENTE */
+            if (isset($_SESSION['email']) && $_SESSION['rol_id'] == 4) {
             echo '<li class="nav-item">
               <a class="nav-link" href="#">Turnos</a>
             </li>
@@ -37,6 +38,22 @@
             }
 
       ?>
+
+      <?php
+      /* NAV VETERINARIO */
+            
+            if (isset($_SESSION['email']) && $_SESSION['rol_id'] == 2) {
+            echo '<li class="nav-item">
+              <a class="nav-link" href="#">Turnos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Mascotas</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Hospitalizacion</a>';
+            }
+        ?>
+
             <li class="nav-item">
               <a class="nav-link" href="contacto.php">Contacto</a>
             </li>

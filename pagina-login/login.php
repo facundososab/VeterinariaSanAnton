@@ -108,7 +108,6 @@
         }  */
 
     }else{
-    
     include_once("formulario_login.php");
 }
 

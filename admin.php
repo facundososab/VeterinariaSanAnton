@@ -10,6 +10,26 @@ if(!isset($_SESSION['rol_id'])){
     }
 }
 
+
+
 echo "Pagina administrador";
 
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<?php
+include_once('./inc/head.php');
+?>
+<body>
+    <?php
+    include_once('./inc/header.php');
+    ?>
+
+    
+
+
+
+    
+</body>
+</html>
