@@ -1,11 +1,13 @@
 <?php
 
-    session_start();
+session_start();
+
+if (isset($_SESSION['usuario'])) {
 
     session_unset();
 
     session_destroy();
+}
         
-    header('../location:index.php');
+header('../location:index.php');
    
-?>

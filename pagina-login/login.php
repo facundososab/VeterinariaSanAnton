@@ -1,18 +1,13 @@
 <?php
-    include_once './db.php';
-
-    session_start();
+    include_once '../db.php';;
 
     if(isset($_POST['enviar'])){
-      
+        session_start();
+
         try {
-        $base = new PDO("mysql:host=localhost; dbname=veterinaria", "root", "");
+        $base = new Database();
 
-        $base->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-        $sql = "SELECT * FROM personal WHERE email = :email AND clave = :clave";
-
-        $resultado = $base->prepare($sql);
+        $resultado = $base->connect()->prepare('SELECT * FROM personal WHERE email = :email AND clave = :clave');
 
         $email = htmlentities(addslashes($_POST["email"]));
 
@@ -32,7 +27,7 @@
             $_SESSION['email'] = $row['email'];
             $_SESSION['telefono'] = $row['telefono'];
             $_SESSION['direccion'] = $row['direccion'];
-            $_SESSION['usuario'] = $row['id'];
+            $_SESSION['usuario'] = $row['personal_id'];
 
             switch($_SESSION['rol_id']){
                 case 1:
@@ -53,7 +48,7 @@
         } else {
             $sql = "SELECT * FROM clientes WHERE email = :email AND clave = :clave";
 
-            $resultado = $base->prepare($sql);
+            $resultado = $base->connect()->prepare($sql);
 
             $email = htmlentities(addslashes($_POST["email"]));
 
@@ -76,7 +71,7 @@
                 $_SESSION['email'] = $row['email'];
                 $_SESSION['telefono'] = $row['telefono'];
                 $_SESSION['direccion'] = $row['direccion'];
-                $_SESSION['usuario'] = $row['id'];
+                $_SESSION['usuario'] = $row['cliente_id'];
                 
                 header('location:../cliente/index.php');
 
@@ -88,44 +83,9 @@
             }
         }
 
-    } catch (Exception $e) {
-        die("Error: " . $e->getMessage());
-    }
-
-        /* $db = new Database();
-        $query = $db->connect()->prepare('SELECT * FROM personal WHERE email = :email AND clave = :clave');
-        $query->execute(['email' => $email, 'clave' => $password]);
-
-        $row = $query->fetch(PDO::FETCH_ASSOC);
-        if($row){
-            // validar rol
-            $rol = $row['rol_id'];
-            $_SESSION['rol_id'] = $rol;
-
-            switch($_SESSION['rol_id']){
-                case 1:
-                header('../location:admin.php');
-                break;
-    
-                case 2:
-                header('../location:veterinario.php');
-                break;
-                
-                case 3:
-                header('../location:peluquero.php');
-                break;
-
-                case 4:
-                header('../location:cliente.php');
-                break;
-    
-                default:
-                header('location:index.php');
-            }
-        }else{
-            // no existe el usuario
-            echo "El usuario o contraseña son incorrectos";
-        }  */
+        } catch (Exception $e) {
+            die("Error: " . $e->getMessage());
+        }
 
     }else{
     include_once("formulario_login.php");

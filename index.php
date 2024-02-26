@@ -2,12 +2,7 @@
 
 require_once('./config/server.php');
 require_once('./config/app.php');
-
-session_start();
-
-if (isset($_SESSION['usuario'])) {
- header('location: pagina-login/login.php');
-} 
+ 
 ?>
 
 <!DOCTYPE html>
