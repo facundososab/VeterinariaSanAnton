@@ -129,6 +129,10 @@ a:hover {
   color: #ffffff;
 }
 
+.dropdown-menu li :hover {
+  transform: scale(1);
+}
+
 .ver-equipo {
   text-decoration: none;
 }
