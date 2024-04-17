@@ -1,0 +1,40 @@
+<div
+  class="modal fade"
+  id="bajaPersonalModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="bajaPersonalLabel"
+  aria-modal="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="bajaPersonalModalLabel">
+          <b>Baja de personal</b>
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        ¿Estás seguro de que desea dar de baja a este personal?
+      </div>
+      <div class="modal-footer">
+        <form action="./bajaPersonal.php" method="post">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cancelar
+          </button>
+          <input type="hidden" name="id" id="id" />
+          <button type="submit" class="btn btn-danger">Eliminar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

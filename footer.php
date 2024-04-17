@@ -10,9 +10,9 @@
             <form
               action="https://formsubmit.co/facundososabianciotto@gmail.com"
               method="POST"
-              class="row justify-content-center align-items-center"
+              class="row justify-content-center align-items-center mx-2"
             >
-              <div class="col-10">
+              <div class="col-9">
                 <label class="form-label" for="email"
                   >¡Dejanos tu mail para no perderte de todas las
                   novedades!</label
@@ -23,10 +23,8 @@
                   id="email"
                   name="email"
                   required
-                  // Habria que validar que lo que se ingrese sea un email con expresiones regulares
-  
                 />
-                              </div>
+              </div>
               <div class="col-2 align-self-end contact-submit">
                 <input type="submit" class="btn rounded-pill btn1-bg-color" />
               </div>

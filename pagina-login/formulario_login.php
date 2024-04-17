@@ -25,9 +25,9 @@
     <link rel="icon" href="../img/logo.svg" />
     <title>Ingreso</title>
 </head>
-  <body class="min-vh-100">
-<nav
-      class="navbar sticky-top navbar-expand-lg navbar-bg-color d-lg-flex justify-content-lg-between rounded-4 rounded-top-0 nav-shadow"
+  <body class="section-ing row flex-column">
+    <nav
+      class="navbar fixed-top navbar-expand-lg navbar-bg-color d-lg-flex justify-content-lg-between rounded-4 rounded-top-0 nav-shadow"
     >
       <div class="container">
 
@@ -80,59 +80,52 @@
         </div>
       </div>
     </nav>
-    <main><section class="section-ing vh-75 align-self-center mt-4">
-      <div class="registro">
-        <h1>Hola!</h1>
-        <h5>Bienvenido a la veterinaria San Antón!</h5>
-        <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
-          <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label"
-              >Email address</label
-            >
-            <input
-              type="email"
-              class="form-control"
-              id="exampleInputEmail1"
-              aria-describedby="emailHelp"
-              name="email"
-            />
-            <div id="emailHelp" class="form-text">
-              We'll never share your email with anyone else.
+    <main class="px-2 px-md-0 row align-self-center rounded-5 mx-auto mt-4 mt-md-0 ">
+        <div class="col-12 col-md-6 d-flex flex-column align-items-center justify-content-center gap-5 p-2">
+          <h1>Hola!</h1>
+          <h5>Bienvenido a la veterinaria San Antón!</h5>
+          <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="post" class="formulario gap-3" id="formulario">
+            <?php if (isset($_SESSION['error'])){  ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <?= $_SESSION['error'];?>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-          </div>
-          <div class="mb-3">
-            <label for="exampleInputPassword1" class="form-label"
-              >Password</label
-            >
-            <input
-              type="password"
-              class="form-control"
-              id="exampleInputPassword1"
-              name="password"
-            />
-          </div>
-          <div class="mb-3 form-check">
-            <input
-              type="checkbox"
-              class="form-check-input"
-              id="exampleCheck1"
-            />
-            <label class="form-check-label" for="exampleCheck1"
-              >Check me out</label
-            >
-          </div>
-          <button type="submit" class="btn btn-primary" name="enviar">Submit</button>
-        </form>
-      </div>
-      <div class="imagen">
-        <img src="../img/img_login.png" alt="" />
-      </div>
-    </section></main>
-
-    <?php
-    include_once("../inc/footer.php");
-    ?>
-
+            <?php } ?>
+            <div class="mb-3">
+              <label for="inputEmail" class="form-label"
+                >Correo electrónico</label
+              >  
+              <input
+                type="email"
+                class="form-control"
+                id="inputEmail"
+                aria-describedby="emailHelp"
+                name="email"
+              />
+              <p id="emailError" class="text-danger"></p>
+            </div>
+            <div class="mb-4">
+              <label for="inputPassword" class="form-label"
+                >Contraseña</label
+              >
+              <input
+                type="password"
+                class="form-control"
+                id="inputPassword"
+                name="password"
+              />
+              <p id="passwordError" class="text-danger"></p>
+            </div>
+            <button type="submit" class="btn btn-success w-100" name="enviar" id="submit-btn">Entrar</button>
+          </form>
+          <p>Todavia no tienes una cuenta? <a href="">Creala aquí</a></p>
+        </div>
+        <div class="imagen-login col-12 col-md-6 d-none d-lg-inline-block p-0">
+          <img src="../img/img_login.png" alt="" class="img-fluid"/>
+        </div>
+  </main>
+  <!-- ACTIVARLO PARA LA VALIDACION DE FORMULARIOS -->
+    <!-- <script src="validacion_login.js"></script> -->
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"

@@ -100,35 +100,26 @@ require_once('./config/app.php');
         </div>
       </div>
     </nav>
-    
-    <?php
-    
-    echo '<main class="pt-5">
+    <main class="pt-5 mx-2">
       <div
-        class="container align-items-center justify-content-center bg-primary-color rounded-4 mb-5"
+        class="container align-items-center justify-content-center bg-primary-color rounded-4 mb-4"
       >
         <section class="row main-content">
           <article
-            class="col-12 col-lg-6 order-lg-1 text-end d-flex flex-column align-items-end align-self-center px-5 pt-3"
+            class="col-12 col-lg-6 order-lg-1 text-end d-flex flex-column align-items-end align-self-center px-4 pt-3"
           >
             <h1 class="mt-3 display-1">Veterinaria<br />San Antón</h1>
             <p class="pb-1">Dirección de la veterinaria</p>
-            <form action="">
-              <input
-                type="submit"
-                class="btn btn-danger rounded-pill fs-4 p-3 mt-4"
-                value="TENGO UNA EMERGENCIA"
-              />
-            </form>
-            <p class="fs-5 mt-5"><b>Lugar seguro para tu mascota</b></p>
+            <a class="btn btn-danger rounded-pill fs-4 p-2 mt-3 d-md-none" href="341042343">TENGO UNA EMERGENCIA</a>
+            <p class="fs-5 my-4"><b>Lugar seguro para tu mascota</b></p>
             <div
-              class="reseñas bg-third-color border border-black rounded-4 mb-4 mt-1 w-50 align-items-center pt-2 align-self-lg-end"
+              class="reseñas bg-third-color border border-black rounded-4 mb-4 w-50 align-items-center pt-2 ms-auto"
             >
               <img src="./img/Avatars1.svg" alt="" class="col-12" />
               <p class="fs-5 text-center col-12">+100 Reseñas</p>
             </div>
             <div
-              class="ubicacion d-flex align-items-center mx-auto justify-content-center"
+              class="ubicacion d-flex align-items-center ms-auto justify-content-center mt-3"
             >
               <img src="./img/garra_izq.svg" alt="" class="img-fluid" />
               <h5 class="mx-2 text-center">
@@ -148,12 +139,7 @@ require_once('./config/app.php');
       </div>
     </main>';
 
-
-    include_once('./inc/footer.php');
-
-
-
-    ?>
+  <?php include_once('./footer.php');?>
  
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"

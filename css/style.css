@@ -5,19 +5,18 @@
   --third-color: rgb(245, 200, 70);
   --service-color: rgb(106, 121, 255);
 
-  --first-alpha-color: rgba(217, 0, 98, 0.75);
-  --second-alpha-color: rgba(20, 25, 45, 0.75);
-  --third-alpha-color: rgba(80, 20, 100, 0.75);
-
-  --link-color: rgb(80, 158, 227);
-  --link-alpha-color: rgba(80, 158, 227, 0.75);
-
   --bg-alpha-color: rgba(245, 245, 245, 0.75);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 /* *****Reset Styles****** */
 body {
-  font-family: "Kiwi Maru", serif;
+  font-family: 'Kiwi Maru', serif;
 }
 
 a {
@@ -27,8 +26,17 @@ a:hover {
   color: black;
 }
 
+textarea {
+  height: 40%;
+  width: 100%;
+  resize: none;
+}
+
 /* ****** Bootstrap Styles ********** */
 
+.active {
+  color: var(--first-color);
+}
 .navbar-dark .navbar-toggler {
   --bs-navbar-toggler-icon-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
   transition: all 0.3s ease-out;
@@ -39,8 +47,27 @@ a:hover {
   opacity: 0.75;
 }
 
+.nav-item a {
+  text-align: center;
+  transition: all 0.15s ease-out;
+  font-weight: bold;
+}
+.nav-item a:hover {
+  transform: scale(1.2);
+}
+
+.dropdown-menu li :hover {
+  transform: scale(1);
+}
+
 /* ******* My Styles ********** */
 
+.bg-hero-image {
+  background-image: var(--bg-image);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
 .bg-primary-color {
   background-color: var(--first-color);
 }
@@ -68,6 +95,14 @@ a:hover {
   background-position: center;
 }
 
+.formulario-perfil {
+  width: 75%;
+  background-color: var(--first-color);
+  border-radius: 1rem;
+  border: 2px solid var(--second-color);
+  box-shadow: 0px 0px 10px 0px var(--second-color);
+}
+
 .img-servicios-1 {
   width: auto;
   height: 12rem;
@@ -91,19 +126,15 @@ a:hover {
   width: auto;
 }
 
-.nav-item a {
-  text-align: center;
-  transition: all 0.15s ease-out;
-  font-weight: bold;
-}
-.nav-item a:hover {
-  transform: scale(1.2);
-}
-
 .nav-shadow {
   -webkit-box-shadow: 0px 11px 24px -14px rgba(36, 36, 63, 1);
   -moz-box-shadow: 0px 11px 24px -14px rgba(36, 36, 63, 1);
   box-shadow: 0px 11px 24px -14px rgba(36, 36, 63, 1);
+}
+
+.perfil {
+  background-image: url('../img/fondo_garras_perfil.jpeg');
+  background-size: cover;
 }
 
 .registro a {
@@ -129,10 +160,6 @@ a:hover {
   color: #ffffff;
 }
 
-.dropdown-menu li :hover {
-  transform: scale(1);
-}
-
 .ver-equipo {
   text-decoration: none;
 }
@@ -146,6 +173,9 @@ a:hover {
 
 /* // Medium devices (tablets, 768px and up) */
 @media (min-width: 768px) {
+  .formulario-perfil {
+    width: 40%;
+  }
 }
 
 /* // Large devices (desktops, 992px and up) */

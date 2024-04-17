@@ -24,7 +24,6 @@
     <link rel="icon" href="img/logo.svg" />
   </head>
   <body>
-
    <nav
       class="navbar sticky-top navbar-expand-lg navbar-bg-color d-lg-flex justify-content-lg-between rounded-4 rounded-top-0 nav-shadow"
     >
@@ -49,7 +48,7 @@
             class="navbar-nav mb-2 mb-lg-0 align-items-center justify-content-lg-evenly col-lg-9"
           >
             <li class="nav-item">
-              <a class="nav-link" aria-current="page" href="servicios.php">Servicios</a>
+              <a class="nav-link active" aria-current="page" href="servicios.php">Servicios</a>
             </li>
 
       <?php
@@ -94,9 +93,7 @@
         </div>
       </div>
     </nav>
-
-   <?php
-    echo ' <main>
+    <main>
       <div class="container service-text-color">
         <section class="row bg-service-color rounded-5 p-4 mt-4 mb-2">
           <div class="col-12 col-md-6">
@@ -231,11 +228,9 @@
         </div>
       </div>
     </main>
-    ';
- 
-    include_once('inc/footer.php');
+    
 
-    ?>
+  <?php include_once './footer.php' ;?>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"

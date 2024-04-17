@@ -1,0 +1,90 @@
+<div
+  class="modal fade"
+  id="modificaPersonalModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modificaPersonalLabel"
+  aria-modal="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modificaPersonalLabel">
+          <b>Modificación de personal</b>
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form action="./modificaPersonal.php" method="post">
+          <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nombre"
+              name="nombre"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="apellido" class="form-label">Apellido</label>
+            <input
+              type="text"
+              class="form-control"
+              id="apellido"
+              name="apellido"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              name="email"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="clave" class="form-label">Clave</label>
+            <input
+              type="password"
+              class="form-control"
+              id="clave"
+              name="clave"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="rol" class="form-label">Rol</label>
+            <p>
+              <b
+                >El rol del personal no se puede cambiar, crea un nuevo
+                usuario</b
+              >
+            </p>
+          </div>
+          <input type="hidden" name="personal_id" id="personal_id" />
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button type="submit" class="btn btn-primary">
+              Guardar cambios
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

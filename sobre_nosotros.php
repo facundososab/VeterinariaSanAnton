@@ -70,7 +70,7 @@
               <a class="nav-link" href="contacto.php">Contacto</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="sobre_nosotros.php">Sobre<br />nosotros</a>
+              <a class="nav-link active" href="sobre_nosotros.php">Sobre<br />nosotros</a>
             </li>
           </ul>
   
@@ -94,25 +94,25 @@
         </div>
       </div>
     </nav>
-
-    <?php
-
-    echo '<main>
+    
+    <main>
       <div class="container pt-4">
         <section class="row mb-4 p-3">
           <article class="col-12 col-lg-6 nuestra-historia order-lg-1">
             <div class="row mx-auto">
               <img src="img/garra_gris.svg" alt="" class="col-3 w-auto h-25" />
-              <h1 class="col-9 align-self-center display-5 mx-lg-auto">
+              <h1 class="col-8 align-self-center fs-2 mx-lg-auto">
                 <b>Nuestra historia</b>
               </h1>
             </div>
-            <p class="text-lg-end my-3 my-lg-0">
+            <p class="text-lg-end my-3">
               La veterinaria San Antón es una clínica veterinaria que se dedica
               al cuidado de animales, cuidados medicinales (rayos X, cirugías,
               vacunas, alimentación, farmacia, etc.), estéticos (baños,
               peluquería, etc.) y otros servicios (arriendo de jaulas,
-              hospitalización, hotel, venta de productos). Fue creada por un
+              hospitalización, hotel, venta de productos).
+            </p>
+            <p class="text-lg-end">Fue creada por un
               grupo de médicos veterinarios que quería ofrecer la mejor medicina
               posible para perros, gatos y mascotas exóticas. Actualmente la
               clínica reside en la ciudad de Rosario provincia de Santa Fe,
@@ -156,11 +156,9 @@
           </div>
         </section>
       </div>
-    </main>';
+    </main>
 
-    include 'inc/footer.php';
-
-    ?>
+    <?php include './footer.php';?>
    
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
