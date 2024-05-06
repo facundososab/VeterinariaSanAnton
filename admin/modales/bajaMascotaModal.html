@@ -6,34 +6,34 @@
   aria-labelledby="bajaMascotaLabel"
   aria-modal="true"
 >
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="bajaMascotaLabel">Baja de mascota</h5>
+        <h1 class="modal-title fs-5" id="bajaMascotaLabel">
+          <b>Baja de mascota</b>
+        </h1>
         <button
           type="button"
-          class="close"
-          data-dismiss="modal"
+          class="btn-close"
+          data-bs-dismiss="modal"
           aria-label="Close"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
+        ></button>
       </div>
       <div class="modal-body">
-        <p>¿Está seguro que desea dar de baja a la mascota?</p>
+        ¿Estás seguro de que desea dar de baja a esta mascota?
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-          Cancelar
-        </button>
-        <button
-          type="button"
-          class="btn btn-danger"
-          data-dismiss="modal"
-          (click)="bajaMascota()"
-        >
-          Dar de baja
-        </button>
+        <form action="./bajaMascota.php" method="post">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cancelar
+          </button>
+          <input type="hidden" name="id" id="id" />
+          <button type="submit" class="btn btn-danger">Eliminar</button>
+        </form>
       </div>
     </div>
   </div>

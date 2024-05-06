@@ -38,7 +38,7 @@
         <hr />  
         <!-- Verificar si hay personal registrado -->
         <?php if ($personal) { ?>
-          <table class="table table-striped table-hover">
+          <table class="table table-striped table-hover align-middle">
           <thead>
             <tr>
               <th scope="col">Nombre</th>
@@ -60,16 +60,12 @@
             } ?>
           <?php
           foreach ($personal as $row) {
-            if ($row['rol_id'] == 1) {
-              continue;
-            }
-            $rolName = $admin->getPersonalRolName($row['rol_id']);
             ?>
             <tr class="">
               <td><?= ucfirst($row['nombre']); ?></td>
               <td><?= ucfirst($row['apellido']); ?></td>
               <td><?= $row['email']; ?></td>
-              <td><?= ucfirst($rolName); ?></td>
+              <td><?= ucfirst($row['rol']); ?></td>
               <td class="d-flex column-gap-3">
                 <button type="button" class="btn btn-warning flex-grow-1" data-bs-toggle="modal" data-bs-target="#modificaPersonalModal" data-bs-id="<?=$row['personal_id']; ?>"><i class="bi bi-pencil-fill"></i></i> Editar</button>
                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#bajaPersonalModal" data-bs-id="<?=$row['personal_id']; ?>"><i class="bi bi-trash"></i> Eliminar</button>
@@ -127,12 +123,13 @@
             })
             .then(response => response.json())
             .then(data => {
+              console.log(data)
                 inputId.value = data.personal_id
                 inputNombre.value = data.nombre
                 inputApellido.value = data.apellido
                 inputEmail.value = data.email
                 inputClave.value = data.clave
-                inputRol.value = data.rol_id
+                inputRol.value = data.rol
             })
 
         }) 

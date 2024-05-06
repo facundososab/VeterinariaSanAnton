@@ -38,7 +38,7 @@ $clientes = $admin->getAllClientes();
         <hr />
         <!-- Verificar si hay clientes registrados -->
         <?php if ($clientes) { ?>
-          <table class="table table-striped table-hover">
+          <table class="table table-striped table-hover align-middle">
           <thead>
             <tr>
               <th scope="col">Nombre</th>
