@@ -27,14 +27,14 @@
           </div>
           <div class="mb-3">
             <label for="img_mascota" class="form-label">Imagen de la mascota</label>
-            <input type="file" class="form-control" id="img_mascota" name="img_mascota" accept="image/jpg, image/jpeg" />
+            <input type="file" class="form-control" id="img_mascota" name="img_mascota" />
           </div>
           <div class="mb-3">
             <label for="cliente_id" class="form-label">Dueño</label>
             <select class="form-select" id="cliente_id" name="cliente_id" required>
               <option value="" selected>Seleccionar cliente</option>
               <?php
-              $clientes = $admin->getAllClientes();
+              $clientes = $admin->showAllClientes();
               foreach ($clientes as $cliente) { ?>
                 <option value="<?= $cliente['cliente_id']; ?>">
                   <?= ucfirst($cliente['nombre']) . ' ' . ucfirst($cliente['apellido']) . ' - ' . $cliente['email']; ?>

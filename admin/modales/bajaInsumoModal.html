@@ -1,0 +1,38 @@
+<div
+  class="modal fade"
+  id="bajaInsumoModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="bajaInsumoModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="bajaInsumoModalLabel">Baja de insumo</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        ¿Estás seguro de que desea dar de baja este insumo?
+      </div>
+      <div class="modal-footer">
+        <form action="./bajaInsumo.php" method="post">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cancelar
+          </button>
+          <input type="hidden" name="insumo_id" id="insumo_id" />
+          <button type="submit" class="btn btn-danger">Eliminar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

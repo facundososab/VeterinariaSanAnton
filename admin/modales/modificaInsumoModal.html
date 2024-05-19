@@ -1,0 +1,75 @@
+<div
+  class="modal fade"
+  id="modificaInsumoModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modificaInsumoModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modificaInsumoModalLabel">
+          Modificación de insumo
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <form
+        action="./modificaInsumo.php"
+        method="post"
+        id="formulario_modificaInsumo"
+      >
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="descripcion" class="form-label">Descripcion</label>
+            <input
+              type="text"
+              class="form-control"
+              id="descripcion"
+              name="descripcion"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="unidad_medida" class="form-label"
+              >Unidad de medida</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="unidad_medida"
+              name="unidad_medida"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="cantidad" class="form-label">Cantidad</label>
+            <input
+              type="number"
+              class="form-control"
+              id="cantidad"
+              name="cantidad"
+              required
+            />
+          </div>
+          <input type="hidden" name="insumo_id" id="insumo_id" />
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

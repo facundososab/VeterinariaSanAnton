@@ -24,6 +24,7 @@ try {
     $_SESSION['msg-color'] = 'success';
 
     if ($_FILES['img_mascota']['error'] == UPLOAD_ERR_OK) {
+
       $permitidos = array("image/jpg", "image/jpeg");
 
       if (in_array($_FILES['img_mascota']['type'], $permitidos)) {

@@ -36,20 +36,24 @@ class Admin extends Database
 
     public function totalPersonal()
     {
-        $sql = "SELECT COUNT(*) as total FROM personal WHERE rol_id != 1";
+        $sql = "SELECT * FROM personal WHERE rol_id != 1";
         $result = $this->connect()->query($sql);
-        $row = $result->fetch(PDO::FETCH_ASSOC);
+        $row = $result->rowCount();
         return $row;
     }
 
 
-    public function getAllPersonal()
+    public function getAllPersonal($empezar_desde, $tamano_paginas)
     {
-        $sql = "SELECT p.personal_id , p.nombre, p.apellido, p.email, r.nombre as rol FROM personal p  
-                INNER JOIN roles r ON p.rol_id = r.rol_id WHERE p.rol_id != 1";
+        $sql = "SELECT p.personal_id, p.nombre, p.apellido, p.email, r.nombre as rol FROM personal p
+                INNER JOIN roles r ON p.rol_id = r.rol_id WHERE p.rol_id != 1 LIMIT $empezar_desde,$tamano_paginas";
         $result = $this->connect()->prepare($sql);
         $result->execute();
-        return $result;
+        if ($result->rowCount() > 0) {
+            return $result;
+        } else {
+            return false;
+        }
     }
 
     public function getPersonal($id)
@@ -117,16 +121,27 @@ class Admin extends Database
 
     public function totalClientes()
     {
-        $sql = "SELECT COUNT(*) as total FROM clientes";
+        $sql = "SELECT * FROM clientes";
         $result = $this->connect()->query($sql);
-        $row = $result->fetch(PDO::FETCH_ASSOC);
+        $row = $result->rowCount();
         return $row;
     }
-    function getAllClientes()
+    function getAllClientes($empezar_desde, $tamano_paginas)
     {
-        $sql = "SELECT * FROM clientes";
+        $sql = "SELECT * FROM clientes LIMIT $empezar_desde, $tamano_paginas";
         $result = $this->connect()->prepare($sql);
         $result->execute();
+        if ($result->rowCount() > 0) {
+            return $result;
+        } else {
+            return false;
+        }
+    }
+
+    function showAllClientes()
+    {
+        $sql = "SELECT * FROM clientes";
+        $result = $this->connect()->query($sql);
         return $result;
     }
 
@@ -190,10 +205,10 @@ class Admin extends Database
 
 
 
-    public function getAllMascotas($empezar_desde)
+    public function getAllMascotas($empezar_desde, $tamano_paginas)
     {
         $sql = "SELECT m.mascota_id, m.nombre, m.raza, m.color, m.fecha_nac, m.fecha_muerte, c.nombre as cliente_nombre, c.apellido as cliente_apellido, c.email as cliente_email FROM mascotas m
-                INNER JOIN clientes c ON m.cliente_id = c.cliente_id LIMIT $empezar_desde,8";
+                INNER JOIN clientes c ON m.cliente_id = c.cliente_id LIMIT $empezar_desde, $tamano_paginas";
         $result = $this->connect()->prepare($sql);
         $result->execute();
         if ($result->rowCount() > 0) {
@@ -273,6 +288,75 @@ class Admin extends Database
         }
     }
 
+    /**************************INSUMOS******************************/
+
+    public function totalInsumos()
+    {
+        $sql = "SELECT * FROM insumos";
+        $result = $this->connect()->query($sql);
+        $row = $result->rowCount();
+        return $row;
+    }
+
+    public function getAllInsumos($empezar_desde, $tamano_paginas)
+    {
+        $sql = "SELECT * FROM insumos LIMIT $empezar_desde, $tamano_paginas";
+        $result = $this->connect()->prepare($sql);
+        $result->execute();
+        if ($result->rowCount() > 0) {
+            return $result;
+        } else {
+            return false;
+        }
+    }
+
+    public function getInsumo($id)
+    {
+        $sql = "SELECT * FROM insumos WHERE insumo_id = :id";
+        $result = $this->connect()->prepare($sql);
+        $result->execute([':id' => $id]);
+        $row = $result->fetch(PDO::FETCH_ASSOC);
+        return $row;
+    }
+
+    public function altaInsumo($descripcion, $unidadMedida, $cantidad)
+    {
+        $sql = "INSERT INTO insumos (descripcion, unidad_medida, cantidad) VALUES (:descripcion, :unidad_medida, :cantidad)";
+        $sentencia = $this->connect()->prepare($sql);
+        $sentencia->execute(array(':descripcion' => $descripcion, ':unidad_medida' => $unidadMedida, ':cantidad' => $cantidad));
+        $sentencia->closeCursor();
+        if ($sentencia->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function bajaInsumo($id)
+    {
+        $sql = "DELETE FROM insumos WHERE insumo_id = :id";
+        $sentencia = $this->connect()->prepare($sql);
+        $sentencia->execute([':id' => $id]);
+        $sentencia->closeCursor();
+        if ($sentencia->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function modificaInsumo($id, $descripcion, $unidadMedida, $cantidad)
+    {
+        $sql = "UPDATE insumos SET descripcion = :descripcion, unidad_medida = :unidad_medida, cantidad = :cantidad WHERE insumo_id = :id";
+        $sentencia = $this->connect()->prepare($sql);
+        $sentencia->execute([':descripcion' => $descripcion, ':unidad_medida' => $unidadMedida, ':cantidad' => $cantidad, ':id' => $id]);
+        $sentencia->closeCursor();
+        if ($sentencia->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 
     /**************************ADMIN******************************/
