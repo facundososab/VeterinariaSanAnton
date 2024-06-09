@@ -48,7 +48,7 @@ $mascotas = $admin->getAllMascotas($empezar_desde, $tamano_paginas);
       <!-- Verificar si hay mascotas registradas -->
       <?php if ($mascotas) { ?>
         <div class="table-responsive mb-5">
-          <table class="table table-striped table-hover align-middle">
+          <table class="table table-striped table-hover align-middle mb-5">
             <thead>
               <tr>
                 <th scope="col">Nombre</th>

@@ -1,0 +1,40 @@
+<div
+  class="modal fade"
+  id="bajaServicioModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="bajaServicioLabel"
+  aria-modal="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="bajaServicioModalLabel">
+          <b>Baja de servicio</b>
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        ¿Estás seguro de que desea dar de baja a este servicio?
+      </div>
+      <div class="modal-footer">
+        <form action="./bajaServicio.php" method="post">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cancelar
+          </button>
+          <input type="hidden" name="servicio_id" id="servicio_id" />
+          <button type="submit" class="btn btn-danger">Eliminar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

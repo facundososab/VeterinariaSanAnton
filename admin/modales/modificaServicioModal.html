@@ -1,0 +1,77 @@
+<div
+  class="modal fade"
+  id="modificaServicioModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modificaServicioLabel"
+  aria-modal="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modificaServicioLabel">
+          <b>Modificación de servicio</b>
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form action="./modificaServicio.php" method="post">
+          <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nombre"
+              name="nombre"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="precio" class="form-label">Precio</label>
+            <input
+              type="number"
+              class="form-control"
+              id="precio"
+              name="precio"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="tipo" class="form-label">Tipo</label>
+            <select
+              type="number"
+              class="form-select"
+              aria-label="Tipo"
+              id="tipo"
+              name="tipo"
+              required
+            >
+              <option value="">Escoja el tipo de servicio</option>
+              <option value="CUIDADOS MEDICINALES" name="1">
+                CUIDADOS MEDICINALES
+              </option>
+              <option value="ESTETICA" name="2">ESTETICA</option>
+              <option value="OTROS SERVICIOS" name="3">OTROS SERVICIOS</option>
+            </select>
+          </div>
+          <input type="hidden" name="servicio_id" id="servicio_id" />
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button type="submit" class="btn btn-primary">Modificar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

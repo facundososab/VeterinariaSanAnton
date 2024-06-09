@@ -9,13 +9,6 @@ class Admin extends Database
         parent::__construct();
     }
 
-    public function getAllAtenciones()
-    {
-        $sql = "SELECT * FROM vista_atenciones";
-        $result = $this->connect()->query($sql);
-        return $result;
-    }
-
     public function getPersonalId($consulta)
     {
         /* Busca personal por nombre o apellido   */
@@ -390,6 +383,101 @@ class Admin extends Database
         $sentencia->closeCursor();
         if ($sentencia->rowCount() > 0) {
             return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**************************SERVICIOS******************************/
+    public function totalServicios()
+    {
+        $sql = "SELECT * FROM servicios WHERE activo = 1";
+        $result = $this->connect()->query($sql);
+        $row = $result->rowCount();
+        return $row;
+    }
+
+    public function getAllServicios($empezar_desde, $tamano_paginas)
+    {
+        $sql = "SELECT * FROM servicios WHERE activo = 1 LIMIT $empezar_desde, $tamano_paginas";
+        $result = $this->connect()->prepare($sql);
+        $result->execute();
+        if ($result->rowCount() > 0) {
+            return $result;
+        } else {
+            return false;
+        }
+    }
+
+    public function getServicio($id)
+    {
+        $sql = "SELECT * FROM servicios WHERE servicio_id = :id";
+        $result = $this->connect()->prepare($sql);
+        $result->execute([':id' => $id]);
+        $row = $result->fetch(PDO::FETCH_ASSOC);
+        return $row;
+    }
+
+    public function altaServicio($nombre, $tipo, $precio)
+    {
+        $sql = "INSERT INTO servicios (nombre, tipo, precio) VALUES (:nombre, :tipo, :precio)";
+        $sentencia = $this->connect()->prepare($sql);
+        $sentencia->execute(array(':nombre' => $nombre, ':tipo' => $tipo, ':precio' => $precio));
+        $sentencia->closeCursor();
+        if ($sentencia->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function bajaServicio($id)
+    {
+        $sql = "UPDATE servicios SET activo = 0 WHERE servicio_id = :id";
+        $sentencia = $this->connect()->prepare($sql);
+        $sentencia->execute([':id' => $id]);
+        $sentencia->closeCursor();
+        if ($sentencia->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function modificaServicio($id, $nombre, $tipo, $precio)
+    {
+        $sql = "UPDATE servicios SET nombre = :nombre, tipo = :tipo, precio = :precio WHERE servicio_id = :id";
+        $sentencia = $this->connect()->prepare($sql);
+        $sentencia->execute([':nombre' => $nombre, ':tipo' => $tipo, ':precio' => $precio, ':id' => $id]);
+        $sentencia->closeCursor();
+        if ($sentencia->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+
+    /**************************ATENCIONES******************************/
+
+    public function totalAtenciones()
+    {
+        $sql = "SELECT * FROM atenciones";
+        $result = $this->connect()->query($sql);
+        $row = $result->rowCount();
+        return $row;
+    }
+
+    public function getAllAtenciones($empezar_desde, $tamano_paginas)
+    {
+        $sql = "SELECT a.atencion_id, a.fecha, a.hora, a.motivo, a.diagnostico, a.tratamiento, a.peso, a.temperatura, a.pulso, a.frec_respiratoria, a.mascota_id, m.nombre as mascota_nombre, m.raza as mascota_raza, m.color as mascota_color, m.fecha_nac as mascota_fecha_nac, c.nombre as cliente_nombre, c.apellido as cliente_apellido, c.email as cliente_email FROM atenciones a
+                INNER JOIN mascotas m ON a.mascota_id = m.mascota_id
+                INNER JOIN clientes c ON m.cliente_id = c.cliente_id LIMIT $empezar_desde, $tamano_paginas";
+        $result = $this->connect()->prepare($sql);
+        $result->execute();
+        if ($result->rowCount() > 0) {
+            return $result;
         } else {
             return false;
         }
