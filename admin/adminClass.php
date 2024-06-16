@@ -49,6 +49,14 @@ class Admin extends Database
         }
     }
 
+    public function showAllPersonal()
+    {
+        $sql = "SELECT p.personal_id, p.nombre, p.apellido, p.email, r.nombre as rol FROM personal p
+                INNER JOIN roles r ON p.rol_id = r.rol_id WHERE p.rol_id != 1";
+        $result = $this->connect()->query($sql);
+        return $result;
+    }
+
     public function getPersonal($id)
     {
         $sql = "SELECT p.personal_id, p.nombre, p.apellido, p.email, p.clave, r.nombre as rol FROM personal p  
@@ -56,6 +64,16 @@ class Admin extends Database
         $result = $this->connect()->prepare($sql);
         $result->execute([':id' => $id]);
         $row = $result->fetch(PDO::FETCH_ASSOC);
+        return $row;
+    }
+
+    public function getPersonalByServicioId($servicio_id)
+    {
+        $sql = "SELECT p.personal_id, p.nombre, p.apellido, p.email FROM personal p
+                INNER JOIN servicios s ON p.rol_id = s.rol_id WHERE s.servicio_id = :servicio_id";
+        $result = $this->connect()->prepare($sql);
+        $result->execute([':servicio_id' => $servicio_id]);
+        $row = $result->fetchAll(PDO::FETCH_ASSOC);
         return $row;
     }
 
@@ -209,6 +227,21 @@ class Admin extends Database
         } else {
             return false;
         }
+    }
+
+    public function showAllMascotas()
+    {
+        $sql = "SELECT * FROM mascotas";
+        $result = $this->connect()->query($sql);
+        return $result;
+    }
+
+    public function showAllMascotasConCliente()
+    {
+        $sql = "SELECT m.mascota_id, m.nombre, m.raza, m.color, m.fecha_nac, m.fecha_muerte, c.nombre as cliente_nombre, c.apellido as cliente_apellido, c.email as cliente_email FROM mascotas m
+                INNER JOIN clientes c ON m.cliente_id = c.cliente_id";
+        $result = $this->connect()->query($sql);
+        return $result;
     }
 
     public function getMascotaId($nombre, $raza, $fecha_nac, $cliente_id)
@@ -409,6 +442,13 @@ class Admin extends Database
         }
     }
 
+    public function showAllServicios()
+    {
+        $sql = "SELECT * FROM servicios WHERE activo = 1";
+        $result = $this->connect()->query($sql);
+        return $result;
+    }
+
     public function getServicio($id)
     {
         $sql = "SELECT * FROM servicios WHERE servicio_id = :id";
@@ -471,13 +511,66 @@ class Admin extends Database
 
     public function getAllAtenciones($empezar_desde, $tamano_paginas)
     {
-        $sql = "SELECT a.atencion_id, a.fecha, a.hora, a.motivo, a.diagnostico, a.tratamiento, a.peso, a.temperatura, a.pulso, a.frec_respiratoria, a.mascota_id, m.nombre as mascota_nombre, m.raza as mascota_raza, m.color as mascota_color, m.fecha_nac as mascota_fecha_nac, c.nombre as cliente_nombre, c.apellido as cliente_apellido, c.email as cliente_email FROM atenciones a
+        $sql = "SELECT a.atencion_id, a.fecha_hora, a.titulo, a.descripcion, m.nombre as mascota_nombre, m.raza, p.nombre as personal_nombre, p.apellido as personal_apellido, c.nombre as cliente_nombre, c.apellido as cliente_apellido, s.nombre as servicio_nombre FROM atenciones a
                 INNER JOIN mascotas m ON a.mascota_id = m.mascota_id
-                INNER JOIN clientes c ON m.cliente_id = c.cliente_id LIMIT $empezar_desde, $tamano_paginas";
+                INNER JOIN clientes c ON m.cliente_id = c.cliente_id
+                INNER JOIN personal p ON a.personal_id = p.personal_id
+                INNER JOIN servicios s ON a.servicio_id = s.servicio_id LIMIT $empezar_desde, $tamano_paginas";
         $result = $this->connect()->prepare($sql);
         $result->execute();
         if ($result->rowCount() > 0) {
             return $result;
+        } else {
+            return false;
+        }
+    }
+    public function getAtencion($id)
+    {
+        $sql = "SELECT a.atencion_id, a.fecha_hora, a.titulo, a.descripcion, m.nombre as mascota_nombre, m.raza, p.nombre as personal_nombre, p.apellido as personal_apellido, c.nombre as cliente_nombre, c.apellido as cliente_apellido, s.nombre as servicio_nombre FROM atenciones a
+                INNER JOIN mascotas m ON a.mascota_id = m.mascota_id
+                INNER JOIN clientes c ON m.cliente_id = c.cliente_id
+                INNER JOIN personal p ON a.personal_id = p.personal_id
+                INNER JOIN servicios s ON a.servicio_id = s.servicio_id WHERE a.atencion_id = :id";
+        $result = $this->connect()->prepare($sql);
+        $result->execute([':id' => $id]);
+        $row = $result->fetch(PDO::FETCH_ASSOC);
+        return $row;
+    }
+
+    public function altaAtencion($fecha_hora, $titulo, $descripcion, $mascota, $servicio, $personal)
+    {
+        $sql = "INSERT INTO atenciones (fecha_hora, titulo, descripcion, mascota_id, servicio_id, personal_id) VALUES (:fecha_hora, :titulo, :descripcion, :mascota, :servicio, :personal)";
+        $sentencia = $this->connect()->prepare($sql);
+        $sentencia->execute(array(':fecha_hora' => $fecha_hora, ':titulo' => $titulo, ':descripcion' => $descripcion, ':mascota' => $mascota, ':servicio' => $servicio, ':personal' => $personal));
+        $sentencia->closeCursor();
+        if ($sentencia->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function bajaAtencion($id)
+    {
+        $sql = "DELETE FROM atenciones WHERE atencion_id = :id";
+        $sentencia = $this->connect()->prepare($sql);
+        $sentencia->execute([':id' => $id]);
+        $sentencia->closeCursor();
+        if ($sentencia->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function modificaAtencion($id, $fecha_hora, $titulo, $descripcion)
+    {
+        $sql = "UPDATE atenciones SET fecha_hora = :fecha_hora, titulo = :titulo, descripcion = :descripcion WHERE atencion_id = :id";
+        $sentencia = $this->connect()->prepare($sql);
+        $sentencia->execute([':fecha_hora' => $fecha_hora, ':titulo' => $titulo, ':descripcion' => $descripcion, ':id' => $id]);
+        $sentencia->closeCursor();
+        if ($sentencia->rowCount() > 0) {
+            return true;
         } else {
             return false;
         }

@@ -12,8 +12,8 @@ require_once 'adminClass.php';
 
 $admin = new Admin();
 
-$personal_id = $_POST['personal_id'];
+$atencion_id = $_POST['atencion_id'];
 
-$personal = $admin->getPersonal($personal_id);
+$atencion = $admin->getAtencion($atencion_id);
 
-echo json_encode($personal, JSON_UNESCAPED_UNICODE);
+echo json_encode($atencion, JSON_UNESCAPED_UNICODE);

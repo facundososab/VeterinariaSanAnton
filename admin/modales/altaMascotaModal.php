@@ -29,8 +29,9 @@
             <label for="img_mascota" class="form-label">Imagen de la mascota</label>
             <input type="file" class="form-control" id="img_mascota" name="img_mascota" />
           </div>
-          <div class="mb-3">
+          <div class="mb-3 dropdown">
             <label for="cliente_id" class="form-label">Dueño</label>
+            <input type="text" class="form-control" id="buscar-dueño" onkeyup="filtrarDueños()" placeholder="Ingrese nombre del dueño..." onclick="event.stopPropagation()">
             <select class="form-select" id="cliente_id" name="cliente_id" required>
               <option value="" selected>Seleccionar cliente</option>
               <?php
@@ -48,3 +49,23 @@
     </div>
   </div>
 </div>
+
+<script>
+  function filtrarDueños() {
+    let buscarDueño = document.getElementById('buscar-dueño');
+    let filtro = buscarDueño.value.toLowerCase();
+    let select = document.getElementById('cliente_id');
+    let option = select.getElementsByTagName('option');
+
+    for (let i = 0; i < option.length; i++) {
+      let txtValue = option[i].textContent || option[i].innerText;
+      if (txtValue.toLowerCase().indexOf(filtro) > -1) {
+        option[i].style.display = '';
+      } else {
+        option[i].style.display = 'none';
+      }
+    }
+
+
+  }
+</script>

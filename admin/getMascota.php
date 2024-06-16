@@ -1,8 +1,12 @@
 <?php
 
-/*
- * Este archivo consulta los datos del registro y los retorna en formato JSON 
- */
+session_start();
+
+if (!isset($_SESSION['usuario'])) {
+  header('Location: index.php');
+} else if ($_SESSION['rol_id'] != 1) {
+  header('Location: index.php');
+}
 
 require_once 'adminClass.php';
 
