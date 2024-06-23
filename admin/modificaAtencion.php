@@ -31,3 +31,5 @@ try {
   $_SESSION['mensaje'] = 'Error al modificar atención: ' . $e->getMessage();
   $_SESSION['msg-color'] = 'danger';
 }
+
+header('Location: gestion_atenciones.php');

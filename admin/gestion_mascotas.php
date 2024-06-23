@@ -129,6 +129,7 @@ $mascotas = $admin->getAllMascotas($empezar_desde, $tamano_paginas);
   <?php include_once './modales/altaMascotaModal.php'; ?>
   <?php include_once './modales/modificaMascotaModal.html'; ?>
   <?php include_once './modales/bajaMascotaModal.html'; ?>
+  <?php include_once './modales/historiaClinicaModal.php'; ?>
 
   <script>
     let editaModal = document.getElementById('modificaMascotaModal')

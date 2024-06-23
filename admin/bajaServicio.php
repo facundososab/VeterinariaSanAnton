@@ -19,8 +19,12 @@ try {
     $_SESSION['msg-color'] = 'success';
   }
 } catch (Exception $e) {
-  $_SESSION['mensaje'] = 'Error al dar de baja servicio: ' . $e->getMessage();
-  $_SESSION['msg-color'] = 'danger';
+  if ($e->getCode() == 23000) {
+    $_SESSION['mensaje'] = 'Error al dar de baja servicio: El servicio tiene registros asociados';
+  } else {
+    $_SESSION['mensaje'] = 'Error al dar de baja servicio: ' . $e->getMessage();
+    $_SESSION['msg-color'] = 'danger';
+  }
 }
 
 header('location: ./gestion_servicios.php');

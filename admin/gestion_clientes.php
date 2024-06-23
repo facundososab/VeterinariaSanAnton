@@ -99,7 +99,7 @@ $clientes = $admin->getAllClientes($empezar_desde, $tamano_paginas);
       </div>
   </main>
   <footer class="footer mt-auto py-3 bg-light fixed-bottom">
-    <nav aria-label="Page navigation example">
+    <nav aria-label="Page navigation clientes">
       <ul class="pagination justify-content-center">
         <?php
         $total_paginas = ceil($total_clientes / $tamano_paginas);

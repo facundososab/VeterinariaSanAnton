@@ -98,17 +98,36 @@ $atenciones = $admin->getAllAtenciones($empezar_desde, $tamano_paginas);
         </div>
       <?php
       } else { ?>
-        <div class="alert alert-warning" role="alert">
-          No hay servicios registrados.
+        <div class="fs-5" role="alert">
+          <i>No hay atencion registradas</i>
         </div>
       <?php } ?>
     </div>
   </main>
 
+  <footer class="footer mt-auto py-3 bg-light fixed-bottom">
+    <nav aria-label="Page navigation atenciones">
+      <ul class="pagination justify-content-center">
+        <?php
+        $total_paginas = ceil($total_atenciones / $tamano_paginas);
+        ?>
+
+        <?php for ($i = 1; $i <= $total_paginas; $i++) {
+          if ($i == $pagina) {
+            echo "<li class='page-item active'><a class='page-link' href='gestion_atenciones.php?pagina=$i'>$i</a></li>";
+          } else {
+            echo "<li class='page-item'><a class='page-link' href='gestion_atenciones.php?pagina=$i'>$i</a></li>";
+          }
+        } ?>
+
+      </ul>
+    </nav>
+  </footer>
+
   <!-- Modales -->
-  <?php include_once 'modales/altaAtencionModal.php'; ?>
-  <?php include_once 'modales/modificaAtencionModal.html'; ?>
-  <?php include_once 'modales/bajaAtencionModal.html'; ?>
+  <?php include 'modales/altaAtencionModal.php'; ?>
+  <?php include 'modales/modificaAtencionModal.html'; ?>
+  <?php include 'modales/bajaAtencionModal.html'; ?>
 
   <script>
     let editaModal = document.getElementById('modificaAtencionModal');
@@ -116,20 +135,20 @@ $atenciones = $admin->getAllAtenciones($empezar_desde, $tamano_paginas);
 
     editaModal.addEventListener('hide.bs.modal', event => {
 
-      editaModal.querySelector('modal-body #atencion_id').value = '';
-      editaModal.querySelector('modal-body #fecha_hora').value = '';
-      editaModal.querySelector('modal-body #titulo').value = '';
-      editaModal.querySelector('modal-body #descripcion').value = '';
+      editaModal.querySelector('.modal-body #atencion_id').value = '';
+      editaModal.querySelector('.modal-body #fecha_hora').value = '';
+      editaModal.querySelector('.modal-body #titulo').value = '';
+      editaModal.querySelector('.modal-body #descripcion').value = '';
     });
 
     editaModal.addEventListener('show.bs.modal', event => {
       let button = event.relatedTarget;
       let id = button.getAttribute('data-bs-id');
 
-      let atencion_id = editaModal.querySelector('modal-body #atencion_id');
-      let fecha_hora = editaModal.querySelector('modal-body #fecha_hora');
-      let titulo = editaModal.querySelector('modal-body #titulo');
-      let descripcion = editaModal.querySelector('modal-body #descripcion');
+      let atencion_id = editaModal.querySelector('.modal-body #atencion_id');
+      let fecha_hora = editaModal.querySelector('.modal-body #fecha_hora');
+      let titulo = editaModal.querySelector('.modal-body #titulo');
+      let descripcion = editaModal.querySelector('.modal-body #descripcion');
 
       let url = './getAtencion.php';
       let data = new FormData();
@@ -152,7 +171,7 @@ $atenciones = $admin->getAllAtenciones($empezar_desde, $tamano_paginas);
     bajaModal.addEventListener('show.bs.modal', event => {
       let button = event.relatedTarget;
       let id = button.getAttribute('data-bs-id');
-      bajaModal.querySelector('.modal-footer #atencion_id').value = id;
+      bajaModal.querySelector('.modal-body #atencion_id').value = id;
     });
   </script>
 
