@@ -539,14 +539,13 @@ class Admin extends Database
 
     public function getAtencionesXMascota($mascota_id)
     {
-        $sql = "SELECT a.atencion_id, a.fecha_hora, a.titulo, a.descripcion, m.nombre as mascota_nombre, m.raza, m.fecha_nac, m.color ,p.nombre as personal_nombre, p.apellido as personal_apellido, c.nombre as cliente_nombre, c.apellido as cliente_apellido, s.nombre as servicio_nombre FROM atenciones a
-                INNER JOIN mascotas m ON a.mascota_id = m.mascota_id
-                INNER JOIN clientes c ON m.cliente_id = c.cliente_id
+        $sql = "SELECT a.atencion_id, a.fecha_hora, a.titulo, a.descripcion, p.nombre as personal_nombre, p.apellido as personal_apellido, s.nombre as servicio_nombre FROM atenciones a
                 INNER JOIN personal p ON a.personal_id = p.personal_id
-                INNER JOIN servicios s ON a.servicio_id = s.servicio_id WHERE m.mascota_id = :mascota_id";
+                INNER JOIN servicios s ON a.servicio_id = s.servicio_id WHERE a.mascota_id = :mascota_id";
         $result = $this->connect()->prepare($sql);
         $result->execute([':mascota_id' => $mascota_id]);
-        return $result;
+        $row = $result->fetchAll(PDO::FETCH_ASSOC);
+        return $row;
     }
 
     public function altaAtencion($fecha_hora, $titulo, $descripcion, $mascota, $servicio, $personal)

@@ -134,6 +134,7 @@ $mascotas = $admin->getAllMascotas($empezar_desde, $tamano_paginas);
   <script>
     let editaModal = document.getElementById('modificaMascotaModal')
     let eliminaModal = document.getElementById('bajaMascotaModal')
+    let historiaClinicaModal = document.getElementById('historiaClinicaModal')
 
     editaModal.addEventListener('hide.bs.modal', event => {
       editaModal.querySelector('.modal-body #mascota_id').value = ''
@@ -180,6 +181,62 @@ $mascotas = $admin->getAllMascotas($empezar_desde, $tamano_paginas);
       let button = event.relatedTarget
       let id = button.getAttribute('data-bs-id')
       eliminaModal.querySelector('.modal-footer #id').value = id
+    })
+
+    historiaClinicaModal.addEventListener('shown.bs.modal', event => {
+      let button = event.relatedTarget
+      let mascota_id = button.getAttribute('data-bs-id')
+
+      let nombre = historiaClinicaModal.querySelector('.modal-body #nombre')
+      let raza = historiaClinicaModal.querySelector('.modal-body #raza')
+      let color = historiaClinicaModal.querySelector('.modal-body #color')
+      let fecha_nac = historiaClinicaModal.querySelector('.modal-body #fecha_nac')
+      let cliente = historiaClinicaModal.querySelector('.modal-body #cliente')
+
+      let url = './getMascota.php'
+      let data = new FormData()
+      data.append('mascota_id', mascota_id)
+
+      fetch(url, {
+          method: 'POST',
+          body: data
+        })
+        .then(response => response.json())
+        .then(data => {
+          nombre.textContent = data.nombre
+          raza.textContent = data.raza
+          color.textContent = data.color
+          fecha_nac.textContent = data.fecha_nac
+          cliente.textContent = data.cliente_nombre + ' ' + data.cliente_apellido + ' (' + data.cliente_email + ')'
+        })
+
+      let atenciones = historiaClinicaModal.querySelector('.modal-body .atenciones-mascotas tbody')
+
+      let urlAtenciones = './getHistoriaClinicaMascota.php'
+      let dataAtenciones = new FormData()
+      dataAtenciones.append('mascota_id', mascota_id)
+
+      fetch(urlAtenciones, {
+          method: 'POST',
+          body: dataAtenciones
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data)
+          atenciones.innerHTML = ''
+          //agregar atenciones a la tabla
+          data.forEach(atencion => {
+            let tr = document.createElement('tr')
+            tr.innerHTML = `
+              <td>${atencion.fecha_hora}</td>
+              <td>${atencion.titulo}</td>
+              <td>${atencion.descripcion}</td>
+              <td>${atencion.servicio_nombre}</td>
+              <td>${atencion.personal_nombre} ${atencion.personal_apellido}</td>
+            `
+            atenciones.appendChild(tr)
+          })
+        })
     })
   </script>
 
