@@ -4,9 +4,7 @@ Este sistema se encargará de gestionar el funcionamiento de la veterinaria. Cue
 
 login y todo eso
 
-## SECCIÓN USUARIO _ADMINISTRADOR_
-
-### Usuario con permisos globales del sistema
+## SECCIÓN USUARIO _ADMINISTRADOR_ (Usuario con permisos globales del sistema)
 
 - ABMC de servicios
 - ABMC de personal
