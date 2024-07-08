@@ -72,22 +72,26 @@ $mascotas = $admin->getAllMascotas($empezar_desde, $tamano_paginas);
               <?php foreach ($mascotas as $mascota) {
               ?>
                 <tr>
-                  <td class="d-flex align-items-stretch p-2">
-                    <div>
-                      <img src="<?= "../img_mascotas" . $mascota['mascota_id'] . '.jpg'; ?>" alt="">
-                    </div>
-                    <div class="flex-grow-1">
-                      <?= ucfirst($mascota['nombre']); ?>
+                  <td>
+                    <div class="d-flex">
+                      <div>
+                        <img src="../img_mascotas/<?= $mascota['mascota_id']; ?>.jpg" alt="<?= $mascota['nombre']; ?>" style="width: 80px; height: auto;">
+                      </div>
+                      <div class="flex-grow-1 align-self-center">
+                        <?= ucfirst($mascota['nombre']); ?>
+                      </div>
                     </div>
                   </td>
                   <td><?= ucfirst($mascota['raza']); ?></td>
                   <td><?= ucfirst($mascota['color']); ?></td>
                   <td><?= $mascota['fecha_nac']; ?></td>
                   <td><span><?= ucfirst($mascota['cliente_nombre']) . ' ' . ucfirst($mascota['cliente_apellido']) ?> </span><br><span><?= '(' . $mascota['cliente_email'] . ')' ?></td>
-                  <td class="d-flex column-gap-3 py-3">
-                    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modificaMascotaModal" data-bs-id="<?= $mascota['mascota_id']; ?>"><i class="bi bi-pencil-fill"></i></i> Editar</button>
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#bajaMascotaModal" data-bs-id="<?= $mascota['mascota_id']; ?>"><i class="bi bi-trash-fill"></i> Eliminar</button>
-                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#historiaClinicaModal" data-bs-id="<?= $mascota['mascota_id']; ?>"><i class="bi bi-journal-medical"></i> Ver historia clínica</button>
+                  <td class="py-3">
+                    <div class="d-flex column-gap-3">
+                      <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modificaMascotaModal" data-bs-id="<?= $mascota['mascota_id']; ?>"><i class="bi bi-pencil-fill"></i></i> Editar</button>
+                      <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#bajaMascotaModal" data-bs-id="<?= $mascota['mascota_id']; ?>"><i class="bi bi-trash-fill"></i> Eliminar</button>
+                      <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#historiaClinicaModal" data-bs-id="<?= $mascota['mascota_id']; ?>"><i class="bi bi-journal-medical"></i> Ver historia clínica</button>
+                    </div>
                   </td>
                 </tr>
               <?php } ?>
@@ -169,7 +173,7 @@ $mascotas = $admin->getAllMascotas($empezar_desde, $tamano_paginas);
           inputId.value = data.mascota_id
           inputNombre.value = data.nombre
           inputRaza.value = data.raza
-          inputFoto.src = '../img_mascotas' + data.mascota_id + '.jpg' ?? undefined
+          inputFoto.src = '../img_mascotas/' + data.mascota_id + '.jpg' ?? undefined
           inputColor.value = data.color
           inputFechaNac.value = data.fecha_nac
 
@@ -222,7 +226,6 @@ $mascotas = $admin->getAllMascotas($empezar_desde, $tamano_paginas);
         })
         .then(response => response.json())
         .then(data => {
-          console.log(data)
           atenciones.innerHTML = ''
           //agregar atenciones a la tabla
           data.forEach(atencion => {

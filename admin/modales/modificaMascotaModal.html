@@ -20,7 +20,11 @@
         ></button>
       </div>
       <div class="modal-body">
-        <form action="./modificaMascota.php" method="post">
+        <form
+          action="./modificaMascota.php"
+          method="post"
+          id="formModificaMascota"
+        >
           <div class="mb-3">
             <label for="nombre" class="form-label">Nombre de la mascota</label>
             <input
@@ -50,6 +54,7 @@
               name="fecha_nac"
               required
             />
+            <p id="fecha_nacError" class="text-danger"></p>
           </div>
           <div class="mb-3">
             <label for="color" class="form-label">Color</label>
@@ -91,3 +96,23 @@
     </div>
   </div>
 </div>
+
+<script>
+  // Validar fecha de nacimiento
+  const formModificaMascota = document.getElementById('formModificaMascota');
+
+  const validateModificaMascota = (e) => {
+    e.preventDefault();
+    const fecha_nac = document.getElementById('fecha_nac');
+
+    if (fecha_nac.value > new Date().toISOString().split('T')[0]) {
+      document.getElementById('fecha_nacError').innerHTML =
+        'La fecha de nacimiento no puede ser mayor a la fecha actual';
+      return;
+    }
+
+    formModificaMascota.submit();
+  };
+
+  formModificaMascota.addEventListener('submit', validateModificaMascota);
+</script>

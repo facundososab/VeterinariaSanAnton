@@ -524,6 +524,18 @@ class Admin extends Database
             return false;
         }
     }
+
+    public function getAtencionesHoy()
+    {
+        $sql = "SELECT a.atencion_id, a.fecha_hora, a.titulo, a.descripcion, m.nombre as mascota_nombre, m.raza, p.nombre as personal_nombre, p.apellido as personal_apellido, c.nombre as cliente_nombre, c.apellido as cliente_apellido, s.nombre as servicio_nombre FROM atenciones a
+                INNER JOIN mascotas m ON a.mascota_id = m.mascota_id
+                INNER JOIN clientes c ON m.cliente_id = c.cliente_id
+                INNER JOIN personal p ON a.personal_id = p.personal_id
+                INNER JOIN servicios s ON a.servicio_id = s.servicio_id WHERE DATE(a.fecha_hora) = CURDATE()";
+        $result = $this->connect()->query($sql);
+        return $result;
+    }
+
     public function getAtencion($id)
     {
         $sql = "SELECT a.atencion_id, a.fecha_hora, a.titulo, a.descripcion, m.nombre as mascota_nombre, m.raza, p.nombre as personal_nombre, p.apellido as personal_apellido, c.nombre as cliente_nombre, c.apellido as cliente_apellido, s.nombre as servicio_nombre FROM atenciones a

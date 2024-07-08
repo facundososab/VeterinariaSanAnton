@@ -72,6 +72,10 @@ textarea {
   background-color: var(--first-color);
 }
 
+.bg-secondary-color {
+  background-color: var(--second-color);
+}
+
 .bg-third-color {
   background-color: var(--third-color);
 }

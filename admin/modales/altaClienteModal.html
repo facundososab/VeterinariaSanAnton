@@ -54,6 +54,7 @@
               name="telefono"
               required
             />
+            <p id="telefonoError" class="form-text text-danger"></p>
           </div>
           <div class="mb-3">
             <label for="email" class="form-label">Email</label>
@@ -64,6 +65,7 @@
               name="email"
               required
             />
+            <p id="emailError" class="form-text text-danger"></p>
           </div>
           <div class="mb-3">
             <label for="clave" class="form-label">Clave</label>
@@ -74,6 +76,7 @@
               name="clave"
               required
             />
+            <p id="claveError" class="form-text text-danger"></p>
           </div>
           <div class="mb-3">
             <label for="ciudad" class="form-label">Ciudad</label>
@@ -115,3 +118,50 @@
     </div>
   </div>
 </div>
+
+<script>
+  const formAltaCliente = document.getElementById('formulario_altaCliente');
+
+  const validateAltaCliente = (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email');
+    const clave = document.getElementById('clave');
+
+    if (!emailValido(email.value.trim())) {
+      emailError.innerHTML = 'Email inválido';
+    } else {
+      emailError.innerHTML = '';
+    }
+
+    if (!claveValida(clave.value.trim())) {
+      claveError.innerHTML =
+        'Clave inválida. Debe tener entre 8 y 15 caracteres, al menos una letra mayúscula, una letra minúscula, un número y un carácter especial.';
+    } else {
+      claveError.innerHTML = '';
+    }
+
+    if (
+      emailValido(email.value) &&
+      claveValida(clave.value) &&
+      telefonoValido(telefono.value)
+    ) {
+      formAltaCliente.submit();
+    }
+  };
+
+  const emailValido = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const claveValida = (clave) => {
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,15}/.test(
+      clave
+    );
+  };
+
+  const telefonoValido = (telefono) => {
+    return /^[0-9]{10}$/.test(telefono);
+  };
+
+  formAltaCliente.addEventListener('submit', validateAltaCliente);
+</script>

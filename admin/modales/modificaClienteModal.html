@@ -54,6 +54,7 @@
               name="email"
               required
             />
+            <p id="emailError" class="form-text text-danger"></p>
           </div>
           <div class="mb-3">
             <label for="telefono" class="form-label">Teléfono</label>
@@ -103,3 +104,25 @@
     </div>
   </div>
 </div>
+
+<script>
+  const formModificaCliente = document.getElementById('modificaClienteForm');
+
+  const validateModificaCliente = (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById('email');
+
+    if (!emailValido(email.value.trim())) {
+      emailError.innerHTML = 'Email inválido';
+    } else {
+      formModificaCliente.submit();
+    }
+  };
+
+  const emailValido = (email) => {
+    return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
+  };
+
+  formModificaCliente.addEventListener('submit', validateModificaCliente);
+</script>

@@ -8,7 +8,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action="./altaAtencion.php" method="POST">
+        <form id="formAltaAtencion" action="./altaAtencion.php" method="POST">
           <div class="mb-3">
             <label for="fecha_hora" class="form-label">
               Fecha y hora
@@ -73,13 +73,15 @@
             <label for="titulo" class="form-label">
               Título
             </label>
-            <input type="text" class="form-control" id="titulo" name="titulo" required />
+            <input type="text" class="form-control" id="titulo" name="titulo" />
+            <p id="tituloError" class="text-danger"></p>
           </div>
           <div class="mb-3">
             <label for="descripcion" class="form-label">
               Descripción
             </label>
-            <textarea class="form-control" id="descripcion" name="descripcion" required></textarea>
+            <textarea class="form-control" id="descripcion" name="descripcion"></textarea>
+            <p id="descripcionError" class="text-danger"></p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -150,4 +152,26 @@
 
       })
   }
+
+  const formAltaAtencion = document.getElementById('formAltaAtencion')
+  const validateAltaAtencion = (e) => {
+    e.preventDefault()
+    const titulo = document.getElementById('titulo')
+    const descripcion = document.getElementById('descripcion')
+
+    if (titulo.value.trim() === '') {
+      document.getElementById('tituloError').innerHTML = 'Campo obligatorio'
+      return
+    }
+
+    if (descripcion.value.trim() === '') {
+      document.getElementById('descripcionError').innerHTML = 'Campo obligatorio'
+      return
+    }
+
+    formAltaAtencion.submit()
+
+  }
+
+  formAltaAtencion.addEventListener('submit', validateAltaAtencion)
 </script>
