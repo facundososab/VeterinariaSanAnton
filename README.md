@@ -6,7 +6,7 @@ login y todo eso
 
 ## Sección usuario _Administrador_
 
-##### Usuario con permisos globales del sistema
+### Usuario con permisos globales del sistema
 
 - ABMC de servicios
 - ABMC de personal
