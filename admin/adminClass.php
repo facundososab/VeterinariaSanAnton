@@ -512,7 +512,7 @@ class Admin extends Database
 
     public function getAllAtenciones($empezar_desde, $tamano_paginas)
     {
-        $sql = "SELECT a.atencion_id, a.fecha_hora, a.titulo, a.descripcion, m.nombre as mascota_nombre, m.fecha_muerte as mascota_fecha_muerte, m.raza, p.nombre as personal_nombre, p.apellido as personal_apellido, c.nombre as cliente_nombre, c.apellido as cliente_apellido, s.nombre as servicio_nombre FROM atenciones a
+        $sql = "SELECT a.atencion_id, a.fecha_hora, a.titulo, a.descripcion, a.estado, m.nombre as mascota_nombre, m.fecha_muerte as mascota_fecha_muerte, m.raza, p.nombre as personal_nombre, p.apellido as personal_apellido, c.nombre as cliente_nombre, c.apellido as cliente_apellido, s.nombre as servicio_nombre FROM atenciones a
                 INNER JOIN mascotas m ON a.mascota_id = m.mascota_id
                 INNER JOIN clientes c ON m.cliente_id = c.cliente_id
                 INNER JOIN personal p ON a.personal_id = p.personal_id
@@ -592,6 +592,19 @@ class Admin extends Database
         $sql = "UPDATE atenciones SET fecha_hora = :fecha_hora, titulo = :titulo, descripcion = :descripcion WHERE atencion_id = :id";
         $sentencia = $this->connect()->prepare($sql);
         $sentencia->execute([':fecha_hora' => $fecha_hora, ':titulo' => $titulo, ':descripcion' => $descripcion, ':id' => $id]);
+        $sentencia->closeCursor();
+        if ($sentencia->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function actualizaEstadoAtencion($atencion_id, $estado)
+    {
+        $sql = "UPDATE atenciones SET estado = :estado WHERE atencion_id = :atencion_id";
+        $sentencia = $this->connect()->prepare($sql);
+        $sentencia->execute([':estado' => $estado, ':atencion_id' => $atencion_id]);
         $sentencia->closeCursor();
         if ($sentencia->rowCount() > 0) {
             return true;

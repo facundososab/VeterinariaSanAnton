@@ -61,6 +61,7 @@ $atenciones = $admin->getAllAtenciones($empezar_desde, $tamano_paginas);
                 <th scope="col">Titulo</th>
                 <th scope="col">Descripción</th>
                 <th scope="col">Personal a cargo</th>
+                <th scope="col">Estado</th>
                 <th scope="col">Acciones</th>
               </tr>
             </thead>
@@ -87,6 +88,7 @@ $atenciones = $admin->getAllAtenciones($empezar_desde, $tamano_paginas);
                   <td><?php echo ucfirst($atencion['titulo']); ?></td>
                   <td><?php echo ucfirst($atencion['descripcion']); ?></td>
                   <td><?php echo ucfirst($atencion['personal_nombre']) . ' ' . ucfirst($atencion['personal_apellido']); ?></td>
+                  <td><?php echo $atencion['estado']; ?></td>
                   <td>
                     <div class="d-flex column-gap-3">
                       <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modificaAtencionModal" data-bs-id="<?= $atencion['atencion_id']; ?>">
@@ -94,6 +96,9 @@ $atenciones = $admin->getAllAtenciones($empezar_desde, $tamano_paginas);
                       </button>
                       <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#bajaAtencionModal" data-bs-id="<?= $atencion['atencion_id']; ?>">
                         <i class=" bi bi-trash-fill"></i> Eliminar
+                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#actualizaEstadoAtencionModal" data-bs-id="<?= $atencion['atencion_id']; ?>">
+                          <i class="bi bi-arrow-repeat"></i> Actualizar estado
+                        </button>
                     </div>
                   </td>
                 <?php } ?>
@@ -132,10 +137,13 @@ $atenciones = $admin->getAllAtenciones($empezar_desde, $tamano_paginas);
   <?php include 'modales/altaAtencionModal.php'; ?>
   <?php include 'modales/modificaAtencionModal.html'; ?>
   <?php include 'modales/bajaAtencionModal.html'; ?>
+  <?php include 'modales/actualizaEstadoAtencionModal.html'; ?>
 
   <script>
     let editaModal = document.getElementById('modificaAtencionModal');
     let bajaModal = document.getElementById('bajaAtencionModal');
+    let actualizaEstadoModal = document.getElementById('actualizaEstadoAtencionModal');
+    console.log(actualizaEstadoModal);
 
     editaModal.addEventListener('hide.bs.modal', event => {
 
@@ -176,6 +184,13 @@ $atenciones = $admin->getAllAtenciones($empezar_desde, $tamano_paginas);
       let button = event.relatedTarget;
       let id = button.getAttribute('data-bs-id');
       bajaModal.querySelector('.modal-body #atencion_id').value = id;
+    });
+
+    actualizaEstadoModal.addEventListener('show.bs.modal', event => {
+      let button = event.relatedTarget;
+      let id = button.getAttribute('data-bs-id');
+      actualizaEstadoModal.querySelector('.modal-body #atencion_id').value = id;
+      actualizaEstadoModal.querySelector('.modal-body #estado').value = 'PENDIENTE';
     });
   </script>
 
