@@ -59,7 +59,16 @@ $insumos = $admin->getAllInsumos($empezar_desde, $tamano_paginas);
               </tr>
             </thead>
             <tbody>
-              <?php foreach ($insumos as $insumo) { ?>
+              <?php if (isset($_SESSION['mensaje'])) { ?>
+                <div class="alert alert-<?= $_SESSION['msg-color']; ?> alert-dismissible fade show" role="alert">
+                  <?= $_SESSION['mensaje']; ?>
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+              <?php
+                unset($_SESSION['msg-color']);
+                unset($_SESSION['mensaje']);
+              }
+              foreach ($insumos as $insumo) { ?>
                 <tr>
                   <td><?php echo $insumo['insumo_id']; ?></td>
                   <td><?php echo $insumo['descripcion']; ?></td>

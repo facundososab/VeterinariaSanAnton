@@ -70,6 +70,9 @@ $mascotas = $admin->getAllMascotas($empezar_desde, $tamano_paginas);
                 unset($_SESSION['mensaje']);
               } ?>
               <?php foreach ($mascotas as $mascota) {
+                if ($mascota['fecha_muerte']) {
+                  continue;
+                }
               ?>
                 <tr>
                   <td>
@@ -131,14 +134,16 @@ $mascotas = $admin->getAllMascotas($empezar_desde, $tamano_paginas);
 
   <!-- Modales -->
   <?php include_once './modales/altaMascotaModal.php'; ?>
-  <?php include_once './modales/modificaMascotaModal.html'; ?>
+  <?php include_once './modales/modificaMascotaModal.php'; ?>
   <?php include_once './modales/bajaMascotaModal.html'; ?>
+  <?php include_once './modales/bajaMascotaPorMuerteModal.html'; ?>
   <?php include_once './modales/historiaClinicaModal.php'; ?>
 
   <script>
     let editaModal = document.getElementById('modificaMascotaModal')
     let eliminaModal = document.getElementById('bajaMascotaModal')
     let historiaClinicaModal = document.getElementById('historiaClinicaModal')
+    let bajaMascotaPorMuerteModal = document.getElementById('bajaMascotaPorMuerteModal')
 
     editaModal.addEventListener('hide.bs.modal', event => {
       editaModal.querySelector('.modal-body #mascota_id').value = ''
@@ -152,7 +157,6 @@ $mascotas = $admin->getAllMascotas($empezar_desde, $tamano_paginas);
     editaModal.addEventListener('shown.bs.modal', event => {
       let button = event.relatedTarget
       let mascota_id = button.getAttribute('data-bs-id')
-
       let inputId = editaModal.querySelector('.modal-body #mascota_id')
       let inputNombre = editaModal.querySelector('.modal-body #nombre')
       let inputRaza = editaModal.querySelector('.modal-body #raza')
@@ -240,6 +244,14 @@ $mascotas = $admin->getAllMascotas($empezar_desde, $tamano_paginas);
             atenciones.appendChild(tr)
           })
         })
+    })
+
+    bajaMascotaPorMuerteModal.addEventListener('shown.bs.modal', event => {
+      let button = event.relatedTarget
+      let mascota_id = button.getAttribute('data-bs-id')
+
+      let inputId = bajaMascotaPorMuerteModal.querySelector('.modal-footer #id_mascota')
+      inputId.value = mascota_id
     })
   </script>
 

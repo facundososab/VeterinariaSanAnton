@@ -74,7 +74,11 @@ $atenciones = $admin->getAllAtenciones($empezar_desde, $tamano_paginas);
                 unset($_SESSION['mensaje']);
                 unset($_SESSION['msg-color']);
               }
-              foreach ($atenciones as $atencion) { ?>
+              foreach ($atenciones as $atencion) {
+                if ($atencion['mascota_fecha_muerte']) {
+                  continue;
+                }
+              ?>
                 <tr>
                   <td><?php echo $atencion['fecha_hora']; ?></td>
                   <td><?php echo ucfirst($atencion['mascota_nombre']) . ' - ' . ucfirst($atencion['raza']); ?></td>

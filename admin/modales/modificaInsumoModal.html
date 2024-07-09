@@ -44,7 +44,6 @@
               class="form-control"
               id="unidad_medida"
               name="unidad_medida"
-              required
             />
           </div>
           <div class="mb-3">
@@ -56,6 +55,7 @@
               name="cantidad"
               required
             />
+            <p id="cantidadErrorModifica" class="text-danger"></p>
           </div>
           <input type="hidden" name="insumo_id" id="insumo_id" />
         </div>
@@ -73,3 +73,21 @@
     </div>
   </div>
 </div>
+
+<script>
+  const formulario_modificaInsumo = document.getElementById(
+    'formulario_modificaInsumo'
+  );
+  const validateModificaCantidadNegativa = (event) => {
+    const cantidad = formulario_modificaInsumo.cantidad.value;
+    if (cantidad < 0) {
+      event.preventDefault();
+      cantidadErrorModifica.innerText = 'La cantidad no puede ser negativa';
+    }
+  };
+
+  formulario_modificaInsumo.addEventListener(
+    'submit',
+    validateModificaCantidadNegativa
+  );
+</script>

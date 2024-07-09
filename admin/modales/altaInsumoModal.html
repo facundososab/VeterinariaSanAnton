@@ -39,7 +39,7 @@
               class="form-control"
               id="unidad_medida"
               name="unidad_medida"
-              required
+              placeholder="Ej: 'kg'"
             />
           </div>
           <div class="mb-3">
@@ -51,6 +51,7 @@
               name="cantidad"
               required
             />
+            <p id="cantidadErrorAlta" class="form-text text-danger"></p>
           </div>
         </div>
         <div class="modal-footer">
@@ -67,3 +68,20 @@
     </div>
   </div>
 </div>
+
+<script>
+  const formulario_altaInsumo = document.getElementById(
+    'formulario_altaInsumo'
+  );
+
+  const validateCantidadNegativa = (event) => {
+    const cantidad = document.getElementById('cantidad').value;
+    if (cantidad < 0) {
+      event.preventDefault();
+      document.getElementById('cantidadErrorAlta').innerText =
+        'La cantidad no puede ser negativa';
+    }
+  };
+
+  formulario_altaInsumo.addEventListener('submit', validateCantidadNegativa);
+</script>

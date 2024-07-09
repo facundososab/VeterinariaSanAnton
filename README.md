@@ -26,15 +26,12 @@ El sistema cuenta con un sistema de login que proporciona distinitas vistas, fun
 - CRUD de insumos
 - Lectura de servicios relacionados a veterinarios
 
-## SECCIÓN
-
 ## SECCIÓN USUARIO _PELUQUERO_
 
 - CRUD de mascotas
 - CRUD de atenciones
 - CRUD de insumos
 - Lectura de servicios relacionados a peluqueros
--
 
 ## SECCIÓN USUARIO _CLIENTE_
 
