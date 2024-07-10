@@ -69,6 +69,7 @@
               name="email"
               required
             />
+            <div id="emailError" class="form-text text-danger"></div>
           </div>
           <div class="mb-3">
             <label for="clave" class="form-label">Contraseña</label>
@@ -79,6 +80,7 @@
               name="clave"
               required
             />
+            <div id="claveError" class="form-text text-danger"></div>
           </div>
         </div>
 
@@ -101,3 +103,37 @@
     </div>
   </div>
 </div>
+
+<script>
+  formAltaPersonal = document.getElementById('formulario_altaPersonal');
+
+  const validateAltaPersonal = (e) => {
+    const email = document.getElementById('email');
+    const clave = document.getElementById('clave');
+    const emailError = document.getElementById('emailError');
+    const claveError = document.getElementById('claveError');
+
+    if (!emailValidoAltaPersonal(email.value.trim())) {
+      e.preventDefault();
+      emailError.innerHTML = 'Email inválido';
+    }
+
+    if (!claveValidaAltaPersonal(clave.value.trim())) {
+      e.preventDefault();
+      claveError.innerHTML =
+        'Clave inválida. Debe tener entre 8 y 15 caracteres, al menos una letra mayúscula, una letra minúscula, un número y un carácter especial.';
+    }
+  };
+
+  const emailValidoAltaPersonal = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const claveValidaAltaPersonal = (clave) => {
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,15}/.test(
+      clave
+    );
+  };
+
+  formAltaPersonal.addEventListener('submit', validateAltaPersonal);
+</script>

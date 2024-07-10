@@ -433,7 +433,8 @@ class Admin extends Database
 
     public function getAllServicios($empezar_desde, $tamano_paginas)
     {
-        $sql = "SELECT * FROM servicios WHERE activo = 1 LIMIT $empezar_desde, $tamano_paginas";
+        $sql = "SELECT s.servicio_id, s.nombre, s.tipo, s.precio, r.nombre as rol FROM servicios s
+                INNER JOIN roles r ON s.rol_id = r.rol_id WHERE s.activo = 1 LIMIT $empezar_desde, $tamano_paginas";
         $result = $this->connect()->prepare($sql);
         $result->execute();
         if ($result->rowCount() > 0) {
@@ -459,11 +460,11 @@ class Admin extends Database
         return $row;
     }
 
-    public function altaServicio($nombre, $tipo, $precio)
+    public function altaServicio($nombre, $tipo, $precio, $rol_id)
     {
-        $sql = "INSERT INTO servicios (nombre, tipo, precio) VALUES (:nombre, :tipo, :precio)";
+        $sql = "INSERT INTO servicios (nombre, tipo, precio, rol_id) VALUES (:nombre, :tipo, :precio, :rol_id)";
         $sentencia = $this->connect()->prepare($sql);
-        $sentencia->execute(array(':nombre' => $nombre, ':tipo' => $tipo, ':precio' => $precio));
+        $sentencia->execute(array(':nombre' => $nombre, ':tipo' => $tipo, ':precio' => $precio, ':rol_id' => $rol_id));
         $sentencia->closeCursor();
         if ($sentencia->rowCount() > 0) {
             return true;
@@ -485,11 +486,11 @@ class Admin extends Database
         }
     }
 
-    public function modificaServicio($id, $nombre, $tipo, $precio)
+    public function modificaServicio($id, $nombre, $tipo, $precio, $rol_id)
     {
-        $sql = "UPDATE servicios SET nombre = :nombre, tipo = :tipo, precio = :precio WHERE servicio_id = :id";
+        $sql = "UPDATE servicios SET nombre = :nombre, tipo = :tipo, precio = :precio, rol_id = :rol_id WHERE servicio_id = :id";
         $sentencia = $this->connect()->prepare($sql);
-        $sentencia->execute([':nombre' => $nombre, ':tipo' => $tipo, ':precio' => $precio, ':id' => $id]);
+        $sentencia->execute([':nombre' => $nombre, ':tipo' => $tipo, ':precio' => $precio, ':id' => $id, ':rol_id' => $rol_id]);
         $sentencia->closeCursor();
         if ($sentencia->rowCount() > 0) {
             return true;
@@ -532,9 +533,10 @@ class Admin extends Database
                 INNER JOIN mascotas m ON a.mascota_id = m.mascota_id
                 INNER JOIN clientes c ON m.cliente_id = c.cliente_id
                 INNER JOIN personal p ON a.personal_id = p.personal_id
-                INNER JOIN servicios s ON a.servicio_id = s.servicio_id WHERE DATE(a.fecha_hora) = CURDATE()";
+                INNER JOIN servicios s ON a.servicio_id = s.servicio_id WHERE DATE(a.fecha_hora) = CURDATE() AND a.estado = 'PENDIENTE'";
         $result = $this->connect()->query($sql);
-        return $result;
+        $row = $result->fetchAll(PDO::FETCH_ASSOC);
+        return $row;
     }
 
     public function getAtencion($id)

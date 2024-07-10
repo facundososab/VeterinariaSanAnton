@@ -129,8 +129,8 @@ $personal = $admin->getAllPersonal($empezar_desde, $tamano_paginas);
       editaModal.querySelector('.modal-body #personal_id').value = ""
       editaModal.querySelector('.modal-body #nombre').value = ""
       editaModal.querySelector('.modal-body #apellido').value = ""
-      editaModal.querySelector('.modal-body #email').value = ""
-      editaModal.querySelector('.modal-body #clave').value = ""
+      editaModal.querySelector('.modal-body #emailModificaPersonal').value = ""
+      editaModal.querySelector('.modal-body #claveModificaPersonal').value = ""
       editaModal.querySelector('.modal-body #rol').value = ""
     })
 
@@ -141,9 +141,8 @@ $personal = $admin->getAllPersonal($empezar_desde, $tamano_paginas);
       let inputId = editaModal.querySelector('.modal-body #personal_id')
       let inputNombre = editaModal.querySelector('.modal-body #nombre')
       let inputApellido = editaModal.querySelector('.modal-body #apellido')
-      let inputEmail = editaModal.querySelector('.modal-body #email')
-      let inputClave = editaModal.querySelector('.modal-body #clave')
-      let inputRol = editaModal.querySelector('.modal-body #rol')
+      let inputEmail = editaModal.querySelector('.modal-body #emailModificaPersonal')
+      let inputClave = editaModal.querySelector('.modal-body #claveModificaPersonal')
 
       let url = "./getPersonal.php"
       let data = new FormData()
@@ -161,7 +160,6 @@ $personal = $admin->getAllPersonal($empezar_desde, $tamano_paginas);
           inputApellido.value = data.apellido
           inputEmail.value = data.email
           inputClave.value = data.clave
-          inputRol.value = data.rol
         })
 
     })

@@ -20,7 +20,11 @@
         ></button>
       </div>
       <div class="modal-body">
-        <form action="./modificaPersonal.php" method="post">
+        <form
+          action="./modificaPersonal.php"
+          method="post"
+          id="formulario_modificaPersonal"
+        >
           <div class="mb-3">
             <label for="nombre" class="form-label">Nombre</label>
             <input
@@ -46,20 +50,28 @@
             <input
               type="email"
               class="form-control"
-              id="email"
+              id="emailModificaPersonal"
               name="email"
               required
             />
+            <div
+              id="emailErrorModificaPersonal"
+              class="form-text text-danger"
+            ></div>
           </div>
           <div class="mb-3">
             <label for="clave" class="form-label">Clave</label>
             <input
               type="password"
               class="form-control"
-              id="clave"
+              id="claveModificaPersonal"
               name="clave"
               required
             />
+            <div
+              id="claveErrorModificaPersonal"
+              class="form-text text-danger"
+            ></div>
           </div>
           <div class="mb-3">
             <label for="rol" class="form-label">Rol</label>
@@ -88,3 +100,37 @@
     </div>
   </div>
 </div>
+
+<script>
+  formModificaPersonal = document.getElementById('formulario_modificaPersonal');
+
+  const validateModificaPersonal = (e) => {
+    const email = document.getElementById('emailModificaPersonal');
+    const clave = document.getElementById('claveModificaPersonal');
+    const emailError = document.getElementById('emailErrorModificaPersonal');
+    const claveError = document.getElementById('claveErrorModificaPersonal');
+
+    if (!emailValidoModificaPersonal(email.value.trim())) {
+      e.preventDefault();
+      emailError.innerHTML = 'Email inválido';
+    }
+
+    if (!claveValidaModificaPersonal(clave.value.trim())) {
+      e.preventDefault();
+      claveError.innerHTML =
+        'Clave inválida. Debe tener entre 8 y 15 caracteres, al menos una letra mayúscula, una letra minúscula, un número y un carácter especial.';
+    }
+  };
+
+  const emailValidoModificaPersonal = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const claveValidaModificaPersonal = (clave) => {
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,15}/.test(
+      clave
+    );
+  };
+
+  formModificaPersonal.addEventListener('submit', validateModificaPersonal);
+</script>

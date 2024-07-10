@@ -72,7 +72,7 @@ $atenciones_hoy = $admin->getAtencionesHoy();
 
                 <h2>Atenciones del día</h2>
                 <hr>
-                <?php if ($atenciones) { ?>
+                <?php if ($atenciones_hoy) { ?>
                     <div class="table-responsive">
                         <table class="table table-striped table-hover">
                             <thead>
@@ -87,11 +87,12 @@ $atenciones_hoy = $admin->getAtencionesHoy();
                             <tbody>
                                 <?php
                                 foreach ($atenciones_hoy as $atencion) { ?>
+
                                     <tr>
                                         <td><?= $atencion['fecha_hora']; ?></td>
                                         <td><?= $atencion['mascota_nombre']; ?></td>
                                         <td><?= $atencion['cliente_nombre'] . ' ' . $atencion['cliente_apellido']; ?></td>
-                                        <td><?= $atencion['servicio']; ?></td>
+                                        <td><?= $atencion['servicio_nombre']; ?></td>
                                         <td><?= $atencion['personal_nombre'] . ' ' . $atencion['personal_apellido']; ?></td>
                                     </tr>
                                 <?php } ?>
@@ -101,7 +102,7 @@ $atenciones_hoy = $admin->getAtencionesHoy();
                 <?php } else {
                 ?>
                     <div class="fs-5">
-                        <i>No hay atenciones registradas para hoy</i>
+                        <i>No hay atenciones pendientes para hoy</i>
                     </div>
                 <?php } ?>
             </article>

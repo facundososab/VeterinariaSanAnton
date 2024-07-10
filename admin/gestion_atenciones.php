@@ -90,15 +90,16 @@ $atenciones = $admin->getAllAtenciones($empezar_desde, $tamano_paginas);
                   <td><?php echo ucfirst($atencion['personal_nombre']) . ' ' . ucfirst($atencion['personal_apellido']); ?></td>
                   <td><?php echo $atencion['estado']; ?></td>
                   <td>
-                    <div class="d-flex column-gap-3">
-                      <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modificaAtencionModal" data-bs-id="<?= $atencion['atencion_id']; ?>">
+                    <div class="row row-gap-2 column-gap-1 mx-1 justify-content-center">
+                      <button type="button" class="btn btn-info col-12 col-md-10 mx-1" data-bs-toggle="modal" data-bs-target="#actualizaEstadoAtencionModal" data-bs-id="<?= $atencion['atencion_id']; ?>" data-bs-estado="<?= $atencion['estado']; ?>">
+                        <i class="bi bi-arrow-repeat"></i> Actualizar estado
+                      </button>
+                      <button type="button" class="btn btn-warning col-md-5 col-12" data-bs-toggle="modal" data-bs-target="#modificaAtencionModal" data-bs-id="<?= $atencion['atencion_id']; ?>">
                         <i class="bi bi-pencil-fill"></i> Editar
                       </button>
-                      <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#bajaAtencionModal" data-bs-id="<?= $atencion['atencion_id']; ?>">
-                        <i class=" bi bi-trash-fill"></i> Eliminar
-                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#actualizaEstadoAtencionModal" data-bs-id="<?= $atencion['atencion_id']; ?>">
-                          <i class="bi bi-arrow-repeat"></i> Actualizar estado
-                        </button>
+                      <button type="button" class="btn btn-danger col-md-5 col-12" data-bs-toggle="modal" data-bs-target="#bajaAtencionModal" data-bs-id="<?= $atencion['atencion_id']; ?>">
+                        <i class=" bi bi-trash-fill"></i>Eliminar
+                      </button>
                     </div>
                   </td>
                 <?php } ?>
@@ -190,7 +191,7 @@ $atenciones = $admin->getAllAtenciones($empezar_desde, $tamano_paginas);
       let button = event.relatedTarget;
       let id = button.getAttribute('data-bs-id');
       actualizaEstadoModal.querySelector('.modal-body #atencion_id').value = id;
-      actualizaEstadoModal.querySelector('.modal-body #estado').value = 'PENDIENTE';
+      actualizaEstadoModal.querySelector('.modal-body #estado').value = button.getAttribute('data-bs-estado');
     });
   </script>
 

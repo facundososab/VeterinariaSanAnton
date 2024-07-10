@@ -26,16 +26,6 @@
       >
         <div class="modal-body">
           <div class="mb-3">
-            <label for="nombre" class="form-label">Nombre</label>
-            <input
-              type="text"
-              class="form-control"
-              id="nombre"
-              name="nombre"
-              required
-            />
-          </div>
-          <div class="mb-3">
             <label for="tipo" class="form-label">Tipo</label>
             <select
               type="number"
@@ -54,6 +44,35 @@
             </select>
           </div>
           <div class="mb-3">
+            <label for="descripcion" class="form-label"
+              >Rol de personal a cargo</label
+            >
+            <select
+              type="select"
+              class="form-select"
+              aria-label="Tipo de personal a cargo"
+              id="rol_id"
+              name="rol_id"
+              required
+            >
+              <option value="" selected>
+                Escoja el rol de personal a cargo
+              </option>
+              <option value="2" name="Veterinario">Veterinario</option>
+              <option value="3" name="Peluquero">Peluquero</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nombre"
+              name="nombre"
+              required
+            />
+          </div>
+          <div class="mb-3">
             <label for="precio" class="form-label">Precio</label>
             <input
               type="text"
@@ -62,6 +81,7 @@
               name="precio"
               required
             />
+            <p id="precioError" class="text-danger"></p>
           </div>
         </div>
         <div class="modal-footer">
@@ -83,3 +103,18 @@
     </div>
   </div>
 </div>
+
+<script>
+  const formAltaServicio = document.getElementById('formulario_altaServicio');
+
+  const validatePrecioNegativo = (event) => {
+    const precio = document.getElementById('precio').value;
+    if (precio < 0) {
+      event.preventDefault();
+      document.getElementById('precioError').innerText =
+        'El precio no puede ser negativo';
+    }
+  };
+
+  formAltaServicio.addEventListener('submit', validatePrecioNegativo);
+</script>

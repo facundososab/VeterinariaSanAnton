@@ -20,27 +20,11 @@
         ></button>
       </div>
       <div class="modal-body">
-        <form action="./modificaServicio.php" method="post">
-          <div class="mb-3">
-            <label for="nombre" class="form-label">Nombre</label>
-            <input
-              type="text"
-              class="form-control"
-              id="nombre"
-              name="nombre"
-              required
-            />
-          </div>
-          <div class="mb-3">
-            <label for="precio" class="form-label">Precio</label>
-            <input
-              type="number"
-              class="form-control"
-              id="precio"
-              name="precio"
-              required
-            />
-          </div>
+        <form
+          action="./modificaServicio.php"
+          method="post"
+          id="formulario_modificaServicio"
+        >
           <div class="mb-3">
             <label for="tipo" class="form-label">Tipo</label>
             <select
@@ -59,6 +43,46 @@
               <option value="OTROS SERVICIOS" name="3">OTROS SERVICIOS</option>
             </select>
           </div>
+          <div class="mb-3">
+            <label for="descripcion" class="form-label"
+              >Rol de personal a cargo</label
+            >
+            <select
+              type="select"
+              class="form-select"
+              aria-label="Tipo de personal a cargo"
+              id="rol_id"
+              name="rol_id"
+              required
+            >
+              <option value="" selected>
+                Escoja el rol de personal a cargo
+              </option>
+              <option value="2" name="Veterinario">Veterinario</option>
+              <option value="3" name="Peluquero">Peluquero</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nombre"
+              name="nombre"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="precio" class="form-label">Precio</label>
+            <input
+              type="number"
+              class="form-control"
+              id="precioModificado"
+              name="precio"
+              required
+            />
+            <div id="precioModificadoError" class="form-text text-danger"></div>
+          </div>
           <input type="hidden" name="servicio_id" id="servicio_id" />
           <div class="modal-footer">
             <button
@@ -75,3 +99,23 @@
     </div>
   </div>
 </div>
+
+<script>
+  const formModificaServicio = document.getElementById(
+    'formulario_modificaServicio'
+  );
+
+  const validatePrecioNegativoModifica = (event) => {
+    const precio = document.getElementById('precioModificado').value;
+    if (precio < 0) {
+      event.preventDefault();
+      document.getElementById('precioModificadoError').innerText =
+        'El precio no puede ser negativo';
+    }
+  };
+
+  formModificaServicio.addEventListener(
+    'submit',
+    validatePrecioNegativoModifica
+  );
+</script>

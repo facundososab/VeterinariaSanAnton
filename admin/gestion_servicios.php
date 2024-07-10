@@ -56,6 +56,7 @@ $servicios = $admin->getAllServicios($empezar_desde, $tamano_paginas);
               <tr>
                 <th scope="col">Nombre</th>
                 <th scope="col">Tipo</th>
+                <th scope="col">Rol de personal a cargo</th>
                 <th scope="col">Precio</th>
                 <th scope="col">Acciones</th>
               </tr>
@@ -74,6 +75,7 @@ $servicios = $admin->getAllServicios($empezar_desde, $tamano_paginas);
                 <tr>
                   <td><?php echo $servicio['nombre']; ?></td>
                   <td><?php echo $servicio['tipo']; ?></td>
+                  <td><?php echo $servicio['rol']; ?></td>
                   <td>$ <?php echo $servicio['precio']; ?></td>
                   <td class="d-flex column-gap-3 ms-auto">
                     <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modificaServicioModal" data-bs-id="<?= $servicio['servicio_id']; ?>">
@@ -127,8 +129,9 @@ $servicios = $admin->getAllServicios($empezar_desde, $tamano_paginas);
 
     modificaServicioModal.addEventListener('hide.bs.modal', event => {
       modificaServicioModal.querySelector('.modal-body #servicio_id').value = '';
+      modificaServicioModal.querySelector('.modal-body #rol_id').value = '';
       modificaServicioModal.querySelector('.modal-body #nombre').value = '';
-      modificaServicioModal.querySelector('.modal-body #precio').value = '';
+      modificaServicioModal.querySelector('.modal-body #precioModificado').value = '';
       modificaServicioModal.querySelector('.modal-body #tipo').value = '';
     });
 
@@ -138,8 +141,9 @@ $servicios = $admin->getAllServicios($empezar_desde, $tamano_paginas);
 
       let inputId = modificaServicioModal.querySelector('.modal-body #servicio_id');
       let inputNombre = modificaServicioModal.querySelector('.modal-body #nombre');
-      let inputPrecio = modificaServicioModal.querySelector('.modal-body #precio');
+      let inputPrecio = modificaServicioModal.querySelector('.modal-body #precioModificado');
       let inputTipo = modificaServicioModal.querySelector('.modal-body #tipo');
+      let inputPersonal = modificaServicioModal.querySelector('.modal-body #rol_id');
 
       let url = "getServicio.php";
       let data = new FormData();
@@ -156,6 +160,7 @@ $servicios = $admin->getAllServicios($empezar_desde, $tamano_paginas);
           inputNombre.value = data.nombre;
           inputPrecio.value = data.precio;
           inputTipo.value = data.tipo;
+          inputPersonal.value = data.rol_id;
         });
     });
 

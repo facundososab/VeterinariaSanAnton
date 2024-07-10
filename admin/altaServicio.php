@@ -14,9 +14,10 @@ $admin = new Admin();
 $nombre = $_POST['nombre'];
 $precio = $_POST['precio'];
 $tipo = $_POST['tipo'];
+$rol_id = $_POST['rol_id'];
 
 try {
-  if ($admin->altaServicio($nombre, $tipo, $precio)) {
+  if ($admin->altaServicio($nombre, $tipo, $precio, $rol_id)) {
     $_SESSION['mensaje'] = 'Servicio registrado con éxito';
     $_SESSION['msg-color'] = 'success';
   }
