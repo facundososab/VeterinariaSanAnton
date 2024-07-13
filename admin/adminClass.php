@@ -9,21 +9,7 @@ class Admin extends Database
         parent::__construct();
     }
 
-    public function getPersonalId($consulta)
-    {
-        /* Busca personal por nombre o apellido   */
-        $sql = "SELECT * FROM personal WHERE match(nombre, apellido) AGAINST ('$consulta' IN BOOLEAN MODE)";
-        $result = $this->connect()->query($sql);
-        return $result;
-    }
 
-    public function getClienteId($consulta)
-    {
-        /* Busca cliente por nombre o apellido   */
-        $sql = "SELECT * FROM clientes WHERE match(nombre, apellido) AGAINST ('$consulta' IN BOOLEAN MODE)";
-        $result = $this->connect()->query($sql);
-        return $result;
-    }
 
     /**************************PERSONAL******************************/
 
@@ -65,6 +51,14 @@ class Admin extends Database
         $result->execute([':id' => $id]);
         $row = $result->fetch(PDO::FETCH_ASSOC);
         return $row;
+    }
+
+    public function getPersonalId($consulta)
+    {
+        /* Busca personal por nombre o apellido   */
+        $sql = "SELECT * FROM personal WHERE match(nombre, apellido) AGAINST ('$consulta' IN BOOLEAN MODE)";
+        $result = $this->connect()->query($sql);
+        return $result;
     }
 
     public function getPersonalByServicioId($servicio_id)
@@ -116,11 +110,11 @@ class Admin extends Database
         }
     }
 
-    public function personalExiste($nombre, $apellido)
+    public function personalExiste($id)
     {
-        $sql = "SELECT * FROM personal WHERE nombre = '$nombre' AND apellido = '$apellido'";
+        $sql = "SELECT * FROM personal WHERE personal_id = :id";
         $result = $this->connect()->prepare($sql);
-        $result->execute();
+        $result->execute([':id' => $id]);
         if ($result->rowCount() > 0) {
             return true;
         } else {
@@ -204,6 +198,19 @@ class Admin extends Database
         }
     }
 
+    public function clienteExiste($id)
+    {
+        $sql = "SELECT * FROM clientes WHERE cliente_id = :id";
+        $result = $this->connect()->prepare($sql);
+        $result->execute([':id' => $id]);
+        $result->closeCursor();
+        if ($result->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**************************MASCOTAS******************************/
 
     public function totalMascotas()
@@ -244,15 +251,6 @@ class Admin extends Database
         return $result;
     }
 
-    public function getMascotaId($nombre, $raza, $fecha_nac, $cliente_id)
-    {
-        $sql = "SELECT mascota_id FROM mascotas WHERE nombre = :nombre AND raza = :raza AND fecha_nac = :fecha_nac AND cliente_id = :cliente_id";
-        $sentencia = $this->connect()->prepare($sql);
-        $sentencia->execute(array(':nombre' => $nombre, ':raza' => $raza, ':fecha_nac' => $fecha_nac, ':cliente_id' => $cliente_id));
-        $row = $sentencia->fetch(PDO::FETCH_ASSOC);
-        return $row;
-    }
-
     public function getMascota($id)
     {
         $sql = "SELECT m.mascota_id, m.nombre, m.raza, m.color, m.fecha_nac, m.fecha_muerte, c.nombre as cliente_nombre, c.apellido as cliente_apellido, c.email as cliente_email FROM mascotas m
@@ -265,12 +263,13 @@ class Admin extends Database
 
     public function altaMascota($nombre, $raza, $color, $fecha_nac, $cliente_id)
     {
+        $conexion = $this->connect();
         $sql = "INSERT INTO mascotas (nombre, raza, color, fecha_nac, cliente_id) VALUES (:nombre, :raza, :color, :fecha_nac, :cliente_id)";
-        $sentencia = $this->connect()->prepare($sql);
-        $sentencia->execute(array(':nombre' => $nombre, ':raza' => $raza, ':color' => $color, ':fecha_nac' => $fecha_nac, ':cliente_id' => $cliente_id));
+        $sentencia = $conexion->prepare($sql);
+        $sentencia->execute([':nombre' => $nombre, ':raza' => $raza, ':color' => $color, ':fecha_nac' => $fecha_nac, ':cliente_id' => $cliente_id]);
         $sentencia->closeCursor();
         if ($sentencia->rowCount() > 0) {
-            return true;
+            return $conexion->lastInsertId();
         } else {
             return false;
         }
@@ -304,11 +303,24 @@ class Admin extends Database
 
     public function modificaMascota($id, $nombre, $raza, $color, $fecha_nac)
     {
-        $sql = "UPDATE mascotas SET nombre = :nombre, raza = :raza, color = :color, fecha_nac = :fecha_nac WHERE mascota_id = :id";
-        $sentencia = $this->connect()->prepare($sql);
-        $sentencia->execute([':nombre' => $nombre,  ':raza' => $raza, ':color' => $color, ':fecha_nac' => $fecha_nac, ':id' => $id]);
-        $sentencia->closeCursor();
-        if ($sentencia->rowCount() > 0) {
+        try {
+            $sql = "UPDATE mascotas SET nombre = :nombre, raza = :raza, color = :color, fecha_nac = :fecha_nac WHERE mascota_id = :id";
+            $sentencia = $this->connect()->prepare($sql);
+            $sentencia->execute([':nombre' => $nombre,  ':raza' => $raza, ':color' => $color, ':fecha_nac' => $fecha_nac, ':id' => $id]);
+            $sentencia->closeCursor();
+            //Devuelvo un true por si la modificacion se ejecuto bien pero no se modifico nada ya que el rowCount devolveria 0. Para el caso de subir imagen
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function mascotaExiste($id)
+    {
+        $sql = "SELECT * FROM mascotas WHERE mascota_id = :id";
+        $result = $this->connect()->prepare($sql);
+        $result->execute([':id' => $id]);
+        if ($result->rowCount() > 0) {
             return true;
         } else {
             return false;
@@ -379,6 +391,18 @@ class Admin extends Database
         $sentencia->execute([':descripcion' => $descripcion, ':unidad_medida' => $unidadMedida, ':cantidad' => $cantidad, ':id' => $id]);
         $sentencia->closeCursor();
         if ($sentencia->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function insumoExiste($id)
+    {
+        $sql = "SELECT * FROM insumos WHERE insumo_id = :id";
+        $result = $this->connect()->prepare($sql);
+        $result->execute([':id' => $id]);
+        if ($result->rowCount() > 0) {
             return true;
         } else {
             return false;
@@ -499,6 +523,18 @@ class Admin extends Database
         }
     }
 
+    public function servicioExiste($id)
+    {
+        $sql = "SELECT * FROM servicios WHERE servicio_id = :id";
+        $result = $this->connect()->prepare($sql);
+        $result->execute([':id' => $id]);
+        if ($result->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
 
     /**************************ATENCIONES******************************/
@@ -609,6 +645,18 @@ class Admin extends Database
         $sentencia->execute([':estado' => $estado, ':atencion_id' => $atencion_id]);
         $sentencia->closeCursor();
         if ($sentencia->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function atencionExiste($id)
+    {
+        $sql = "SELECT * FROM atenciones WHERE atencion_id = :id";
+        $result = $this->connect()->prepare($sql);
+        $result->execute([':id' => $id]);
+        if ($result->rowCount() > 0) {
             return true;
         } else {
             return false;

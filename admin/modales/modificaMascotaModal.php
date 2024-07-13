@@ -7,7 +7,7 @@
         </h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form action="./modificaMascota.php" method="post" id="formModificaMascota">
+      <form action="./modificaMascota.php" method="post" id="formModificaMascota" enctype="multipart/form-data">
         <div class="modal-body">
           <div class="mb-3">
             <label for="nombre" class="form-label">Nombre de la mascota</label>
@@ -28,7 +28,7 @@
           </div>
           <div class="mb-3">
             <label for="img_mascota" class="form-label">Imagen de la mascota</label>
-            <input type="file" class="form-control" id="img_mascota" name="img_mascota" accept="image/jpg, image/jpeg" />
+            <input type="file" class="form-control" id="img_mascota" name="img_mascota" />
           </div>
           <div class="mb-3">
             <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#bajaMascotaPorMuerteModal" data-bs-id="<?= $mascota['mascota_id']; ?>">Dar de baja mascota por muerte</button>

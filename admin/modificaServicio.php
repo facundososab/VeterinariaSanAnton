@@ -17,6 +17,37 @@ $precio = $_POST['precio'];
 $tipo = $_POST['tipo'];
 $rol_id = $_POST['rol_id'];
 
+/***** VALIDACIONES *****/
+
+$errores = [];
+
+if (empty($nombre)) {
+  $errores[] = 'Debe ingresar un nombre';
+}
+
+if (empty($precio)) {
+  $errores[] = 'Debe ingresar un precio';
+}
+
+if (!is_numeric($precio)) {
+  $errores[] = 'El precio debe ser un número valido. Si el precio es decimal, utilice el punto como separador de decimales.';
+}
+
+if ($precio < 0) {
+  $errores[] = 'El precio no puede ser negativo';
+}
+
+if (!$admin->servicioExiste($servicio_id)) {
+  $errores[] = 'El servicio que intenta modificar no existe';
+}
+
+if (count($errores) > 0) {
+  $_SESSION['mensaje'] = implode('<br>', $errores);
+  $_SESSION['msg-color'] = 'danger';
+  header('Location: ./gestion_servicios.php');
+  exit;
+}
+
 try {
   if ($admin->modificaServicio($servicio_id, $nombre, $tipo, $precio, $rol_id)) {
     $_SESSION['mensaje'] = 'Servicio modificado con éxito';

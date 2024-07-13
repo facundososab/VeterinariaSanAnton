@@ -73,17 +73,20 @@ $mascotas = $admin->getAllMascotas($empezar_desde, $tamano_paginas);
                 if ($mascota['fecha_muerte']) {
                   continue;
                 }
+                $imagen = '../img_mascotas/' . $mascota['mascota_id'] . '.jpg';
+                if (!file_exists($imagen)) {
+                  $imagen = '../img_mascotas/default.jpg';
+                }
               ?>
                 <tr>
                   <td>
                     <div class="d-flex">
                       <div>
-                        <img src="../img_mascotas/<?= $mascota['mascota_id']; ?>.jpg" alt="<?= $mascota['nombre']; ?>" style="width: 80px; height: auto;">
+                        <img src=<?= $imagen ?> alt="<?= $mascota['nombre']; ?>" style="width: 80px; height: auto;">
+                        <div class="flex-grow-1 align-self-center">
+                          <?= ucfirst($mascota['nombre']); ?>
+                        </div>
                       </div>
-                      <div class="flex-grow-1 align-self-center">
-                        <?= ucfirst($mascota['nombre']); ?>
-                      </div>
-                    </div>
                   </td>
                   <td><?= ucfirst($mascota['raza']); ?></td>
                   <td><?= ucfirst($mascota['color']); ?></td>

@@ -15,6 +15,37 @@ $descripcion = $_POST['descripcion'];
 $unidad_medida = $_POST['unidad_medida'];
 $cantidad = $_POST['cantidad'];
 
+/***** VALIDACIONES *****/
+
+$errores = [];
+
+if (empty($descripcion)) {
+  $errores[] = 'Debe ingresar una descripción';
+}
+
+if (empty($unidad_medida)) {
+  $errores[] = 'Debe ingresar una unidad de medida';
+}
+
+if (empty($cantidad)) {
+  $errores[] = 'Debe ingresar una cantidad';
+}
+
+if (!is_numeric($cantidad)) {
+  $errores[] = 'La cantidad debe ser un número';
+}
+
+if ($cantidad < 0) {
+  $errores[] = 'La cantidad no puede ser negativa';
+}
+
+if (count($errores) > 0) {
+  $_SESSION['mensaje'] = implode('<br>', $errores);
+  $_SESSION['msg-color'] = 'danger';
+  header('Location: ./gestion_insumos.php');
+  exit;
+}
+
 try {
 
   if ($admin->altaInsumo($descripcion, $unidad_medida, $cantidad)) {

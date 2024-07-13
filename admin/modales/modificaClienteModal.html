@@ -109,18 +109,17 @@
   const formModificaCliente = document.getElementById('modificaClienteForm');
 
   const validateModificaCliente = (e) => {
-    e.preventDefault();
-
     const email = document.getElementById('email');
 
-    if (!emailValido(email.value.trim())) {
+    if (!emailValidoModifica(email.value.trim())) {
+      e.preventDefault();
       emailError.innerHTML = 'Email inválido';
     } else {
-      formModificaCliente.submit();
+      emailError.innerHTML = '';
     }
   };
 
-  const emailValido = (email) => {
+  const emailValidoModifica = (email) => {
     return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
   };
 

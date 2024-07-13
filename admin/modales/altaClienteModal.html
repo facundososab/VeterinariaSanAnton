@@ -123,44 +123,33 @@
   const formAltaCliente = document.getElementById('formulario_altaCliente');
 
   const validateAltaCliente = (e) => {
-    e.preventDefault();
     const email = document.getElementById('email');
     const clave = document.getElementById('clave');
 
-    if (!emailValido(email.value.trim())) {
+    if (!emailValidoAlta(email.value.trim())) {
+      e.preventDefault();
       emailError.innerHTML = 'Email inválido';
     } else {
       emailError.innerHTML = '';
     }
 
-    if (!claveValida(clave.value.trim())) {
+    if (!claveValidaAlta(clave.value.trim())) {
+      e.preventDefault();
       claveError.innerHTML =
         'Clave inválida. Debe tener entre 8 y 15 caracteres, al menos una letra mayúscula, una letra minúscula, un número y un carácter especial.';
     } else {
       claveError.innerHTML = '';
     }
-
-    if (
-      emailValido(email.value) &&
-      claveValida(clave.value) &&
-      telefonoValido(telefono.value)
-    ) {
-      formAltaCliente.submit();
-    }
   };
 
-  const emailValido = (email) => {
+  const emailValidoAlta = (email) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
 
-  const claveValida = (clave) => {
-    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,15}/.test(
+  const claveValidaAlta = (clave) => {
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])([A-Za-z\d$@$!%*?&]|[^ ]){8,15}$/.test(
       clave
     );
-  };
-
-  const telefonoValido = (telefono) => {
-    return /^[0-9]{10}$/.test(telefono);
   };
 
   formAltaCliente.addEventListener('submit', validateAltaCliente);

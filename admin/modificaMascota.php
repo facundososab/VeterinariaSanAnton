@@ -17,44 +17,65 @@ $raza = $_POST['raza'];
 $color = $_POST['color'];
 $fecha_nac = $_POST['fecha_nac'];
 
+/***** VALIDACIONES *****/
+
+$errores = [];
+
+if (empty($nombre_mascota)) {
+  $errores[] = 'Debe ingresar un nombre';
+}
+
+if (empty($raza)) {
+  $errores[] = 'Debe ingresar una raza';
+}
+
+if (empty($color)) {
+  $errores[] = 'Debe ingresar un color';
+}
+
+if (empty($fecha_nac)) {
+  $errores[] = 'Debe ingresar una fecha de nacimiento';
+}
+
+if (!$admin->mascotaExiste($mascota_id)) {
+  $errores[] = 'La mascota que intenta modificar no existe';
+}
+
+if (count($errores) > 0) {
+  $_SESSION['mensaje'] = implode('<br>', $errores);
+  $_SESSION['msg-color'] = 'danger';
+  header('Location: ./gestion_mascotas.php');
+  exit;
+}
+
 
 try {
+  $_SESSION['mensaje'] = 'Mascota modificada correctamente';
+  $_SESSION['msg-color'] = 'success';
 
-  if ($mascota = $admin->modificaMascota($mascota_id, $nombre_mascota, $raza, $color, $fecha_nac)) {
+  if ($admin->modificaMascota($mascota_id, $nombre_mascota, $raza, $color, $fecha_nac)) {
+    if ($_FILES['img_mascota']['error'] == UPLOAD_ERR_OK) {
 
-    $_SESSION['mensaje'] = 'La mascota se modificó correctamente';
-    $_SESSION['msg-color'] = 'success';
+      $permitidos = array("image/jpg", "image/jpeg");
 
-    $imagen = $_FILES['img_mascota']['name'];
+      if (in_array($_FILES['img_mascota']['type'], $permitidos)) {
+        $dir = "../img_mascotas";
 
-    if (isset($imagen)) {
+        $info_img = pathinfo($_FILES['img_mascota']['name']);
+        $extension = $info_img['extension'];
 
-      if ($_FILES['img_mascota']['error'] == UPLOAD_ERR_OK) {
-        $permitidos = array("image/jpg");
-        if (in_array($_FILES['img_mascota']['type'], $permitidos)) {
+        $imagen = $dir . '/' . $mascota_id . '.' . $extension;
 
-          $dir = "img_mascotas";
+        if (!file_exists($dir)) {
+          mkdir($dir, 0777, true);
+        }
 
-          $info_img = pathinfo($_FILES['img_mascota']['name']);
-
-
-          $imagen = $dir . '/' . $mascota_id . '.jpg';
-
-          if (!file_exists($dir)) {
-            mkdir($dir, 0777);
-          }
-
-          if (!move_uploaded_file($_FILES['img_mascota']['tmp_name'], $imagen)) {
-            $_SESSION['mensaje'] .= '<br>Error al guardar imagen';
-            $_SESSION['msg-color'] = 'danger';
-          }
-        } else {
-          $_SESSION['mensaje'] = '<br>Formato de imágen no permitido';
+        if (!move_uploaded_file($_FILES['img_mascota']['tmp_name'], $imagen)) {
+          $_SESSION['mensaje'] .= '<br>Error al guardar imagen';
           $_SESSION['msg-color'] = 'danger';
         }
       } else {
-
-        $_SESSION['mensaje'] = 'Error al subir imagen';
+        $_SESSION['mensaje'] .= '<br>Formato de imágen no permitido: ' . $_FILES['img_mascota']['type'] . '. Solo se permiten jpg y jpeg';
         $_SESSION['msg-color'] = 'danger';
       }
     }

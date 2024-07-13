@@ -15,9 +15,33 @@ $atencion_id = $_POST['atencion_id'];
 $fecha_hora = $_POST['fecha_hora'];
 $titulo = $_POST['titulo'];
 $descripcion = $_POST['descripcion'];
-$mascota_id = $_POST['mascota_id'];
-$servicio_id = $_POST['servicio_id'];
-$personal_id = $_POST['personal_id'];
+
+/***** VALIDACIONES *****/
+
+$errores = [];
+
+if (empty($fecha_hora)) {
+  $errores[] = 'Debe ingresar una fecha y hora';
+}
+
+if (empty($titulo)) {
+  $errores[] = 'Debe ingresar un título';
+}
+
+if (empty($descripcion)) {
+  $errores[] = 'Debe ingresar una descripción';
+}
+
+if (!$admin->atencionExiste($atencion_id)) {
+  $errores[] = 'La atención que intenta modificar no existe';
+}
+
+if (count($errores) > 0) {
+  $_SESSION['mensaje'] = implode('<br>', $errores);
+  $_SESSION['msg-color'] = 'danger';
+  header('Location: ./gestion_atenciones.php');
+  exit;
+}
 
 try {
 
