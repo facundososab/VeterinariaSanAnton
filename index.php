@@ -85,7 +85,7 @@ require_once('./config/app.php');
         </article>
       </section>
     </div>
-  </main>';
+  </main>
 
   <?php include_once('./footer.php'); ?>
 
