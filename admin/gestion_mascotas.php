@@ -18,11 +18,15 @@ if (isset($_GET["pagina"])) {
   $pagina = 1;
 }
 
-$total_mascotas = $admin->totalMascotas();
-
 $empezar_desde = ($pagina - 1) * $tamano_paginas;
 
-$mascotas = $admin->getAllMascotas($empezar_desde, $tamano_paginas);
+if (isset($_POST['buscadorMascotas']) && !empty($_POST['buscadorMascotas'])) {
+  $mascotas = $admin->getMascotasByNombreORaza($_POST['buscadorMascotas'], $empezar_desde, $tamano_paginas);
+  $total_mascotas = count($mascotas);
+} else {
+  $mascotas = $admin->getAllMascotas($empezar_desde, $tamano_paginas);
+  $total_mascotas = count($mascotas);
+}
 
 ?>
 
@@ -45,6 +49,14 @@ $mascotas = $admin->getAllMascotas($empezar_desde, $tamano_paginas);
         </button>
       </div>
       <hr />
+      <nav class="navbar">
+        <div class="container-fluid justify-content-end">
+          <form class="d-flex" role="search" id="formBuscadorMascotas" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+            <input class="form-control me-2" type="search" placeholder="Nombre o raza" aria-label="Buscar" name="buscadorMascotas">
+            <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i></button>
+          </form>
+        </div>
+      </nav>
       <!-- Verificar si hay mascotas registradas -->
       <?php if ($mascotas) { ?>
         <div class="table-responsive mb-5">
@@ -113,27 +125,27 @@ $mascotas = $admin->getAllMascotas($empezar_desde, $tamano_paginas);
         </div>
       <?php } ?>
     </div>
-
-    <footer class="footer mt-auto py-3 bg-light fixed-bottom">
-      <nav aria-label="navigation-mascotas">
-        <ul class="pagination justify-content-center">
-          <?php
-          $total_paginas = ceil($total_mascotas / $tamano_paginas);
-          ?>
-
-          <?php for ($i = 1; $i <= $total_paginas; $i++) {
-            if ($i == $pagina) {
-              echo "<li class='page-item active'><a class='page-link' href='gestion_mascotas.php?pagina=$i'>$i</a></li>";
-            } else {
-              echo "<li class='page-item'><a class='page-link' href='gestion_mascotas.php?pagina=$i'>$i</a></li>";
-            }
-          } ?>
-
-        </ul>
-      </nav>
-    </footer>
-
   </main>
+
+
+  <footer class="footer mt-auto py-3 bg-light fixed-bottom">
+    <nav aria-label="navigation-mascotas">
+      <ul class="pagination justify-content-center">
+        <?php
+        $total_paginas = ceil($total_mascotas / $tamano_paginas);
+        ?>
+
+        <?php for ($i = 1; $i <= $total_paginas; $i++) {
+          if ($i == $pagina) {
+            echo "<li class='page-item active'><a class='page-link' href='gestion_mascotas.php?pagina=$i'>$i</a></li>";
+          } else {
+            echo "<li class='page-item'><a class='page-link' href='gestion_mascotas.php?pagina=$i'>$i</a></li>";
+          }
+        } ?>
+
+      </ul>
+    </nav>
+  </footer>
 
   <!-- Modales -->
   <?php include_once './modales/altaMascotaModal.php'; ?>

@@ -35,14 +35,6 @@ class Admin extends Database
         }
     }
 
-    public function showAllPersonal()
-    {
-        $sql = "SELECT p.personal_id, p.nombre, p.apellido, p.email, r.nombre as rol FROM personal p
-                INNER JOIN roles r ON p.rol_id = r.rol_id WHERE p.rol_id != 1";
-        $result = $this->connect()->query($sql);
-        return $result;
-    }
-
     public function getPersonal($id)
     {
         $sql = "SELECT p.personal_id, p.nombre, p.apellido, p.email, p.clave, r.nombre as rol FROM personal p  
@@ -51,14 +43,6 @@ class Admin extends Database
         $result->execute([':id' => $id]);
         $row = $result->fetch(PDO::FETCH_ASSOC);
         return $row;
-    }
-
-    public function getPersonalId($consulta)
-    {
-        /* Busca personal por nombre o apellido   */
-        $sql = "SELECT * FROM personal WHERE match(nombre, apellido) AGAINST ('$consulta' IN BOOLEAN MODE)";
-        $result = $this->connect()->query($sql);
-        return $result;
     }
 
     public function getPersonalByServicioId($servicio_id)
@@ -229,19 +213,27 @@ class Admin extends Database
                 INNER JOIN clientes c ON m.cliente_id = c.cliente_id LIMIT $empezar_desde, $tamano_paginas";
         $result = $this->connect()->prepare($sql);
         $result->execute();
-        if ($result->rowCount() > 0) {
+        $result = $result->fetchAll(PDO::FETCH_ASSOC);
+        if ($result) {
             return $result;
         } else {
             return false;
         }
     }
 
-    public function showAllMascotas()
+    public function getMascotasByNombreORaza($nombreORaza, $empezar_desde, $tamano_paginas)
     {
-        $sql = "SELECT * FROM mascotas";
-        $result = $this->connect()->query($sql);
-        return $result;
+        $sql = "SELECT * FROM mascotas WHERE MATCH(nombre, raza) AGAINST (:nombreORaza) LIMIT $empezar_desde, $tamano_paginas";
+        $result = $this->connect()->prepare($sql);
+        $result->execute([':nombreORaza' => $nombreORaza]);
+        $result = $result->fetchAll(PDO::FETCH_ASSOC);
+        if ($result) {
+            return $result;
+        } else {
+            return false;
+        }
     }
+
 
     public function showAllMascotasConCliente()
     {
@@ -549,7 +541,21 @@ class Admin extends Database
 
     public function getAllAtenciones($empezar_desde, $tamano_paginas)
     {
-        $sql = "SELECT a.atencion_id, a.fecha_hora, a.titulo, a.descripcion, a.estado, m.nombre as mascota_nombre, m.fecha_muerte as mascota_fecha_muerte, m.raza, p.nombre as personal_nombre, p.apellido as personal_apellido, c.nombre as cliente_nombre, c.apellido as cliente_apellido, s.nombre as servicio_nombre FROM atenciones a
+        $sql = "SELECT 
+                    a.atencion_id, 
+                    DATE_FORMAT(a.fecha_hora, '%d/%m/%Y %H:%i:%s') as fecha_hora, 
+                    a.titulo, 
+                    a.descripcion, 
+                    a.estado, 
+                    m.nombre as mascota_nombre, 
+                    m.fecha_muerte as mascota_fecha_muerte, 
+                    m.raza, 
+                    p.nombre as personal_nombre, 
+                    p.apellido as personal_apellido, 
+                    c.nombre as cliente_nombre, 
+                    c.apellido as cliente_apellido, 
+                    s.nombre as servicio_nombre 
+                FROM atenciones a
                 INNER JOIN mascotas m ON a.mascota_id = m.mascota_id
                 INNER JOIN clientes c ON m.cliente_id = c.cliente_id
                 INNER JOIN personal p ON a.personal_id = p.personal_id
@@ -577,7 +583,7 @@ class Admin extends Database
 
     public function getAtencion($id)
     {
-        $sql = "SELECT a.atencion_id, a.fecha_hora, a.titulo, a.descripcion, m.nombre as mascota_nombre, m.raza, p.nombre as personal_nombre, p.apellido as personal_apellido, c.nombre as cliente_nombre, c.apellido as cliente_apellido, s.nombre as servicio_nombre FROM atenciones a
+        $sql = "SELECT a.atencion_id, a.fecha_hora, a.titulo, a.descripcion, m.mascota_id, m.nombre as mascota_nombre, m.raza, p.personal_id, p.nombre as personal_nombre, p.apellido as personal_apellido, c.nombre as cliente_nombre, c.apellido as cliente_apellido, s.servicio_id, s.nombre as servicio_nombre FROM atenciones a
                 INNER JOIN mascotas m ON a.mascota_id = m.mascota_id
                 INNER JOIN clientes c ON m.cliente_id = c.cliente_id
                 INNER JOIN personal p ON a.personal_id = p.personal_id
@@ -625,11 +631,11 @@ class Admin extends Database
         }
     }
 
-    public function modificaAtencion($id, $fecha_hora, $titulo, $descripcion)
+    public function modificaAtencion($id, $fecha_hora, $titulo, $descripcion, $mascota_id, $servicio_id, $personal_id)
     {
-        $sql = "UPDATE atenciones SET fecha_hora = :fecha_hora, titulo = :titulo, descripcion = :descripcion WHERE atencion_id = :id";
+        $sql = "UPDATE atenciones SET fecha_hora = :fecha_hora, titulo = :titulo, descripcion = :descripcion, mascota_id = :mascota_id, servicio_id = :servicio_id, personal_id = :personal_id WHERE atencion_id = :id";
         $sentencia = $this->connect()->prepare($sql);
-        $sentencia->execute([':fecha_hora' => $fecha_hora, ':titulo' => $titulo, ':descripcion' => $descripcion, ':id' => $id]);
+        $sentencia->execute([':fecha_hora' => $fecha_hora, ':titulo' => $titulo, ':descripcion' => $descripcion, ':mascota_id' => $mascota_id, ':servicio_id' => $servicio_id, ':personal_id' => $personal_id, ':id' => $id]);
         $sentencia->closeCursor();
         if ($sentencia->rowCount() > 0) {
             return true;
@@ -654,6 +660,250 @@ class Admin extends Database
     public function atencionExiste($id)
     {
         $sql = "SELECT * FROM atenciones WHERE atencion_id = :id";
+        $result = $this->connect()->prepare($sql);
+        $result->execute([':id' => $id]);
+        if ($result->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    /**************************HOSPITALIZACIONES******************************/
+
+    public function totalHospitalizaciones()
+    {
+        $sql = "SELECT * FROM hospitalizaciones";
+        $result = $this->connect()->query($sql);
+        $row = $result->rowCount();
+        return $row;
+    }
+
+    public function getAllHospitalizaciones($empezar_desde, $tamano_paginas)
+    {
+        $sql = "SELECT 
+                    h.hospitalizacion_id, 
+                    DATE_FORMAT(h.fecha_hora_ingreso, '%d/%m/%Y %H:%i:%s') as fecha_hora_ingreso, 
+                    h.motivo, 
+                    DATE_FORMAT(h.fecha_hora_alta, '%d/%m/%Y %H:%i:%s') as fecha_hora_alta, 
+                    h.observaciones, 
+                    m.nombre as mascota_nombre, 
+                    m.raza, 
+                    p.nombre as personal_nombre, 
+                    p.apellido as personal_apellido, 
+                    c.nombre as cliente_nombre, 
+                    c.apellido as cliente_apellido 
+                FROM hospitalizaciones h
+                INNER JOIN mascotas m ON h.mascota_id = m.mascota_id
+                INNER JOIN clientes c ON m.cliente_id = c.cliente_id
+                INNER JOIN personal p ON h.personal_id = p.personal_id 
+                LIMIT $empezar_desde, $tamano_paginas";
+        $result = $this->connect()->prepare($sql);
+        $result->execute();
+        if ($result->rowCount() > 0) {
+            return $result;
+        } else {
+            return false;
+        }
+    }
+
+    public function getHospitalizacion($id)
+    {
+        $sql = "SELECT h.hospitalizacion_id, h.fecha_hora_ingreso, h.motivo, h.fecha_hora_alta, h.observaciones, m.mascota_id, m.nombre as mascota_nombre, m.raza, p.personal_id, p.nombre as personal_nombre, p.apellido as personal_apellido, c.nombre as cliente_nombre, c.apellido as cliente_apellido FROM hospitalizaciones h
+                INNER JOIN mascotas m ON h.mascota_id = m.mascota_id
+                INNER JOIN clientes c ON m.cliente_id = c.cliente_id
+                INNER JOIN personal p ON h.personal_id = p.personal_id WHERE h.hospitalizacion_id = :id";
+        $result = $this->connect()->prepare($sql);
+        $result->execute([':id' => $id]);
+        $row = $result->fetch(PDO::FETCH_ASSOC);
+        return $row;
+    }
+
+    public function getHospitalizacionesXMascota($mascota_id)
+    {
+        $sql = "SELECT h.hospitalizacion_id, h.fecha_hora_ingreso, h.fecha_hora_alta, h.titulo, h.observaciones, p.nombre as personal_nombre, p.apellido as personal_apellido FROM hospitalizaciones h
+                INNER JOIN personal p ON h.personal_id = p.personal_id WHERE h.mascota_id = :mascota_id";
+        $result = $this->connect()->prepare($sql);
+        $result->execute([':mascota_id' => $mascota_id]);
+        $row = $result->fetchAll(PDO::FETCH_ASSOC);
+        return $row;
+    }
+
+    public function altaHospitalizacion($fecha_hora_ingreso, $motivo, $mascota_id, $personal_id)
+    {
+        $sql = "INSERT INTO hospitalizaciones (fecha_hora_ingreso, motivo, mascota_id, personal_id) VALUES (:fecha_hora_ingreso, :motivo, :mascota_id, :personal_id)";
+        $sentencia = $this->connect()->prepare($sql);
+        $sentencia->execute(array(':fecha_hora_ingreso' => $fecha_hora_ingreso, ':motivo' => $motivo, ':mascota_id' => $mascota_id, ':personal_id' => $personal_id));
+        $sentencia->closeCursor();
+        if ($sentencia->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function altaSalidaHospitalizacion($observaciones, $hospitalizacion_id)
+    {
+        $sql = "UPDATE hospitalizaciones SET fecha_hora_alta = :fecha_hora_alta, observaciones = :observaciones WHERE hospitalizacion_id = :hospitalizacion_id";
+        $sentencia = $this->connect()->prepare($sql);
+        date_default_timezone_set('America/Argentina/Buenos_Aires');
+        $sentencia->execute([':fecha_hora_alta' => date('Y-m-d H:i:s'), ':observaciones' => $observaciones, ':hospitalizacion_id' => $hospitalizacion_id]);
+        $sentencia->closeCursor();
+        if ($sentencia->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function bajaHospitalizacion($id)
+    {
+        $sql = "DELETE FROM hospitalizaciones WHERE hospitalizacion_id = :id";
+        $sentencia = $this->connect()->prepare($sql);
+        $sentencia->execute([':id' => $id]);
+        $sentencia->closeCursor();
+        if ($sentencia->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function modificaHospitalizacion($id, $fecha_hora_ingreso, $motivo, $mascota_id, $personal_id)
+    {
+        $sql = "UPDATE hospitalizaciones SET fecha_hora_ingreso = :fecha_hora_ingreso, motivo = :motivo, mascota_id = :mascota_id, personal_id = :personal_id WHERE hospitalizacion_id = :id";
+        $sentencia = $this->connect()->prepare($sql);
+        $sentencia->execute([':fecha_hora_ingreso' => $fecha_hora_ingreso, ':motivo' => $motivo, ':mascota_id' => $mascota_id, ':personal_id' => $personal_id, ':id' => $id]);
+        $sentencia->closeCursor();
+        if ($sentencia->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+
+    public function hospitalizacionExiste($id)
+    {
+        $sql = "SELECT * FROM hospitalizaciones WHERE hospitalizacion_id = :id";
+        $result = $this->connect()->prepare($sql);
+        $result->execute([':id' => $id]);
+        if ($result->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function showAllVeterinarios()
+    {
+        $sql = "SELECT * FROM personal WHERE rol_id = 2";
+        $result = $this->connect()->query($sql);
+        $row = $result->fetchAll(PDO::FETCH_ASSOC);
+        return $row;
+    }
+
+    /**************************HOTELERIA******************************/
+
+    public function totalHospedajes()
+    {
+        $sql = "SELECT * FROM hoteleria";
+        $result = $this->connect()->query($sql);
+        $row = $result->rowCount();
+        return $row;
+    }
+
+    public function getAllHospedajes($empezar_desde, $tamano_paginas)
+    {
+        $sql = "SELECT 
+                    h.hospedaje_id, 
+                    DATE_FORMAT(h.fecha_hora_ingreso, '%d/%m/%Y') as fecha_hora_ingreso, 
+                    DATE_FORMAT(h.fecha_hora_salida, '%d/%m/%Y') as fecha_hora_salida, 
+                    m.nombre as mascota_nombre, 
+                    m.raza, 
+                    p.nombre as personal_nombre, 
+                    p.apellido as personal_apellido 
+                FROM hoteleria h
+                INNER JOIN mascotas m ON h.mascota_id = m.mascota_id
+                INNER JOIN personal p ON h.personal_id = p.personal_id LIMIT $empezar_desde, $tamano_paginas";
+
+        $result = $this->connect()->prepare($sql);
+        $result->execute();
+
+        if ($result->rowCount() > 0) {
+            return $result->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            return false;
+        }
+    }
+
+    public function getHospedaje($id)
+    {
+        $sql = "SELECT h.hospedaje_id, h.fecha_hora_ingreso, h.fecha_hora_salida, m.mascota_id ,m.nombre as mascota_nombre, m.raza, p.personal_id, p.nombre as personal_nombre, p.apellido as personal_apellido FROM hoteleria h
+                INNER JOIN mascotas m ON h.mascota_id = m.mascota_id
+                INNER JOIN personal p ON h.personal_id = p.personal_id WHERE h.hospedaje_id = :id";
+        $result = $this->connect()->prepare($sql);
+        $result->execute([':id' => $id]);
+        $row = $result->fetch(PDO::FETCH_ASSOC);
+        return $row;
+    }
+
+    public function getHospedajesXMascota($mascota_id)
+    {
+        $sql = "SELECT h.hospedaje_id, h.fecha_hora_ingreso, h.fecha_hora_salida, p.nombre as personal_nombre, p.apellido as personal_apellido FROM hoteleria h
+                INNER JOIN personal p ON h.personal_id = p.personal_id WHERE h.mascota_id = :mascota_id";
+        $result = $this->connect()->prepare($sql);
+        $result->execute([':mascota_id' => $mascota_id]);
+        $row = $result->fetchAll(PDO::FETCH_ASSOC);
+        return $row;
+    }
+
+    public function altaHospedaje($fecha_hora_ingreso, $fecha_hora_salida, $mascota_id, $personal_id)
+    {
+        $sql = "INSERT INTO hoteleria (fecha_hora_ingreso, fecha_hora_salida, mascota_id, personal_id) VALUES (:fecha_hora_ingreso, :fecha_hora_salida, :mascota_id, :personal_id)";
+        $sentencia = $this->connect()->prepare($sql);
+        $sentencia->execute([':fecha_hora_ingreso' => $fecha_hora_ingreso, ':fecha_hora_salida' => $fecha_hora_salida, ':mascota_id' => $mascota_id, ':personal_id' => $personal_id]);
+        $sentencia->closeCursor();
+        if ($sentencia->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    public function bajaHospedaje($id)
+    {
+        $sql = "DELETE FROM hoteleria WHERE hospedaje_id = :id";
+        $sentencia = $this->connect()->prepare($sql);
+        $sentencia->execute([':id' => $id]);
+        $sentencia->closeCursor();
+        if ($sentencia->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function modificaHospedaje($hospedaje_id, $fecha_hora_ingreso, $fecha_hora_salida, $mascota_id, $personal_id)
+    {
+        $sql = "UPDATE hoteleria SET fecha_hora_ingreso = :fecha_hora_ingreso, fecha_hora_salida = :fecha_hora_salida, mascota_id = :mascota_id, personal_id = :personal_id WHERE hospedaje_id = :hospedaje_id";
+        $sentencia = $this->connect()->prepare($sql);
+        $sentencia->execute([':fecha_hora_ingreso' => $fecha_hora_ingreso, ':fecha_hora_salida' => $fecha_hora_salida, ':mascota_id' => $mascota_id, ':personal_id' => $personal_id, ':hospedaje_id' => $hospedaje_id]);
+        $sentencia->closeCursor();
+        if ($sentencia->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    public function hospedajeExiste($id)
+    {
+        $sql = "SELECT * FROM hoteleria WHERE hospedaje_id = :id";
         $result = $this->connect()->prepare($sql);
         $result->execute([':id' => $id]);
         if ($result->rowCount() > 0) {

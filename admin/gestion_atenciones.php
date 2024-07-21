@@ -50,7 +50,7 @@ $atenciones = $admin->getAllAtenciones($empezar_desde, $tamano_paginas);
       <hr />
       <!-- Verificar si hay atenciones registradas -->
       <?php if ($atenciones) { ?>
-        <div class="table-responsive">
+        <div class="table-responsive mb-5">
           <table class="table table-striped table-hover align-middle">
             <thead>
               <tr>
@@ -136,7 +136,7 @@ $atenciones = $admin->getAllAtenciones($empezar_desde, $tamano_paginas);
 
   <!-- Modales -->
   <?php include 'modales/altaAtencionModal.php'; ?>
-  <?php include 'modales/modificaAtencionModal.html'; ?>
+  <?php include 'modales/modificaAtencionModal.php'; ?>
   <?php include 'modales/bajaAtencionModal.html'; ?>
   <?php include 'modales/actualizaEstadoAtencionModal.html'; ?>
 
@@ -144,14 +144,16 @@ $atenciones = $admin->getAllAtenciones($empezar_desde, $tamano_paginas);
     let editaModal = document.getElementById('modificaAtencionModal');
     let bajaModal = document.getElementById('bajaAtencionModal');
     let actualizaEstadoModal = document.getElementById('actualizaEstadoAtencionModal');
-    console.log(actualizaEstadoModal);
 
     editaModal.addEventListener('hide.bs.modal', event => {
 
       editaModal.querySelector('.modal-body #atencion_id').value = '';
-      editaModal.querySelector('.modal-body #fecha_hora').value = '';
-      editaModal.querySelector('.modal-body #titulo').value = '';
-      editaModal.querySelector('.modal-body #descripcion').value = '';
+      editaModal.querySelector('.modal-body #fecha_hora_modifica').value = '';
+      editaModal.querySelector('.modal-body #titulo_modifica').value = '';
+      editaModal.querySelector('.modal-body #descripcion_modifica').value = '';
+      editaModal.querySelector('.modal-body #personal_id_modifica').value = '';
+      editaModal.querySelector('.modal-body #servicio_id_modifica').value = '';
+      editaModal.querySelector('.modal-body #mascota_id_modifica').value = '';
     });
 
     editaModal.addEventListener('show.bs.modal', event => {
@@ -159,10 +161,12 @@ $atenciones = $admin->getAllAtenciones($empezar_desde, $tamano_paginas);
       let id = button.getAttribute('data-bs-id');
 
       let atencion_id = editaModal.querySelector('.modal-body #atencion_id');
-      let fecha_hora = editaModal.querySelector('.modal-body #fecha_hora');
-      let titulo = editaModal.querySelector('.modal-body #titulo');
-      let descripcion = editaModal.querySelector('.modal-body #descripcion');
-
+      let fecha_hora = editaModal.querySelector('.modal-body #fecha_hora_modifica');
+      let titulo = editaModal.querySelector('.modal-body #titulo_modifica');
+      let descripcion = editaModal.querySelector('.modal-body #descripcion_modifica');
+      let personal_id = editaModal.querySelector('.modal-body #personal_id_modifica');
+      let servicio_id = editaModal.querySelector('.modal-body #servicio_id_modifica');
+      let mascota_id = editaModal.querySelector('.modal-body #mascota_id_modifica');
       let url = './getAtencion.php';
       let data = new FormData();
       data.append('atencion_id', id);
@@ -173,11 +177,13 @@ $atenciones = $admin->getAllAtenciones($empezar_desde, $tamano_paginas);
         })
         .then(response => response.json())
         .then(data => {
-          console.log(data);
           atencion_id.value = data.atencion_id;
           fecha_hora.value = data.fecha_hora;
           titulo.value = data.titulo;
           descripcion.value = data.descripcion;
+          servicio_id.value = data.servicio_id;
+          mascota_id.value = data.mascota_id;
+          personal_id.innerHTML = `<option value="${data.personal_id}">${data.personal_nombre} ${data.personal_apellido}</option>`
         })
     });
 

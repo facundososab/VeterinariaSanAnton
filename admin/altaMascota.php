@@ -61,7 +61,7 @@ try {
     $_SESSION['mensaje'] = 'Mascota registrada correctamente';
     $_SESSION['msg-color'] = 'success';
 
-    if ($_FILES['img_mascota']['error'] == UPLOAD_ERR_OK) {
+    if ($_FILES['img_mascota']['error'] == UPLOAD_ERR_OK && $_FILES['img_mascota']['size'] > 0) {
 
       $permitidos = array("image/jpg", "image/jpeg");
 

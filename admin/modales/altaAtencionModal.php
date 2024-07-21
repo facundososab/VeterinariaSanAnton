@@ -26,7 +26,11 @@
               </option>
               <?php
               $mascotas = $admin->showAllMascotasConCliente();
-              foreach ($mascotas as $mascota) { ?>
+              foreach ($mascotas as $mascota) {
+                if ($mascota['fecha_muerte']) {
+                  continue;
+                }
+              ?>
                 <option value="<?= $mascota['mascota_id']; ?>">
                   <?= ucfirst($mascota['nombre']) .
                     ' - ' .
@@ -34,7 +38,7 @@
                     ' - ' .
                     ucfirst($mascota['color']) .
                     ' || ' .
-                    $mascota['cliente_nombre'] .
+                    ucfirst($mascota['cliente_nombre']) .
                     ' - ' .
                     $mascota['cliente_email']; ?>
                 </option>
@@ -147,7 +151,7 @@
         console.log(data)
         personal_id.innerHTML = ''
         data.forEach(personal => {
-          personal_id.innerHTML += `<option value="${personal.personal_id}">${personal.nombre} ${personal.apellido} - ${personal.email}</option>`
+          personal_id.innerHTML += `<option value="${personal.personal_id}">${personal.nombre.charAt(0).toUpperCase() + string.slice(1).toLowerCase()} ${personal.apellido}</option>`
         })
 
       })

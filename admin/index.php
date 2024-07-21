@@ -30,7 +30,7 @@ $atenciones_hoy = $admin->getAtencionesHoy();
             <h1>Bienvenido al panel de administración</h1>
             <p>Desde aquí podrás gestionar las mascotas, clientes, personal, servicios de la veterinaria y más.</p>
             <article class="row">
-                <div class="col-12 col-md-6 col-lg-3">
+                <div class="col-12 col-md-6 col-lg-3 mb-2">
                     <div class="card bg-primary-color text-white">
                         <div class="card-body">
                             <h5 class="card-title text-center text-dark">Mascotas</h5>
@@ -39,7 +39,7 @@ $atenciones_hoy = $admin->getAtencionesHoy();
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-md-6 col-lg-3">
+                <div class="col-12 col-md-6 col-lg-3 mb-2">
                     <div class="card bg-primary-color text-white">
                         <div class="card-body">
                             <h5 class="card-title text-center text-dark">Clientes</h5>
@@ -48,7 +48,7 @@ $atenciones_hoy = $admin->getAtencionesHoy();
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-md-6 col-lg-3">
+                <div class="col-12 col-md-6 col-lg-3 mb-2">
                     <div class="card bg-primary-color text-white">
                         <div class="card-body">
                             <h5 class="card-title text-center text-dark">Personal</h5>
@@ -58,7 +58,7 @@ $atenciones_hoy = $admin->getAtencionesHoy();
 
                     </div>
                 </div>
-                <div class="col-12 col-md-6 col-lg-3">
+                <div class="col-12 col-md-6 col-lg-3 mb-2">
                     <div class="card bg-primary-color text-white">
                         <div class="card-body">
                             <h5 class="card-title text-center text-dark">Servicios</h5>
