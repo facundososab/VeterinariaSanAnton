@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 session_start();
 if (!isset($_SESSION['usuario'])) {
@@ -10,7 +13,7 @@ if (!isset($_SESSION['usuario'])) {
 require_once 'adminClass.php';
 $admin = new Admin();
 
-$tamano_paginas = 8;
+$tamano_paginas = 1;
 
 if (isset($_GET["pagina"])) {
   $pagina = $_GET["pagina"];
@@ -20,12 +23,16 @@ if (isset($_GET["pagina"])) {
 
 $empezar_desde = ($pagina - 1) * $tamano_paginas;
 
-if (isset($_POST['buscadorMascotas']) && !empty($_POST['buscadorMascotas'])) {
-  $mascotas = $admin->getMascotasByNombreORaza($_POST['buscadorMascotas'], $empezar_desde, $tamano_paginas);
-  $total_mascotas = count($mascotas);
+if ((isset($_GET['buscadorMascotas']) && !($_GET['buscadorMascotas'] == ''))) {
+  $total_mascotas = $admin->totalMascotasByNombreORaza($_GET['buscadorMascotas']);
+  $mascotas = $admin->getMascotasByNombreORaza($_GET['buscadorMascotas'], $empezar_desde, $tamano_paginas);
+  if ($total_mascotas == 0) {
+    $_SESSION['mensaje'] = 'No se encontraron resultados';
+    $_SESSION['msg-color'] = 'warning';
+  }
 } else {
+  $total_mascotas = $admin->totalMascotas();
   $mascotas = $admin->getAllMascotas($empezar_desde, $tamano_paginas);
-  $total_mascotas = count($mascotas);
 }
 
 ?>
@@ -51,7 +58,7 @@ if (isset($_POST['buscadorMascotas']) && !empty($_POST['buscadorMascotas'])) {
       <hr />
       <nav class="navbar">
         <div class="container-fluid justify-content-end">
-          <form class="d-flex" role="search" id="formBuscadorMascotas" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+          <form class="d-flex" role="search" id="formBuscadorMascotas" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="GET">
             <input class="form-control me-2" type="search" placeholder="Nombre o raza" aria-label="Buscar" name="buscadorMascotas">
             <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i></button>
           </form>
@@ -82,9 +89,6 @@ if (isset($_POST['buscadorMascotas']) && !empty($_POST['buscadorMascotas'])) {
                 unset($_SESSION['mensaje']);
               } ?>
               <?php foreach ($mascotas as $mascota) {
-                if ($mascota['fecha_muerte']) {
-                  continue;
-                }
                 $imagen = '../img_mascotas/' . $mascota['mascota_id'] . '.jpg';
                 if (!file_exists($imagen)) {
                   $imagen = '../img_mascotas/default.jpg';
@@ -133,15 +137,25 @@ if (isset($_POST['buscadorMascotas']) && !empty($_POST['buscadorMascotas'])) {
       <ul class="pagination justify-content-center">
         <?php
         $total_paginas = ceil($total_mascotas / $tamano_paginas);
-        ?>
 
-        <?php for ($i = 1; $i <= $total_paginas; $i++) {
-          if ($i == $pagina) {
-            echo "<li class='page-item active'><a class='page-link' href='gestion_mascotas.php?pagina=$i'>$i</a></li>";
-          } else {
-            echo "<li class='page-item'><a class='page-link' href='gestion_mascotas.php?pagina=$i'>$i</a></li>";
+        if (isset($_GET['buscadorMascotas']) && !($_GET['buscadorMascotas'] == '')) {
+          for ($i = 1; $i <= $total_paginas; $i++) {
+            if ($i == $pagina) { ?>
+              <li class="page-item active"><a class="page-link" href="gestion_mascotas.php?pagina=<?= $i ?>&buscadorMascotas=<?= $_GET['buscadorMascotas'] ?>"><?= $i ?></a></li>
+            <?php } else { ?>
+              <li class="page-item"><a class="page-link" href="gestion_mascotas.php?pagina=<?= $i ?>&buscadorMascotas=<?= $_GET['buscadorMascotas'] ?>"><?= $i ?></a></li>
+        <?php }
           }
-        } ?>
+        } else {
+          for ($i = 1; $i <= $total_paginas; $i++) {
+            if ($i == $pagina) {
+              echo "<li class='page-item active'><a class='page-link' href='gestion_mascotas.php?pagina=$i'>$i</a></li>";
+            } else {
+              echo "<li class='page-item'><a class='page-link' href='gestion_mascotas.php?pagina=$i'>$i</a></li>";
+            }
+          }
+        }
+        ?>
 
       </ul>
     </nav>

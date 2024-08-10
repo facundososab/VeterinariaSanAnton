@@ -18,11 +18,16 @@ if (isset($_GET["pagina"])) {
   $pagina = 1;
 }
 
-$total_personal = $admin->totalPersonal();
-
 $empezar_desde = ($pagina - 1) * $tamano_paginas;
 
-$personal = $admin->getAllPersonal($empezar_desde, $tamano_paginas);
+if (isset($_GET['searchPersonal']) && !empty($_GET['searchPersonal'])) {
+  $filtro = $_GET['searchPersonal'];
+  $total_personal = $admin->totalPersonalXBusqueda($filtro);
+  $personal = $admin->getPersonalXBusqueda($filtro, $empezar_desde, $tamano_paginas);
+} else {
+  $total_personal = $admin->totalPersonal();
+  $personal = $admin->getAllPersonal($empezar_desde, $tamano_paginas);
+}
 
 
 ?>
@@ -47,6 +52,14 @@ $personal = $admin->getAllPersonal($empezar_desde, $tamano_paginas);
           </button>
         </div>
         <hr />
+        <nav class="navbar">
+          <div class="container-fluid justify-content-end">
+            <form class="d-flex" role="search" id="formSearchPersonal" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="GET">
+              <input class="form-control me-2" type="search" placeholder="Nombre o raza" aria-label="Buscar" name="searchPersonal">
+              <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i></button>
+            </form>
+          </div>
+        </nav>
         <!-- Verificar si hay personal registrado -->
         <?php if ($personal) { ?>
           <div class="table-responsive">
@@ -101,15 +114,25 @@ $personal = $admin->getAllPersonal($empezar_desde, $tamano_paginas);
       <ul class="pagination justify-content-center">
         <?php
         $total_paginas = ceil($total_personal / $tamano_paginas);
-        ?>
 
-        <?php for ($i = 1; $i <= $total_paginas; $i++) {
-          if ($i == $pagina) {
-            echo "<li class='page-item active'><a class='page-link' href='gestion_personal.php?pagina=$i'>$i</a></li>";
-          } else {
-            echo "<li class='page-item'><a class='page-link' href='gestion_personal.php?pagina=$i'>$i</a></li>";
+        if (isset($_GET['searchPersonal']) && !empty($_GET['searchPersonal'])) {
+          for ($i = 1; $i <= $total_paginas; $i++) {
+            if ($i == $pagina) { ?>
+              <li class="page-item active"><a class="page-link" href="gestion_personal.php?pagina=<?= $i ?>&searchPersonal=<?= $_GET['searchPersonal'] ?>"><?= $i ?></a></li>
+            <?php } else { ?>
+              <li class="page-item"><a class="page-link" href="gestion_personal.php?pagina=<?= $i ?>&searchPersonal=<?= $_GET['searchPersonal'] ?>"><?= $i ?></a></li>
+        <?php }
           }
-        } ?>
+        } else {
+          for ($i = 1; $i <= $total_paginas; $i++) {
+            if ($i == $pagina) {
+              echo "<li class='page-item active'><a class='page-link' href='gestion_personal.php?pagina=$i'>$i</a></li>";
+            } else {
+              echo "<li class='page-item'><a class='page-link' href='gestion_personal.php?pagina=$i'>$i</a></li>";
+            }
+          }
+        }
+        ?>
 
       </ul>
     </nav>

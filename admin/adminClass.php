@@ -24,21 +24,65 @@ class Admin extends Database
 
     public function getAllPersonal($empezar_desde, $tamano_paginas)
     {
-        $sql = "SELECT p.personal_id, p.nombre, p.apellido, p.email, r.nombre as rol FROM personal p
-                INNER JOIN roles r ON p.rol_id = r.rol_id WHERE p.rol_id != 1 LIMIT $empezar_desde,$tamano_paginas";
+        $sql = "SELECT p.personal_id, p.nombre, p.apellido, p.email, r.nombre as rol 
+                FROM personal p
+                INNER JOIN roles r ON p.rol_id = r.rol_id 
+                WHERE p.rol_id != 1 
+                LIMIT $empezar_desde,$tamano_paginas";
         $result = $this->connect()->prepare($sql);
         $result->execute();
-        if ($result->rowCount() > 0) {
-            return $result;
+        $data = $result->fetchAll(PDO::FETCH_ASSOC);
+        if ($data) {
+            return $data;
         } else {
-            return false;
+            return [];
+        }
+    }
+
+    public function totalPersonalXBusqueda($nombreOEmail)
+    {
+        $sql = "SELECT p.personal_id, p.nombre, p.apellido, p.email, r.nombre as rol 
+                FROM personal p
+                INNER JOIN roles r ON p.rol_id = r.rol_id 
+                WHERE p.rol_id != 1 AND (p.nombre LIKE :nombreOEmail OR p.email LIKE :nombreOEmail)";
+        $result = $this->connect()->prepare($sql);
+        $searchTerm = '%' . $nombreOEmail . '%';
+        $result->bindValue(':nombreOEmail', $searchTerm, PDO::PARAM_STR);
+        $result->execute();
+        $data = $result->fetchAll(PDO::FETCH_ASSOC);
+        if ($data) {
+            return count($data);
+        } else {
+            return 0;
+        }
+    }
+    public function getPersonalXBusqueda($nombreOEmail, $empezar_desde, $tamano_paginas)
+    {
+        $sql = "SELECT p.personal_id, p.nombre, p.apellido, p.email, r.nombre as rol 
+                FROM personal p
+                INNER JOIN roles r ON p.rol_id = r.rol_id 
+                WHERE p.rol_id != 1 AND (p.nombre LIKE :nombreOEmail OR p.email LIKE :nombreOEmail)
+                LIMIT :empezar_desde, :tamano_paginas";
+        $result = $this->connect()->prepare($sql);
+        $searchTerm = '%' . $nombreOEmail . '%';
+        $result->bindValue(':nombreOEmail', $searchTerm, PDO::PARAM_STR);
+        $result->bindValue(':empezar_desde', $empezar_desde, PDO::PARAM_INT);
+        $result->bindValue(':tamano_paginas', $tamano_paginas, PDO::PARAM_INT);
+        $result->execute();
+        $data = $result->fetchAll(PDO::FETCH_ASSOC);
+        if ($data) {
+            return $data;
+        } else {
+            return [];
         }
     }
 
     public function getPersonal($id)
     {
-        $sql = "SELECT p.personal_id, p.nombre, p.apellido, p.email, p.clave, r.nombre as rol FROM personal p  
-                INNER JOIN roles r ON p.rol_id = r.rol_id WHERE p.personal_id = :id";
+        $sql = "SELECT p.personal_id, p.nombre, p.apellido, p.email, p.clave, r.nombre as rol 
+                FROM personal p  
+                INNER JOIN roles r ON p.rol_id = r.rol_id 
+                WHERE p.personal_id = :id";
         $result = $this->connect()->prepare($sql);
         $result->execute([':id' => $id]);
         $row = $result->fetch(PDO::FETCH_ASSOC);
@@ -47,8 +91,10 @@ class Admin extends Database
 
     public function getPersonalByServicioId($servicio_id)
     {
-        $sql = "SELECT p.personal_id, p.nombre, p.apellido, p.email FROM personal p
-                INNER JOIN servicios s ON p.rol_id = s.rol_id WHERE s.servicio_id = :servicio_id";
+        $sql = "SELECT p.personal_id, p.nombre, p.apellido, p.email 
+                FROM personal p
+                INNER JOIN servicios s ON p.rol_id = s.rol_id 
+                WHERE s.servicio_id = :servicio_id";
         $result = $this->connect()->prepare($sql);
         $result->execute([':servicio_id' => $servicio_id]);
         $row = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -115,7 +161,7 @@ class Admin extends Database
         $row = $result->rowCount();
         return $row;
     }
-    function getAllClientes($empezar_desde, $tamano_paginas)
+    public function getAllClientes($empezar_desde, $tamano_paginas)
     {
         $sql = "SELECT * FROM clientes LIMIT $empezar_desde, $tamano_paginas";
         $result = $this->connect()->prepare($sql);
@@ -127,7 +173,41 @@ class Admin extends Database
         }
     }
 
-    function showAllClientes()
+    public function totalClientesXBusqueda($nombreOEmail)
+    {
+        $sql = "SELECT * FROM clientes WHERE nombre LIKE :nombreOEmail OR email LIKE :nombreOEmail";
+        $result = $this->connect()->prepare($sql);
+        $searchTerm = '%' . $nombreOEmail . '%';
+        $result->bindValue(':nombreOEmail', $searchTerm, PDO::PARAM_STR);
+        $result->execute();
+        $data = $result->fetchAll(PDO::FETCH_ASSOC);
+        if ($data) {
+            return count($data);
+        } else {
+            return 0;
+        }
+    }
+
+    public function getClientesXBusqueda($nombreOEmail, $empezar_desde, $tamano_paginas)
+    {
+        $sql = "SELECT * FROM clientes 
+                WHERE nombre LIKE :nombreOEmail OR email LIKE :nombreOEmail 
+                LIMIT :empezar_desde, :tamano_paginas";
+        $result = $this->connect()->prepare($sql);
+        $searchTerm = '%' . $nombreOEmail . '%';
+        $result->bindValue(':nombreOEmail', $searchTerm, PDO::PARAM_STR);
+        $result->bindValue(':empezar_desde', $empezar_desde, PDO::PARAM_INT);
+        $result->bindValue(':tamano_paginas', $tamano_paginas, PDO::PARAM_INT);
+        $result->execute();
+        $data = $result->fetchAll(PDO::FETCH_ASSOC);
+        if ($data) {
+            return $data;
+        } else {
+            return [];
+        }
+    }
+
+    public function showAllClientes()
     {
         $sql = "SELECT * FROM clientes";
         $result = $this->connect()->query($sql);
@@ -199,40 +279,76 @@ class Admin extends Database
 
     public function totalMascotas()
     {
-        $sql = "SELECT * FROM mascotas";
+        $sql = "SELECT * FROM mascotas m WHERE m.fecha_muerte IS NULL";
         $result = $this->connect()->query($sql);
         $row = $result->rowCount();
         return $row;
     }
 
 
-
     public function getAllMascotas($empezar_desde, $tamano_paginas)
     {
-        $sql = "SELECT m.mascota_id, m.nombre, m.raza, m.color, m.fecha_nac, m.fecha_muerte, c.nombre as cliente_nombre, c.apellido as cliente_apellido, c.email as cliente_email FROM mascotas m
-                INNER JOIN clientes c ON m.cliente_id = c.cliente_id LIMIT $empezar_desde, $tamano_paginas";
+        $sql = "SELECT m.mascota_id, m.nombre, m.raza, m.color, m.fecha_nac, c.nombre as cliente_nombre, c.apellido as cliente_apellido, c.email as cliente_email 
+                FROM mascotas m
+                INNER JOIN clientes c ON m.cliente_id = c.cliente_id 
+                WHERE m.fecha_muerte IS NULL 
+                LIMIT $empezar_desde, $tamano_paginas";
         $result = $this->connect()->prepare($sql);
         $result->execute();
-        $result = $result->fetchAll(PDO::FETCH_ASSOC);
-        if ($result) {
-            return $result;
+        $data = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        if ($data) {
+            return $data;
         } else {
-            return false;
+            return [];
+        }
+    }
+
+    public function totalMascotasByNombreORaza($nombreORaza)
+    {
+        $sql = "SELECT m.mascota_id, m.nombre, m.raza, m.color, m.fecha_nac, c.nombre as cliente_nombre, c.apellido as cliente_apellido, c.email as cliente_email 
+                FROM mascotas m
+                INNER JOIN clientes c ON m.cliente_id = c.cliente_id 
+                WHERE m.fecha_muerte IS NULL AND m.nombre LIKE :nombreORaza OR m.raza LIKE :nombreORaza";
+        $result = $this->connect()->prepare($sql);
+
+        $searchTerm = '%' . $nombreORaza . '%';
+        $result->bindValue(':nombreORaza', $searchTerm, PDO::PARAM_STR);
+        $result->execute();
+        $data = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        if ($data) {
+            return count($data);
+        } else {
+            return 0;
         }
     }
 
     public function getMascotasByNombreORaza($nombreORaza, $empezar_desde, $tamano_paginas)
     {
-        $sql = "SELECT * FROM mascotas WHERE MATCH(nombre, raza) AGAINST (:nombreORaza) LIMIT $empezar_desde, $tamano_paginas";
+        $sql = "SELECT m.mascota_id, m.nombre, m.raza, m.color, m.fecha_nac, c.nombre as cliente_nombre, c.apellido as cliente_apellido, c.email as cliente_email 
+                FROM mascotas m
+                INNER JOIN clientes c ON m.cliente_id = c.cliente_id 
+                WHERE m.fecha_muerte IS NULL AND m.nombre LIKE :nombreORaza OR m.raza LIKE :nombreORaza
+                LIMIT :empezar_desde, :tamano_paginas";
+
         $result = $this->connect()->prepare($sql);
-        $result->execute([':nombreORaza' => $nombreORaza]);
-        $result = $result->fetchAll(PDO::FETCH_ASSOC);
-        if ($result) {
-            return $result;
+
+        // Bind parameters
+        $searchTerm = '%' . $nombreORaza . '%';
+        $result->bindValue(':nombreORaza', $searchTerm, PDO::PARAM_STR);
+        $result->bindValue(':empezar_desde', $empezar_desde, PDO::PARAM_INT);
+        $result->bindValue(':tamano_paginas', $tamano_paginas, PDO::PARAM_INT);
+        $result->execute();
+        $data = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        if ($data) {
+            return $data;
         } else {
-            return false;
+            return [];
         }
     }
+
 
 
     public function showAllMascotasConCliente()

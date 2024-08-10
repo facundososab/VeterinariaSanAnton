@@ -78,7 +78,8 @@ try {
         }
 
         if (!move_uploaded_file($_FILES['img_mascota']['tmp_name'], $imagen)) {
-          $_SESSION['mensaje'] .= '<br>Error al guardar imagen';
+          $_SESSION['mensaje'] .= '<br>';
+          $_SESSION['mensaje'] .= 'Error al guardar imagen';
           $_SESSION['msg-color'] = 'danger';
         }
       } else {
