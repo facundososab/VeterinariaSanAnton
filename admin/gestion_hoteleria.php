@@ -23,9 +23,25 @@ if (isset($_GET['pagina'])) {
 
 $empezar_desde = ($pagina - 1) * $tamano_paginas;
 
-$hospedajes = $admin->getAllHospedajes($empezar_desde, $tamano_paginas);
+$hospedajes = null;
 
-$total_hospedajes = $admin->totalHospedajes();
+if (isset($_GET['searchHospedaje']) && !empty($_GET['searchHospedaje'])) {
+  $filtro = $_GET['searchHospedaje'];
+  $total_hospedajes = $admin->totalHospedajesXBusqueda($filtro);
+  if ($total_hospedajes == 0) {
+    $_SESSION['mensaje'] = 'No se encontraron resultados';
+    $_SESSION['msg-color'] = 'warning';
+  } else {
+    $hospedajes = $admin->getHospedajesXBusqueda($filtro, $empezar_desde, $tamano_paginas);
+  }
+} else {
+  $total_hospedajes = $admin->totalHospedajes();
+  $hospedajes = $admin->getAllHospedajes($empezar_desde, $tamano_paginas);
+  if (empty($hospedajes)) {
+    $_SESSION['mensaje'] = 'No hay hospedajes registrados';
+    $_SESSION['msg-color'] = 'warning';
+  }
+}
 
 ?>
 
@@ -49,6 +65,14 @@ $total_hospedajes = $admin->totalHospedajes();
         </button>
       </div>
       <hr>
+      <nav class="navbar">
+        <div class="container-fluid justify-content-end">
+          <form class="d-flex" role="search" id="formSearchHospedaje" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="GET">
+            <input class="form-control me-2" type="search" placeholder="Mascota o personal responsable" aria-label="Buscar" name="searchHospedaje" value="<?= isset($_GET['searchHospedaje']) ? $_GET['searchHospedaje'] : ''; ?>">
+            <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i></button>
+          </form>
+        </div>
+      </nav>
       <!-- Verificar si hay hospedajees registradas -->
       <?php if ($hospedajes) { ?>
         <div class="table-responsive mb-5">
@@ -99,7 +123,8 @@ $total_hospedajes = $admin->totalHospedajes();
         </div>
       <?php } else { ?>
         <div class="alert alert-warning" role="alert">
-          No hay hospedajes registrados.
+          <?php echo $_SESSION['mensaje'];
+          unset($_SESSION['mensaje']); ?>
         </div>
       <?php } ?>
   </main>
@@ -109,13 +134,22 @@ $total_hospedajes = $admin->totalHospedajes();
       <ul class="pagination justify-content-center">
         <?php
         $total_paginas = ceil($total_hospedajes / $tamano_paginas);
-        ?>
 
-        <?php for ($i = 1; $i <= $total_paginas; $i++) {
-          if ($i == $pagina) {
-            echo "<li class='page-item active'><a class='page-link' href='gestion_hoteleria.php?pagina=$i'>$i</a></li>";
-          } else {
-            echo "<li class='page-item'><a class='page-link' href='gestion_hoteleria.php?pagina=$i'>$i</a></li>";
+        if (isset($_GET['searchHospedaje']) && !empty($_GET['searchHospedaje'])) {
+          for ($i = 1; $i <= $total_paginas; $i++) {
+            if ($i == $pagina) {
+              echo "<li class='page-item active'><a class='page-link' href='gestion_hoteleria.php?searchHospedaje=" . $_GET['searchHospedaje'] . "&pagina=$i'>$i</a></li>";
+            } else {
+              echo "<li class='page-item'><a class='page-link' href='gestion_hoteleria.php?searchHospedaje=" . $_GET['searchHospedaje'] . "&pagina=$i'>$i</a></li>";
+            }
+          }
+        } else {
+          for ($i = 1; $i <= $total_paginas; $i++) {
+            if ($i == $pagina) {
+              echo "<li class='page-item active'><a class='page-link' href='gestion_hoteleria.php?pagina=$i'>$i</a></li>";
+            } else {
+              echo "<li class='page-item'><a class='page-link' href='gestion_hoteleria.php?pagina=$i'>$i</a></li>";
+            }
           }
         } ?>
 

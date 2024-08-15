@@ -11,7 +11,7 @@ if (!isset($_SESSION['usuario'])) {
 require_once 'adminClass.php';
 $admin = new Admin();
 
-$tamano_paginas = 1;
+$tamano_paginas = 8;
 
 if (isset($_GET["pagina"])) {
   $pagina = $_GET["pagina"];
@@ -22,12 +22,24 @@ if (isset($_GET["pagina"])) {
 
 $empezar_desde = ($pagina - 1) * $tamano_paginas;
 
+$clientes = null;
+
 if (isset($_GET['searchCliente']) && !empty($_GET['searchCliente'])) {
   $filtro = $_GET['searchCliente'];
   $total_clientes = $admin->totalClientesXBusqueda($filtro);
-  $clientes = $admin->getClientesXBusqueda($filtro, $empezar_desde, $tamano_paginas);
+  if ($total_clientes == 0) {
+    $_SESSION['mensaje'] = 'No se encontraron resultados';
+    $_SESSION['msg-color'] = 'warning';
+  } else {
+    $clientes = $admin->getClientesXBusqueda($filtro, $empezar_desde, $tamano_paginas);
+  }
 } else {
   $total_clientes = $admin->totalClientes();
+  if ($total_clientes == 0) {
+    $_SESSION['mensaje'] = 'No hay clientes registrados';
+    $_SESSION['msg-color'] = 'warning';
+    return;
+  }
   $clientes = $admin->getAllClientes($empezar_desde, $tamano_paginas);
 }
 
@@ -56,7 +68,7 @@ if (isset($_GET['searchCliente']) && !empty($_GET['searchCliente'])) {
         <nav class="navbar">
           <div class="container-fluid justify-content-end">
             <form class="d-flex" role="search" id="formSearchCliente" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="GET">
-              <input class="form-control me-2" type="search" placeholder="Nombre, apellido o email" aria-label="Buscar" name="searchCliente">
+              <input class="form-control me-2" type="search" placeholder="Nombre, apellido o email" aria-label="Buscar" name="searchCliente" value="<?= isset($_GET['searchCliente']) ? $_GET['searchCliente'] : ''; ?>">
               <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i></button>
             </form>
           </div>
@@ -106,10 +118,12 @@ if (isset($_GET['searchCliente']) && !empty($_GET['searchCliente'])) {
             </table>
           </div>
 
-        <?php } else {
-          echo '<div class="alert alert-warning" role="alert">
-                  No hay clientes registrados';
-        } ?>
+        <?php } else { ?>
+          <div class="alert alert-warning" role="alert">
+            <?php echo $_SESSION['mensaje'];
+            unset($_SESSION['mensaje']); ?>
+          </div>
+        <?php } ?>
       </div>
   </main>
   <footer class="footer mt-auto py-3 bg-light fixed-bottom">

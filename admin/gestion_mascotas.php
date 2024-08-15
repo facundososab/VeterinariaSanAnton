@@ -13,7 +13,7 @@ if (!isset($_SESSION['usuario'])) {
 require_once 'adminClass.php';
 $admin = new Admin();
 
-$tamano_paginas = 1;
+$tamano_paginas = 8;
 
 if (isset($_GET["pagina"])) {
   $pagina = $_GET["pagina"];
@@ -23,16 +23,23 @@ if (isset($_GET["pagina"])) {
 
 $empezar_desde = ($pagina - 1) * $tamano_paginas;
 
-if ((isset($_GET['buscadorMascotas']) && !($_GET['buscadorMascotas'] == ''))) {
-  $total_mascotas = $admin->totalMascotasByNombreORaza($_GET['buscadorMascotas']);
-  $mascotas = $admin->getMascotasByNombreORaza($_GET['buscadorMascotas'], $empezar_desde, $tamano_paginas);
+$mascotas = null;
+
+if ((isset($_GET['searchMascotas']) && !($_GET['searchMascotas'] == ''))) {
+  $total_mascotas = $admin->totalMascotasByNombreORaza($_GET['searchMascotas']);
   if ($total_mascotas == 0) {
     $_SESSION['mensaje'] = 'No se encontraron resultados';
     $_SESSION['msg-color'] = 'warning';
+  } else {
+    $mascotas = $admin->getMascotasByNombreORaza($_GET['searchMascotas'], $empezar_desde, $tamano_paginas);
   }
 } else {
   $total_mascotas = $admin->totalMascotas();
   $mascotas = $admin->getAllMascotas($empezar_desde, $tamano_paginas);
+  if (empty($mascotas)) {
+    $_SESSION['mensaje'] = 'No hay mascotas registradas';
+    $_SESSION['msg-color'] = 'warning';
+  }
 }
 
 ?>
@@ -59,7 +66,7 @@ if ((isset($_GET['buscadorMascotas']) && !($_GET['buscadorMascotas'] == ''))) {
       <nav class="navbar">
         <div class="container-fluid justify-content-end">
           <form class="d-flex" role="search" id="formBuscadorMascotas" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="GET">
-            <input class="form-control me-2" type="search" placeholder="Nombre o raza" aria-label="Buscar" name="buscadorMascotas">
+            <input class="form-control me-2" type="search" placeholder="Nombre o raza" aria-label="Buscar" name="searchMascotas">
             <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i></button>
           </form>
         </div>
@@ -125,9 +132,12 @@ if ((isset($_GET['buscadorMascotas']) && !($_GET['buscadorMascotas'] == ''))) {
 
       } else { ?>
         <div class="alert alert-warning" role="alert">
-          No hay mascotas registradas
+          <?php echo $_SESSION['mensaje'];
+          unset($_SESSION['mensaje']); ?>
         </div>
-      <?php } ?>
+      <?php
+
+      } ?>
     </div>
   </main>
 
@@ -138,12 +148,12 @@ if ((isset($_GET['buscadorMascotas']) && !($_GET['buscadorMascotas'] == ''))) {
         <?php
         $total_paginas = ceil($total_mascotas / $tamano_paginas);
 
-        if (isset($_GET['buscadorMascotas']) && !($_GET['buscadorMascotas'] == '')) {
+        if (isset($_GET['searchMascotas']) && !($_GET['searchMascotas'] == '')) {
           for ($i = 1; $i <= $total_paginas; $i++) {
             if ($i == $pagina) { ?>
-              <li class="page-item active"><a class="page-link" href="gestion_mascotas.php?pagina=<?= $i ?>&buscadorMascotas=<?= $_GET['buscadorMascotas'] ?>"><?= $i ?></a></li>
+              <li class="page-item active"><a class="page-link" href="gestion_mascotas.php?pagina=<?= $i ?>&searchMascotas=<?= $_GET['searchMascotas'] ?>"><?= $i ?></a></li>
             <?php } else { ?>
-              <li class="page-item"><a class="page-link" href="gestion_mascotas.php?pagina=<?= $i ?>&buscadorMascotas=<?= $_GET['buscadorMascotas'] ?>"><?= $i ?></a></li>
+              <li class="page-item"><a class="page-link" href="gestion_mascotas.php?pagina=<?= $i ?>&searchMascotas=<?= $_GET['searchMascotas'] ?>"><?= $i ?></a></li>
         <?php }
           }
         } else {

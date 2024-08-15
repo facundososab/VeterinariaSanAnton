@@ -296,7 +296,6 @@ class Admin extends Database
         $result = $this->connect()->prepare($sql);
         $result->execute();
         $data = $result->fetchAll(PDO::FETCH_ASSOC);
-
         if ($data) {
             return $data;
         } else {
@@ -457,6 +456,36 @@ class Admin extends Database
         }
     }
 
+    public function totalInsumosXBusqueda($descripcion)
+    {
+        $sql = "SELECT * FROM insumos WHERE descripcion LIKE :descripcion";
+        $result = $this->connect()->prepare($sql);
+        $searchTerm = '%' . $descripcion . '%';
+        $result->bindValue(':descripcion', $searchTerm, PDO::PARAM_STR);
+        $result->execute();
+        if ($result->rowCount() > 0) {
+            return $result->rowCount();
+        } else {
+            return 0;
+        }
+    }
+
+    public function getInsumosXBusqueda($descripcion, $empezar_desde, $tamano_paginas)
+    {
+        $sql = "SELECT * FROM insumos WHERE descripcion LIKE :descripcion LIMIT :empezar_desde, :tamano_paginas";
+        $result = $this->connect()->prepare($sql);
+        $searchTerm = '%' . $descripcion . '%';
+        $result->bindValue(':descripcion', $searchTerm, PDO::PARAM_STR);
+        $result->bindValue(':empezar_desde', $empezar_desde, PDO::PARAM_INT);
+        $result->bindValue(':tamano_paginas', $tamano_paginas, PDO::PARAM_INT);
+        $result->execute();
+        if ($result->rowCount() > 0) {
+            return $result;
+        } else {
+            return false;
+        }
+    }
+
     public function getInsumo($id)
     {
         $sql = "SELECT * FROM insumos WHERE insumo_id = :id";
@@ -565,14 +594,58 @@ class Admin extends Database
 
     public function getAllServicios($empezar_desde, $tamano_paginas)
     {
-        $sql = "SELECT s.servicio_id, s.nombre, s.tipo, s.precio, r.nombre as rol FROM servicios s
-                INNER JOIN roles r ON s.rol_id = r.rol_id WHERE s.activo = 1 LIMIT $empezar_desde, $tamano_paginas";
+        $sql = "SELECT s.servicio_id, s.nombre, s.tipo, s.precio, r.nombre as rol 
+                FROM servicios s
+                INNER JOIN roles r ON s.rol_id = r.rol_id
+                WHERE s.activo = 1 
+                LIMIT :empezar_desde, :tamano_paginas";
         $result = $this->connect()->prepare($sql);
+        $result->bindValue(':empezar_desde', $empezar_desde, PDO::PARAM_INT);
+        $result->bindValue(':tamano_paginas', $tamano_paginas, PDO::PARAM_INT);
         $result->execute();
         if ($result->rowCount() > 0) {
             return $result;
         } else {
             return false;
+        }
+    }
+
+    public function totalServiciosXBusqueda($nombreOTipo)
+    {
+        $sql = "SELECT s.servicio_id, s.nombre, s.tipo, s.precio, r.nombre as rol 
+                FROM servicios s
+                INNER JOIN roles r ON s.rol_id = r.rol_id
+                WHERE s.activo = 1 AND (s.nombre LIKE :nombreOTipo OR s.tipo LIKE :nombreOTipo)";
+        $result = $this->connect()->prepare($sql);
+        $searchTerm = '%' . $nombreOTipo . '%';
+        $result->bindValue(':nombreOTipo', $searchTerm, PDO::PARAM_STR);
+        $result->execute();
+        $data = $result->fetchAll(PDO::FETCH_ASSOC);
+        if ($data) {
+            return count($data);
+        } else {
+            return 0;
+        }
+    }
+
+    public function getServiciosXBusqueda($nombreOTipo, $empezar_desde, $tamano_paginas)
+    {
+        $sql = "SELECT s.servicio_id, s.nombre, s.tipo, s.precio, r.nombre as rol 
+                FROM servicios s
+                INNER JOIN roles r ON s.rol_id = r.rol_id
+                WHERE s.activo = 1 AND (s.nombre LIKE :nombreOTipo OR s.tipo LIKE :nombreOTipo)
+                LIMIT :empezar_desde, :tamano_paginas";
+        $result = $this->connect()->prepare($sql);
+        $searchTerm = '%' . $nombreOTipo . '%';
+        $result->bindValue(':nombreOTipo', $searchTerm, PDO::PARAM_STR);
+        $result->bindValue(':empezar_desde', $empezar_desde, PDO::PARAM_INT);
+        $result->bindValue(':tamano_paginas', $tamano_paginas, PDO::PARAM_INT);
+        $result->execute();
+        $data = $result->fetchAll(PDO::FETCH_ASSOC);
+        if ($data) {
+            return $data;
+        } else {
+            return [];
         }
     }
 
@@ -663,8 +736,7 @@ class Admin extends Database
                     a.titulo, 
                     a.descripcion, 
                     a.estado, 
-                    m.nombre as mascota_nombre, 
-                    m.fecha_muerte as mascota_fecha_muerte, 
+                    m.nombre as mascota_nombre,  
                     m.raza, 
                     p.nombre as personal_nombre, 
                     p.apellido as personal_apellido, 
@@ -685,13 +757,73 @@ class Admin extends Database
         }
     }
 
+    public function totalAtencionesXBusqueda($filtro)
+    {
+        $sql = "SELECT 
+                    count(*) as total
+                FROM atenciones a
+                INNER JOIN mascotas m ON a.mascota_id = m.mascota_id
+                INNER JOIN clientes c ON m.cliente_id = c.cliente_id
+                INNER JOIN personal p ON a.personal_id = p.personal_id
+                INNER JOIN servicios s ON a.servicio_id = s.servicio_id
+                WHERE (a.titulo LIKE :filtro OR a.descripcion LIKE :filtro OR m.nombre LIKE :filtro OR m.raza LIKE :filtro OR p.nombre LIKE :filtro OR p.apellido LIKE :filtro OR c.nombre LIKE :filtro OR c.apellido LIKE :filtro OR s.nombre LIKE :filtro)";
+        $result = $this->connect()->prepare($sql);
+        $searchTerm = '%' . $filtro . '%';
+        $result->bindValue(':filtro', $searchTerm, PDO::PARAM_STR);
+        $result->execute();
+        $data = $result->fetch(PDO::FETCH_ASSOC);
+        if ($data) {
+            return $data['total'];
+        } else {
+            return 0;
+        }
+    }
+
+    public function getAtencionesXBusqueda($filtro, $empezar_desde, $tamano_paginas)
+    {
+        $sql = "SELECT 
+                    a.atencion_id, 
+                    DATE_FORMAT(a.fecha_hora, '%d/%m/%Y %H:%i:%s') as fecha_hora, 
+                    a.titulo, 
+                    a.descripcion, 
+                    a.estado, 
+                    m.nombre as mascota_nombre, 
+                    m.fecha_muerte as mascota_fecha_muerte, 
+                    m.raza, 
+                    p.nombre as personal_nombre, 
+                    p.apellido as personal_apellido, 
+                    c.nombre as cliente_nombre, 
+                    c.apellido as cliente_apellido, 
+                    s.nombre as servicio_nombre 
+                FROM atenciones a
+                INNER JOIN mascotas m ON a.mascota_id = m.mascota_id
+                INNER JOIN clientes c ON m.cliente_id = c.cliente_id
+                INNER JOIN personal p ON a.personal_id = p.personal_id
+                INNER JOIN servicios s ON a.servicio_id = s.servicio_id
+                WHERE (a.titulo LIKE :filtro OR a.descripcion LIKE :filtro OR m.nombre LIKE :filtro OR m.raza LIKE :filtro OR p.nombre LIKE :filtro OR p.apellido LIKE :filtro OR c.nombre LIKE :filtro OR c.apellido LIKE :filtro OR s.nombre LIKE :filtro)
+                LIMIT :empezar_desde, :tamano_paginas";
+        $result = $this->connect()->prepare($sql);
+        $searchTerm = '%' . $filtro . '%';
+        $result->bindValue(':filtro', $searchTerm, PDO::PARAM_STR);
+        $result->bindValue(':empezar_desde', $empezar_desde, PDO::PARAM_INT);
+        $result->bindValue(':tamano_paginas', $tamano_paginas, PDO::PARAM_INT);
+        $result->execute();
+        $data = $result->fetchAll(PDO::FETCH_ASSOC);
+        if ($data) {
+            return $data;
+        } else {
+            return [];
+        }
+    }
+
     public function getAtencionesHoy()
     {
         $sql = "SELECT a.atencion_id, a.fecha_hora, a.titulo, a.descripcion, m.nombre as mascota_nombre, m.raza, p.nombre as personal_nombre, p.apellido as personal_apellido, c.nombre as cliente_nombre, c.apellido as cliente_apellido, s.nombre as servicio_nombre FROM atenciones a
                 INNER JOIN mascotas m ON a.mascota_id = m.mascota_id
                 INNER JOIN clientes c ON m.cliente_id = c.cliente_id
                 INNER JOIN personal p ON a.personal_id = p.personal_id
-                INNER JOIN servicios s ON a.servicio_id = s.servicio_id WHERE DATE(a.fecha_hora) = CURDATE() AND a.estado = 'PENDIENTE'";
+                INNER JOIN servicios s ON a.servicio_id = s.servicio_id 
+                WHERE DATE(a.fecha_hora) = CURDATE() AND a.estado = 'PENDIENTE'";
         $result = $this->connect()->query($sql);
         $row = $result->fetchAll(PDO::FETCH_ASSOC);
         return $row;
@@ -824,6 +956,61 @@ class Admin extends Database
         }
     }
 
+    public function totalHospitalizacionesXBusqueda($filtro)
+    {
+        $sql = "SELECT 
+                    count(*) as total
+                FROM hospitalizaciones h
+                INNER JOIN mascotas m ON h.mascota_id = m.mascota_id
+                INNER JOIN clientes c ON m.cliente_id = c.cliente_id
+                INNER JOIN personal p ON h.personal_id = p.personal_id
+                WHERE (m.nombre LIKE :filtro OR p.nombre LIKE :filtro OR p.apellido LIKE :filtro OR c.nombre LIKE :filtro OR c.apellido LIKE :filtro)";
+        $result = $this->connect()->prepare($sql);
+        $searchTerm = '%' . $filtro . '%';
+        $result->bindValue(':filtro', $searchTerm, PDO::PARAM_STR);
+        $result->execute();
+        $data = $result->fetch(PDO::FETCH_ASSOC);
+        if ($data) {
+            return $data['total'];
+        } else {
+            return 0;
+        }
+    }
+
+    public function getHospitalizacionesXBusqueda($filtro, $empezar_desde, $tamano_paginas)
+    {
+        $sql = "SELECT 
+                    h.hospitalizacion_id, 
+                    DATE_FORMAT(h.fecha_hora_ingreso, '%d/%m/%Y %H:%i:%s') as fecha_hora_ingreso, 
+                    h.motivo, 
+                    DATE_FORMAT(h.fecha_hora_alta, '%d/%m/%Y %H:%i:%s') as fecha_hora_alta, 
+                    h.observaciones, 
+                    m.nombre as mascota_nombre, 
+                    m.raza, 
+                    p.nombre as personal_nombre, 
+                    p.apellido as personal_apellido, 
+                    c.nombre as cliente_nombre, 
+                    c.apellido as cliente_apellido 
+                FROM hospitalizaciones h
+                INNER JOIN mascotas m ON h.mascota_id = m.mascota_id
+                INNER JOIN clientes c ON m.cliente_id = c.cliente_id
+                INNER JOIN personal p ON h.personal_id = p.personal_id
+                WHERE (m.nombre LIKE :filtro OR p.nombre LIKE :filtro OR p.apellido LIKE :filtro OR c.nombre LIKE :filtro OR c.apellido LIKE :filtro)
+                LIMIT :empezar_desde, :tamano_paginas";
+        $result = $this->connect()->prepare($sql);
+        $searchTerm = '%' . $filtro . '%';
+        $result->bindValue(':filtro', $searchTerm, PDO::PARAM_STR);
+        $result->bindValue(':empezar_desde', $empezar_desde, PDO::PARAM_INT);
+        $result->bindValue(':tamano_paginas', $tamano_paginas, PDO::PARAM_INT);
+        $result->execute();
+        $data = $result->fetchAll(PDO::FETCH_ASSOC);
+        if ($data) {
+            return $data;
+        } else {
+            return [];
+        }
+    }
+
     public function getHospitalizacion($id)
     {
         $sql = "SELECT h.hospitalizacion_id, h.fecha_hora_ingreso, h.motivo, h.fecha_hora_alta, h.observaciones, m.mascota_id, m.nombre as mascota_nombre, m.raza, p.personal_id, p.nombre as personal_nombre, p.apellido as personal_apellido, c.nombre as cliente_nombre, c.apellido as cliente_apellido FROM hospitalizaciones h
@@ -899,8 +1086,6 @@ class Admin extends Database
         }
     }
 
-
-
     public function hospitalizacionExiste($id)
     {
         $sql = "SELECT * FROM hospitalizaciones WHERE hospitalizacion_id = :id";
@@ -964,6 +1149,54 @@ class Admin extends Database
         $result->execute([':id' => $id]);
         $row = $result->fetch(PDO::FETCH_ASSOC);
         return $row;
+    }
+
+    public function totalHospedajesXBusqueda($filtro)
+    {
+        $sql = "SELECT 
+                    count(*) as total
+                FROM hoteleria h
+                INNER JOIN mascotas m ON h.mascota_id = m.mascota_id
+                INNER JOIN personal p ON h.personal_id = p.personal_id
+                WHERE (m.nombre LIKE :filtro OR m.raza LIKE :filtro OR p.nombre LIKE :filtro OR p.apellido LIKE :filtro)";
+        $result = $this->connect()->prepare($sql);
+        $searchTerm = '%' . $filtro . '%';
+        $result->bindValue(':filtro', $searchTerm, PDO::PARAM_STR);
+        $result->execute();
+        $data = $result->fetch(PDO::FETCH_ASSOC);
+        if ($data) {
+            return $data['total'];
+        } else {
+            return 0;
+        }
+    }
+    public function getHospedajesXBusqueda($filtro, $empezar_desde, $tamano_paginas)
+    {
+        $sql = "SELECT 
+                    h.hospedaje_id, 
+                    DATE_FORMAT(h.fecha_hora_ingreso, '%d/%m/%Y') as fecha_hora_ingreso, 
+                    DATE_FORMAT(h.fecha_hora_salida, '%d/%m/%Y') as fecha_hora_salida, 
+                    m.nombre as mascota_nombre, 
+                    m.raza, 
+                    p.nombre as personal_nombre, 
+                    p.apellido as personal_apellido 
+                FROM hoteleria h
+                INNER JOIN mascotas m ON h.mascota_id = m.mascota_id
+                INNER JOIN personal p ON h.personal_id = p.personal_id
+                WHERE (m.nombre LIKE :filtro OR m.raza LIKE :filtro OR p.nombre LIKE :filtro OR p.apellido LIKE :filtro)
+                LIMIT :empezar_desde, :tamano_paginas";
+        $result = $this->connect()->prepare($sql);
+        $searchTerm = '%' . $filtro . '%';
+        $result->bindValue(':filtro', $searchTerm, PDO::PARAM_STR);
+        $result->bindValue(':empezar_desde', $empezar_desde, PDO::PARAM_INT);
+        $result->bindValue(':tamano_paginas', $tamano_paginas, PDO::PARAM_INT);
+        $result->execute();
+        $data = $result->fetchAll(PDO::FETCH_ASSOC);
+        if ($data) {
+            return $data;
+        } else {
+            return [];
+        }
     }
 
     public function getHospedajesXMascota($mascota_id)

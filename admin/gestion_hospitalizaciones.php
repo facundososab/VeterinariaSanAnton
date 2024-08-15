@@ -23,9 +23,25 @@ if (isset($_GET['pagina'])) {
 
 $empezar_desde = ($pagina - 1) * $tamano_paginas;
 
-$hospitalizaciones = $admin->getAllHospitalizaciones($empezar_desde, $tamano_paginas);
+$hospitalizaciones = null;
 
-$total_hospitalizaciones = $admin->totalHospitalizaciones();
+if (isset($_GET['searchHospitalizacion']) && !empty($_GET['searchHospitalizacion'])) {
+  $filtro = $_GET['searchHospitalizacion'];
+  $total_hospitalizaciones = $admin->totalHospitalizacionesXBusqueda($filtro);
+  if ($total_hospitalizaciones == 0) {
+    $_SESSION['mensaje'] = 'No se encontraron resultados';
+    $_SESSION['msg-color'] = 'warning';
+  } else {
+    $hospitalizaciones = $admin->getHospitalizacionesXBusqueda($filtro, $empezar_desde, $tamano_paginas);
+  }
+} else {
+  $total_hospitalizaciones = $admin->totalHospitalizaciones();
+  $hospitalizaciones = $admin->getAllHospitalizaciones($empezar_desde, $tamano_paginas);
+  if (empty($hospitalizaciones)) {
+    $_SESSION['mensaje'] = 'No hay hospitalizaciones registradas';
+    $_SESSION['msg-color'] = 'warning';
+  }
+}
 
 ?>
 
@@ -49,6 +65,14 @@ $total_hospitalizaciones = $admin->totalHospitalizaciones();
         </button>
       </div>
       <hr>
+      <nav class="navbar">
+        <div class="container-fluid justify-content-end">
+          <form class="d-flex" role="search" id="formSearchHospitalizacion" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="GET">
+            <input class="form-control me-2" type="search" placeholder="Mascota o personal responsable" aria-label="Buscar" name="searchHospitalizacion" value="<?= isset($_GET['searchHospitalizacion']) ? $_GET['searchHospitalizacion'] : ''; ?>">
+            <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i></button>
+          </form>
+        </div>
+      </nav>
       <!-- Verificar si hay hospitalizaciones registradas -->
       <?php if ($hospitalizaciones) { ?>
         <div class="table-responsive mb-5">
@@ -108,7 +132,8 @@ $total_hospitalizaciones = $admin->totalHospitalizaciones();
         </div>
       <?php } else { ?>
         <div class="alert alert-warning" role="alert">
-          No hay hospitalizaciones registradas.
+          <?php echo $_SESSION['mensaje'];
+          unset($_SESSION['mensaje']); ?>
         </div>
       <?php } ?>
   </main>
@@ -118,13 +143,22 @@ $total_hospitalizaciones = $admin->totalHospitalizaciones();
       <ul class="pagination justify-content-center">
         <?php
         $total_paginas = ceil($total_hospitalizaciones / $tamano_paginas);
-        ?>
 
-        <?php for ($i = 1; $i <= $total_paginas; $i++) {
-          if ($i == $pagina) {
-            echo "<li class='page-item active'><a class='page-link' href='gestion_hospitalizaciones.php?pagina=$i'>$i</a></li>";
-          } else {
-            echo "<li class='page-item'><a class='page-link' href='gestion_hospitalizaciones.php?pagina=$i'>$i</a></li>";
+        if (isset($_GET['searchHospitalizacion']) && !empty($_GET['searchHospitalizacion'])) {
+          for ($i = 1; $i <= $total_paginas; $i++) {
+            if ($i == $pagina) { ?>
+              <li class="page-item active"><a class="page-link" href="gestion_hospitalizaciones.php?pagina=<?= $i ?>&searchHospitalizacion=<?= $_GET['searchHospitalizacion'] ?>"><?= $i ?></a></li>
+            <?php } else { ?>
+              <li class="page-item"><a class="page-link" href="gestion_hospitalizaciones.php?pagina=<?= $i ?>&searchHospitalizacion=<?= $_GET['searchHospitalizacion'] ?>"><?= $i ?></a></li>
+        <?php }
+          }
+        } else {
+          for ($i = 1; $i <= $total_paginas; $i++) {
+            if ($i == $pagina) {
+              echo "<li class='page-item active'><a class='page-link' href='gestion_hospitalizaciones.php?pagina=$i'>$i</a></li>";
+            } else {
+              echo "<li class='page-item'><a class='page-link' href='gestion_hospitalizaciones.php?pagina=$i'>$i</a></li>";
+            }
           }
         } ?>
 

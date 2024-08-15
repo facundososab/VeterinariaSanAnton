@@ -21,11 +21,26 @@ if (isset($_GET["pagina"])) {
   $pagina = 1;
 }
 
-$total_servicios = $admin->totalServicios();
 
 $empezar_desde = ($pagina - 1) * $tamano_paginas;
 
-$servicios = $admin->getAllServicios($empezar_desde, $tamano_paginas);
+if (isset($_GET['searchServicios']) && !empty($_GET['searchServicios'])) {
+  $filtro = $_GET['searchServicios'];
+  $total_servicios = $admin->totalServiciosXBusqueda($filtro);
+  if ($total_servicios == 0) {
+    $_SESSION['mensaje'] = 'No se encontraron resultados';
+    $_SESSION['msg-color'] = 'warning';
+  } else {
+    $servicios = $admin->getServiciosXBusqueda($filtro, $empezar_desde, $tamano_paginas);
+  }
+} else {
+  $total_servicios = $admin->totalServicios();
+  $servicios = $admin->getAllServicios($empezar_desde, $tamano_paginas);
+  if (empty($servicios)) {
+    $_SESSION['mensaje'] = 'No hay servicios registrados';
+    $_SESSION['msg-color'] = 'warning';
+  }
+}
 
 ?>
 
@@ -48,6 +63,14 @@ $servicios = $admin->getAllServicios($empezar_desde, $tamano_paginas);
         </button>
       </div>
       <hr />
+      <nav class="navbar">
+        <div class="container-fluid justify-content-end">
+          <form class="d-flex" role="search" id="formSearchServicios" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="GET">
+            <input class="form-control me-2" type="search" placeholder="Nombre o raza" aria-label="Buscar" name="searchServicios" value="<?= isset($_GET['searchServicios']) ? $_GET['searchServicios'] : ''; ?>">
+            <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i></button>
+          </form>
+        </div>
+      </nav>
       <!-- Verificar si hay servicios registrados -->
       <?php if ($servicios) { ?>
         <div class="table-responsive mb-5">
@@ -94,7 +117,9 @@ $servicios = $admin->getAllServicios($empezar_desde, $tamano_paginas);
       <?php
       } else { ?>
         <div class="alert alert-warning" role="alert">
-          No hay servicios registrados.
+          <?php echo $_SESSION['mensaje'];
+          unset($_SESSION['mensaje']);
+          ?>
         </div>
       <?php } ?>
     </div>
@@ -105,13 +130,22 @@ $servicios = $admin->getAllServicios($empezar_desde, $tamano_paginas);
         <ul class="pagination justify-content-center">
           <?php
           $total_paginas = ceil($total_servicios / $tamano_paginas);
-          for ($i = 1; $i <= $total_paginas; $i++) {
-            if ($i == $pagina) {
-              echo '<li class="page-item active"><a class="page-link" href="?pagina=' . $i . '">' . $i . '</a></li>';
-            } else {
-              echo '<li class="page-item"><a class="page-link" href="?pagina=' . $i . '">' . $i . '</a></li>';
+          if (isset($_GET['searchServicios']) && !empty($_GET['searchServicios'])) {
+            for ($i = 1; $i <= $total_paginas; $i++) {
+              if ($i == $pagina) { ?>
+                <li class="page-item active"><a class="page-link" href="?pagina=<?= $i; ?>&searchServicios=<?= $_GET['searchServicios']; ?>"><?= $i; ?></a></li>
+              <?php } else { ?>
+                <li class="page-item"><a class="page-link" href="?pagina=<?= $i; ?>&searchServicios=<?= $_GET['searchServicios']; ?>"><?= $i; ?></a></li>
+          <?php }
             }
-          }
+          } else
+            for ($i = 1; $i <= $total_paginas; $i++) {
+              if ($i == $pagina) {
+                echo '<li class="page-item active"><a class="page-link" href="?pagina=' . $i . '">' . $i . '</a></li>';
+              } else {
+                echo '<li class="page-item"><a class="page-link" href="?pagina=' . $i . '">' . $i . '</a></li>';
+              }
+            }
           ?>
         </ul>
       </nav>

@@ -20,13 +20,24 @@ if (isset($_GET["pagina"])) {
 
 $empezar_desde = ($pagina - 1) * $tamano_paginas;
 
+$personal = null;
+
 if (isset($_GET['searchPersonal']) && !empty($_GET['searchPersonal'])) {
   $filtro = $_GET['searchPersonal'];
   $total_personal = $admin->totalPersonalXBusqueda($filtro);
-  $personal = $admin->getPersonalXBusqueda($filtro, $empezar_desde, $tamano_paginas);
+  if ($total_personal == 0) {
+    $_SESSION['mensaje'] = 'No se encontraron resultados';
+    $_SESSION['msg-color'] = 'warning';
+  } else {
+    $personal = $admin->getPersonalXBusqueda($filtro, $empezar_desde, $tamano_paginas);
+  }
 } else {
   $total_personal = $admin->totalPersonal();
   $personal = $admin->getAllPersonal($empezar_desde, $tamano_paginas);
+  if (empty($personal)) {
+    $_SESSION['mensaje'] = 'No hay personal registrado';
+    $_SESSION['msg-color'] = 'warning';
+  }
 }
 
 
@@ -55,7 +66,7 @@ if (isset($_GET['searchPersonal']) && !empty($_GET['searchPersonal'])) {
         <nav class="navbar">
           <div class="container-fluid justify-content-end">
             <form class="d-flex" role="search" id="formSearchPersonal" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="GET">
-              <input class="form-control me-2" type="search" placeholder="Nombre o raza" aria-label="Buscar" name="searchPersonal">
+              <input class="form-control me-2" type="search" placeholder="Nombre o raza" aria-label="Buscar" name="searchPersonal" value="<?= isset($_GET['searchPersonal']) ? $_GET['searchPersonal'] : ''; ?>">
               <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i></button>
             </form>
           </div>
@@ -102,7 +113,8 @@ if (isset($_GET['searchPersonal']) && !empty($_GET['searchPersonal'])) {
           </div>
         <?php } else { ?>
           <div class="alert alert-warning" role="alert">
-            No hay personal registrado
+            <?php echo $_SESSION['mensaje'];
+            unset($_SESSION['mensaje']); ?>
           </div>
         <?php } ?>
 

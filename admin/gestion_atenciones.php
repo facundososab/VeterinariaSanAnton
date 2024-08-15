@@ -21,11 +21,27 @@ if (isset($_GET["pagina"])) {
   $pagina = 1;
 }
 
-$total_atenciones = $admin->totalAtenciones();
-
 $empezar_desde = ($pagina - 1) * $tamano_paginas;
 
-$atenciones = $admin->getAllAtenciones($empezar_desde, $tamano_paginas);
+$atenciones = null;
+
+if (isset($_GET['searchAtenciones']) && !empty($_GET['searchAtenciones'])) {
+  $filtro = $_GET['searchAtenciones'];
+  $total_atenciones = $admin->totalAtencionesXBusqueda($filtro);
+  if ($total_atenciones == 0) {
+    $_SESSION['mensaje'] = 'No se encontraron resultados';
+    $_SESSION['msg-color'] = 'warning';
+  } else {
+    $atenciones = $admin->getAtencionesXBusqueda($filtro, $empezar_desde, $tamano_paginas);
+  }
+} else {
+  $total_atenciones = $admin->totalAtenciones();
+  $atenciones = $admin->getAllAtenciones($empezar_desde, $tamano_paginas);
+  if (empty($atenciones)) {
+    $_SESSION['mensaje'] = 'No hay atenciones registradas';
+    $_SESSION['msg-color'] = 'warning';
+  }
+}
 
 ?>
 
@@ -48,6 +64,14 @@ $atenciones = $admin->getAllAtenciones($empezar_desde, $tamano_paginas);
         </button>
       </div>
       <hr />
+      <nav class="navbar">
+        <div class="container-fluid justify-content-end">
+          <form class="d-flex" role="search" id="formSearchAtenciones" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="GET">
+            <input class="form-control me-2" type="search" placeholder="Buscar" aria-label="Buscar" name="searchAtenciones" value="<?= isset($_GET['searchAtenciones']) ? $_GET['searchAtenciones'] : ''; ?>">
+            <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i></button>
+          </form>
+        </div>
+      </nav>
       <!-- Verificar si hay atenciones registradas -->
       <?php if ($atenciones) { ?>
         <div class="table-responsive mb-5">
@@ -60,7 +84,7 @@ $atenciones = $admin->getAllAtenciones($empezar_desde, $tamano_paginas);
                 <th scope="col">Servicio</th>
                 <th scope="col">Titulo</th>
                 <th scope="col">Descripción</th>
-                <th scope="col">Personal a cargo</th>
+                <th scope="col">Atenciones a cargo</th>
                 <th scope="col">Estado</th>
                 <th scope="col">Acciones</th>
               </tr>
@@ -108,8 +132,9 @@ $atenciones = $admin->getAllAtenciones($empezar_desde, $tamano_paginas);
         </div>
       <?php
       } else { ?>
-        <div class="fs-5" role="alert">
-          <i>No hay atencion registradas</i>
+        <div class="alert alert-warning" role="alert">
+          <?php echo $_SESSION['mensaje'];
+          unset($_SESSION['mensaje']); ?>
         </div>
       <?php } ?>
     </div>
@@ -120,15 +145,27 @@ $atenciones = $admin->getAllAtenciones($empezar_desde, $tamano_paginas);
       <ul class="pagination justify-content-center">
         <?php
         $total_paginas = ceil($total_atenciones / $tamano_paginas);
-        ?>
 
-        <?php for ($i = 1; $i <= $total_paginas; $i++) {
-          if ($i == $pagina) {
-            echo "<li class='page-item active'><a class='page-link' href='gestion_atenciones.php?pagina=$i'>$i</a></li>";
-          } else {
-            echo "<li class='page-item'><a class='page-link' href='gestion_atenciones.php?pagina=$i'>$i</a></li>";
+        if (isset($_GET['searchAtenciones']) && !empty($_GET['searchAtenciones'])) {
+          for ($i = 1; $i <= $total_paginas; $i++) {
+            if ($i == $pagina) { ?>
+              <li class="page-item active">
+                <a class="page-link" href="gestion_atenciones.php?pagina=<?= $i ?>&searchAtenciones=<?= $_GET['searchAtenciones'] ?>"><?= $i ?></a>
+              </li>
+            <?php } else { ?>
+              <li class="page-item">
+                <a class="page-link" href="gestion_atenciones.php?pagina=<?= $i ?>&searchAtenciones=<?= $_GET['searchAtenciones'] ?>"><?= $i ?></a>
+              </li>
+        <?php }
           }
-        } ?>
+        } else
+          for ($i = 1; $i <= $total_paginas; $i++) {
+            if ($i == $pagina) {
+              echo "<li class='page-item active'><a class='page-link' href='gestion_atenciones.php?pagina=$i'>$i</a></li>";
+            } else {
+              echo "<li class='page-item'><a class='page-link' href='gestion_atenciones.php?pagina=$i'>$i</a></li>";
+            }
+          } ?>
 
       </ul>
     </nav>

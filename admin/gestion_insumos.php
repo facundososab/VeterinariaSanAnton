@@ -19,11 +19,25 @@ if (isset($_GET["pagina"])) {
   $pagina = 1;
 }
 
-$total_insumos = $admin->totalInsumos();
-
 $empezar_desde = ($pagina - 1) * $tamano_paginas;
 
-$insumos = $admin->getAllInsumos($empezar_desde, $tamano_paginas);
+if (isset($_GET['searchInsumos']) && !empty($_GET['searchInsumos'])) {
+  $filtro = $_GET['searchInsumos'];
+  $total_insumos = $admin->totalInsumosXBusqueda($filtro);
+  if ($total_insumos == 0) {
+    $_SESSION['mensaje'] = 'No se encontraron resultados';
+    $_SESSION['msg-color'] = 'warning';
+  } else {
+    $insumos = $admin->getInsumosXBusqueda($filtro, $empezar_desde, $tamano_paginas);
+  }
+} else {
+  $total_insumos = $admin->totalInsumos();
+  $insumos = $admin->getAllInsumos($empezar_desde, $tamano_paginas);
+  if (empty($insumos)) {
+    $_SESSION['mensaje'] = 'No hay insumos registrados';
+    $_SESSION['msg-color'] = 'warning';
+  }
+}
 ?>
 
 <!DOCTYPE html>
@@ -45,6 +59,14 @@ $insumos = $admin->getAllInsumos($empezar_desde, $tamano_paginas);
         </button>
       </div>
       <hr />
+      <nav class="navbar">
+        <div class="container-fluid justify-content-end">
+          <form class="d-flex" role="search" id="formSearchInsumos" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="GET">
+            <input class="form-control me-2" type="search" placeholder="Buscar por descripción" aria-label="Buscar" name="searchInsumos" value="<?= isset($_GET['searchInsumos']) ? $_GET['searchInsumos'] : ''; ?>">
+            <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i></button>
+          </form>
+        </div>
+      </nav>
       <!-- Verificar si hay insumos registrados -->
       <?php if ($insumos) { ?>
         <div class="table-responsive">
@@ -90,10 +112,11 @@ $insumos = $admin->getAllInsumos($empezar_desde, $tamano_paginas);
 
       <?php } else { ?>
         <div class="alert alert-warning" role="alert">
-          No hay insumos registrados
+        <?php
+        echo $_SESSION['mensaje'];
+        unset($_SESSION['mensaje']);
+      } ?>
         </div>
-      <?php } ?>
-    </div>
   </main>
 
   <footer class="footer mt-auto py-3 bg-light fixed-bottom">
@@ -103,13 +126,27 @@ $insumos = $admin->getAllInsumos($empezar_desde, $tamano_paginas);
         $total_paginas = ceil($total_insumos / $tamano_paginas);
         ?>
 
-        <?php for ($i = 1; $i <= $total_paginas; $i++) {
-          if ($i == $pagina) {
-            echo "<li class='page-item active'><a class='page-link' href='gestion_insumos.php?pagina=$i'>$i</a></li>";
-          } else {
-            echo "<li class='page-item'><a class='page-link' href='gestion_insumos.php?pagina=$i'>$i</a></li>";
+        <?php
+        if (isset($_GET['searchInsumos']) && !empty($_GET['searchInsumos'])) {
+          for ($i = 1; $i <= $total_paginas; $i++) {
+            if ($i == $pagina) { ?>
+              <li class="page-item active">
+                <a class="page-link" href="gestion_insumos.php?pagina=<?= $i ?>&searchInsumos=<?= $_GET['searchInsumos'] ?>"><?= $i ?></a>
+              </li>
+            <?php } else { ?>
+              <li class="page-item">
+                <a class="page-link" href="gestion_insumos.php?pagina=<?= $i ?>&searchInsumos=<?= $_GET['searchInsumos'] ?>"><?= $i ?></a>
+              </li>
+        <?php }
           }
-        } ?>
+        } else
+          for ($i = 1; $i <= $total_paginas; $i++) {
+            if ($i == $pagina) {
+              echo "<li class='page-item active'><a class='page-link' href='gestion_insumos.php?pagina=$i'>$i</a></li>";
+            } else {
+              echo "<li class='page-item'><a class='page-link' href='gestion_insumos.php?pagina=$i'>$i</a></li>";
+            }
+          } ?>
 
       </ul>
     </nav>
