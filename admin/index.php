@@ -33,37 +33,36 @@ $atenciones_hoy = $admin->getAtencionesHoy();
                 <div class="col-12 col-md-6 col-lg-3 mb-2">
                     <div class="card bg-primary-color text-white">
                         <div class="card-body">
+                            <h5 class="card-title text-center text-dark">Atenciones</h5>
+                            <p class="card-text text-center">Gestiona las atenciones de la veterinaria.</p>
+                            <a href="gestion_atenciones.php" class="btn btn-light d-block">Ir a atenciones</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-3 mb-2">
+                    <div class="card bg-primary-color text-white">
+                        <div class="card-body">
+                            <h5 class="card-title text-center text-dark">Hospitalizaciones</h5>
+                            <p class="card-text text-center">Gestiona las hospitalizaciones de la veterinaria.</p>
+                            <a href="gestion_hospitalizaciones.php" class="btn btn-light d-block">Ir a hospitalizaciones</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-3 mb-2">
+                    <div class="card bg-primary-color text-white">
+                        <div class="card-body">
+                            <h5 class="card-title text-center text-dark">Hotelería</h5>
+                            <p class="card-text text-center">Gestiona los hospedajes de la veterinaria.</p>
+                            <a href="gestion_hoteleria.php" class="btn btn-light d-block">Ir a hotelería</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-3 mb-2">
+                    <div class="card bg-primary-color text-white">
+                        <div class="card-body">
                             <h5 class="card-title text-center text-dark">Mascotas</h5>
                             <p class="card-text text-center">Gestiona las mascotas registradas en la veterinaria.</p>
                             <a href="gestion_mascotas.php" class="btn btn-light d-block">Ir a mascotas</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-6 col-lg-3 mb-2">
-                    <div class="card bg-primary-color text-white">
-                        <div class="card-body">
-                            <h5 class="card-title text-center text-dark">Clientes</h5>
-                            <p class="card-text text-center">Gestiona los clientes registrados en la veterinaria.</p>
-                            <a href="gestion_clientes.php" class="btn btn-light d-block">Ir a clientes</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-6 col-lg-3 mb-2">
-                    <div class="card bg-primary-color text-white">
-                        <div class="card-body">
-                            <h5 class="card-title text-center text-dark">Personal</h5>
-                            <p class="card-text text-center">Gestiona el personal registrado en la veterinaria.</p>
-                            <a href="gestion_personal.php" class="btn btn-light d-block">Ir a personal</a>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="col-12 col-md-6 col-lg-3 mb-2">
-                    <div class="card bg-primary-color text-white">
-                        <div class="card-body">
-                            <h5 class="card-title text-center text-dark">Servicios</h5>
-                            <p class="card-text text-center">Gestiona los servicios ofrecidos en la veterinaria.</p>
-                            <a href="gestion_servicios.php" class="btn btn-light d-block">Ir a servicios</a>
                         </div>
                     </div>
                 </div>

@@ -1,0 +1,77 @@
+<div
+  class="modal fade"
+  id="bajaMascotaPorMuerteModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="bajaMascotaPorMuerteLabel"
+  aria-modal="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="bajaMascotaPorMuerteLabel">
+          <b>Baja de mascota por muerte</b>
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <form
+        id="bajaMascotaPorMuerteForm"
+        action="./bajaMascotaPorMuerte.php"
+        method="POST"
+      >
+        <div class="modal-body">
+          <p class="fw-bold text-danger">
+            ACLARACIÓN! Al dar de baja a una mascota por muerte, se dejarán de
+            mostrar sus datos en el sistema.
+          </p>
+          <div class="mb-3">
+            <label for="fecha_muerte" class="form-label">Fecha de muerte</label>
+            <input
+              type="date"
+              class="form-control"
+              id="fecha_muerte"
+              name="fecha_muerte"
+              required
+            />
+            <div id="fecha_muerteError" class="form-text text-danger"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <input type="hidden" name="id_mascota" id="id_mascota" />
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-danger">Aceptar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  const modalMuerteMascota = document.getElementById(
+    'bajaMascotaPorMuerteModal'
+  );
+  const fechaMuerte = document.getElementById('fecha_muerte');
+
+  const validateFechaMuerte = (e) => {
+    console.log(1);
+    if (fechaMuerte.value > new Date().toISOString().split('T')[0]) {
+      e.preventDefault();
+      console.log(2);
+      document.getElementById('fecha_muerteError').innerText =
+        'La fecha de muerte no puede ser posterior a la fecha actual';
+    }
+  };
+
+  modalMuerteMascota.addEventListener('submit', validateFechaMuerte);
+</script>

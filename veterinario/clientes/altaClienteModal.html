@@ -1,0 +1,156 @@
+<div
+  class="modal fade"
+  id="altaClienteModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="altaClienteModalLabel"
+  aria-modal="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="AltaClienteLabel">
+          <b>Alta de cliente</b>
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <form
+        action="./altaCliente.php"
+        method="post"
+        id="formulario_altaCliente"
+      >
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nombre"
+              name="nombre"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="apellido" class="form-label">Apellido</label>
+            <input
+              type="text"
+              class="form-control"
+              id="apellido"
+              name="apellido"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="telefono" class="form-label">Telefono</label>
+            <input
+              type="number"
+              class="form-control"
+              id="telefono"
+              name="telefono"
+              required
+            />
+            <p id="telefonoError" class="form-text text-danger"></p>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              name="email"
+              required
+            />
+            <p id="emailError" class="form-text text-danger"></p>
+          </div>
+          <div class="mb-3">
+            <label for="clave" class="form-label">Clave</label>
+            <input
+              type="password"
+              class="form-control"
+              id="clave"
+              name="clave"
+              required
+            />
+            <p id="claveError" class="form-text text-danger"></p>
+          </div>
+          <div class="mb-3">
+            <label for="ciudad" class="form-label">Ciudad</label>
+            <input
+              type="text"
+              class="form-control"
+              id="ciudad"
+              name="ciudad"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="direccion" class="form-label">Direccion</label>
+            <input
+              type="text"
+              class="form-control"
+              id="direccion"
+              name="direccion"
+              required
+            />
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <input
+              type="submit"
+              name="alta-cliente"
+              value="Guardar"
+              class="btn btn-primary"
+            />
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  const formAltaCliente = document.getElementById('formulario_altaCliente');
+
+  const validateAltaCliente = (e) => {
+    const email = document.getElementById('email');
+    const clave = document.getElementById('clave');
+
+    if (!emailValidoAlta(email.value.trim())) {
+      e.preventDefault();
+      emailError.innerHTML = 'Email inválido';
+    } else {
+      emailError.innerHTML = '';
+    }
+
+    if (!claveValidaAlta(clave.value.trim())) {
+      e.preventDefault();
+      claveError.innerHTML =
+        'Clave inválida. Debe tener entre 8 y 15 caracteres, al menos una letra mayúscula, una letra minúscula, un número y un carácter especial.';
+    } else {
+      claveError.innerHTML = '';
+    }
+  };
+
+  const emailValidoAlta = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const claveValidaAlta = (clave) => {
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])([A-Za-z\d$@$!%*?&]|[^ ]){8,15}$/.test(
+      clave
+    );
+  };
+
+  formAltaCliente.addEventListener('submit', validateAltaCliente);
+</script>

@@ -288,7 +288,7 @@ class Admin extends Database
 
     public function getAllMascotas($empezar_desde, $tamano_paginas)
     {
-        $sql = "SELECT m.mascota_id, m.nombre, m.raza, m.color, m.fecha_nac, c.nombre as cliente_nombre, c.apellido as cliente_apellido, c.email as cliente_email 
+        $sql = "SELECT m.mascota_id, m.nombre, m.raza, m.color, DATE_FORMAT(m.fecha_nac, '%d/%m/%Y') as fecha_nac, c.nombre as cliente_nombre, c.apellido as cliente_apellido, c.email as cliente_email 
                 FROM mascotas m
                 INNER JOIN clientes c ON m.cliente_id = c.cliente_id 
                 WHERE m.fecha_muerte IS NULL 
@@ -325,7 +325,7 @@ class Admin extends Database
 
     public function getMascotasByNombreORaza($nombreORaza, $empezar_desde, $tamano_paginas)
     {
-        $sql = "SELECT m.mascota_id, m.nombre, m.raza, m.color, m.fecha_nac, c.nombre as cliente_nombre, c.apellido as cliente_apellido, c.email as cliente_email 
+        $sql = "SELECT m.mascota_id, m.nombre, m.raza, m.color, DATE_FORMAT(m.fecha_nac, '%d/%m/%Y') as fecha_nac, c.nombre as cliente_nombre, c.apellido as cliente_apellido, c.email as cliente_email 
                 FROM mascotas m
                 INNER JOIN clientes c ON m.cliente_id = c.cliente_id 
                 WHERE m.fecha_muerte IS NULL AND m.nombre LIKE :nombreORaza OR m.raza LIKE :nombreORaza

@@ -25,7 +25,7 @@
                 Seleccionar mascota
               </option>
               <?php
-              $mascotas = $admin->showAllMascotasConCliente();
+              $mascotas = $vet->showAllMascotasConCliente();
               foreach ($mascotas as $mascota) {
                 if ($mascota['fecha_muerte']) {
                   continue;
@@ -54,7 +54,7 @@
                 Seleccionar servicio
               </option>
               <?php
-              $servicios = $admin->showAllServicios();
+              $servicios = $vet->showAllServicios();
               foreach ($servicios as $servicio) { ?>
                 <option value="<?= $servicio['servicio_id']; ?>">
                   <?= ucfirst($servicio['nombre']) . ' - ' . $servicio['tipo'] ?>

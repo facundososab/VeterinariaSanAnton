@@ -1,10 +1,10 @@
 <?php
-    include_once '../db.php';
+include_once '../db.php';
 
-    if(isset($_POST['enviar'])){
-        session_start();
+if (isset($_POST['enviar'])) {
+    session_start();
 
-        try {
+    try {
         $base = new Database();
 
         $resultado = $base->connect()->prepare('SELECT * FROM personal WHERE email = :email');
@@ -19,6 +19,7 @@
         $row = $resultado->fetch(PDO::FETCH_ASSOC);
 
         if ($row && password_verify($clave, $row['clave'])) {
+            $_SESSION['id'] = $row['personal_id'];
             $_SESSION['rol_id'] = $row['rol_id'];
             $_SESSION['nombre'] = $row['nombre'];
             $_SESSION['apellido'] = $row['apellido'];
@@ -27,22 +28,21 @@
             $_SESSION['direccion'] = $row['direccion'];
             $_SESSION['usuario'] = $row['personal_id'];
 
-            switch($_SESSION['rol_id']){
+            switch ($_SESSION['rol_id']) {
                 case 1:
-                header('location:../admin/index.php');
-                break;
-    
-                case 2:
-                header('location:../veterinario/index.php');
-                break;
-                case 3:
-                header('location:../peluquero/index.php');
-                break;
-    
-                default:
-                header('location:../index.php');
-            }
+                    header('location:../admin/index.php');
+                    break;
 
+                case 2:
+                    header('location:../veterinario/index.php');
+                    break;
+                case 3:
+                    header('location:../peluquero/index.php');
+                    break;
+
+                default:
+                    header('location:../index.php');
+            }
         } else {
             $sql = "SELECT * FROM clientes WHERE email = :email";
 
@@ -61,6 +61,7 @@
             //Redirige al login
             //header("location:login.php");
             if ($row && password_verify($clave, $row['clave'])) {
+                $_SESSION['id'] = $row['cliente'];
                 $_SESSION['rol_id'] = 4;
                 $_SESSION['nombre'] = $row['nombre'];
                 $_SESSION['apellido'] = $row['apellido'];
@@ -69,28 +70,21 @@
                 $_SESSION['direccion'] = $row['direccion'];
                 $_SESSION['usuario'] = $row['cliente_id'];
 
-                
+
                 header('location:../cliente/index.php');
-
-
             } else {
 
                 $_SESSION['error'] = "Error. Usuario o contraseña incorrectos";
-                
-
             }
-
-
         }
-
-        } catch (Exception $e) {
-            die("Error: " . $e->getMessage());
-        }
-
+    } catch (Exception $e) {
+        die("Error: " . $e->getMessage());
     }
-    include_once("formulario_login.php");
+}
+include_once("formulario_login.php");
 ?>
 
-    
+
 </body>
+
 </html>

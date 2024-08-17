@@ -1,0 +1,39 @@
+<div
+  class="modal fade"
+  id="bajaClienteModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="bajaClienteModalLabel"
+  aria-modal="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="bajaClienteModalLabel">Baja de cliente</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        ¿Estás seguro de que desea dar de baja a este cliente? Esto eliminará a
+        todas sus mascotas con sus respectivas atenciones.
+      </div>
+      <div class="modal-footer">
+        <form action="./bajaCliente.php" method="post">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cancelar
+          </button>
+          <input type="hidden" name="cliente_id" id="cliente_id" />
+          <button type="submit" class="btn btn-danger">Eliminar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
