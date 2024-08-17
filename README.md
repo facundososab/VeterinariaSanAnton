@@ -9,6 +9,7 @@ El sistema cuenta con un sistema de login que proporciona distinitas vistas, fun
 - Inicio de sesión de usuarios
 - Vista y modificación de perfiles de usuarios
 - Encriptación de contraseñas de usuarios
+- Buscador de registros en todas las secciones
 
 ## SECCIÓN USUARIO _ADMINISTRADOR_ (Usuario con permisos globales del sistema)
 
