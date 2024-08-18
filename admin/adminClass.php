@@ -747,7 +747,9 @@ class Admin extends Database
                 INNER JOIN mascotas m ON a.mascota_id = m.mascota_id
                 INNER JOIN clientes c ON m.cliente_id = c.cliente_id
                 INNER JOIN personal p ON a.personal_id = p.personal_id
-                INNER JOIN servicios s ON a.servicio_id = s.servicio_id LIMIT $empezar_desde, $tamano_paginas";
+                INNER JOIN servicios s ON a.servicio_id = s.servicio_id 
+                ORDER BY a.fecha_hora DESC
+                LIMIT $empezar_desde, $tamano_paginas";
         $result = $this->connect()->prepare($sql);
         $result->execute();
         if ($result->rowCount() > 0) {
@@ -766,7 +768,8 @@ class Admin extends Database
                 INNER JOIN clientes c ON m.cliente_id = c.cliente_id
                 INNER JOIN personal p ON a.personal_id = p.personal_id
                 INNER JOIN servicios s ON a.servicio_id = s.servicio_id
-                WHERE (a.titulo LIKE :filtro OR a.descripcion LIKE :filtro OR m.nombre LIKE :filtro OR m.raza LIKE :filtro OR p.nombre LIKE :filtro OR p.apellido LIKE :filtro OR c.nombre LIKE :filtro OR c.apellido LIKE :filtro OR s.nombre LIKE :filtro)";
+                WHERE (a.titulo LIKE :filtro OR a.descripcion LIKE :filtro OR m.nombre LIKE :filtro OR m.raza LIKE :filtro OR p.nombre LIKE :filtro OR p.apellido LIKE :filtro OR c.nombre LIKE :filtro OR c.apellido LIKE :filtro OR s.nombre LIKE :filtro)
+                ORDER BY a.fecha_hora DESC";
         $result = $this->connect()->prepare($sql);
         $searchTerm = '%' . $filtro . '%';
         $result->bindValue(':filtro', $searchTerm, PDO::PARAM_STR);
@@ -801,6 +804,7 @@ class Admin extends Database
                 INNER JOIN personal p ON a.personal_id = p.personal_id
                 INNER JOIN servicios s ON a.servicio_id = s.servicio_id
                 WHERE (a.titulo LIKE :filtro OR a.descripcion LIKE :filtro OR m.nombre LIKE :filtro OR m.raza LIKE :filtro OR p.nombre LIKE :filtro OR p.apellido LIKE :filtro OR c.nombre LIKE :filtro OR c.apellido LIKE :filtro OR s.nombre LIKE :filtro)
+                ORDER BY a.fecha_hora DESC
                 LIMIT :empezar_desde, :tamano_paginas";
         $result = $this->connect()->prepare($sql);
         $searchTerm = '%' . $filtro . '%';
@@ -823,7 +827,8 @@ class Admin extends Database
                 INNER JOIN clientes c ON m.cliente_id = c.cliente_id
                 INNER JOIN personal p ON a.personal_id = p.personal_id
                 INNER JOIN servicios s ON a.servicio_id = s.servicio_id 
-                WHERE DATE(a.fecha_hora) = CURDATE() AND a.estado = 'PENDIENTE'";
+                WHERE DATE(a.fecha_hora) = CURDATE() AND a.estado = 'PENDIENTE'
+                ORDER BY a.fecha_hora ASC";
         $result = $this->connect()->query($sql);
         $row = $result->fetchAll(PDO::FETCH_ASSOC);
         return $row;
@@ -846,7 +851,7 @@ class Admin extends Database
     {
         $sql = "SELECT a.atencion_id, a.fecha_hora, a.titulo, a.descripcion, p.nombre as personal_nombre, p.apellido as personal_apellido, s.nombre as servicio_nombre FROM atenciones a
                 INNER JOIN personal p ON a.personal_id = p.personal_id
-                INNER JOIN servicios s ON a.servicio_id = s.servicio_id WHERE a.mascota_id = :mascota_id";
+                INNER JOIN servicios s ON a.servicio_id = s.servicio_id WHERE a.mascota_id = :mascota_id AND a.estado = 'FINALIZADA'";
         $result = $this->connect()->prepare($sql);
         $result->execute([':mascota_id' => $mascota_id]);
         $row = $result->fetchAll(PDO::FETCH_ASSOC);

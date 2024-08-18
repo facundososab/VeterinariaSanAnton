@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 session_start();
 
@@ -12,6 +15,7 @@ if (!isset($_SESSION['rol_id'])) {
 
 require_once '../vetClass.php';
 $vet = new Veterinario();
+$vet_id = $_SESSION['id'];
 
 $tamano_paginas = 8;
 
@@ -27,16 +31,16 @@ $atenciones = null;
 
 if (isset($_GET['searchAtenciones']) && !empty($_GET['searchAtenciones'])) {
   $filtro = $_GET['searchAtenciones'];
-  $total_atenciones = $vet->totalAtencionesXBusqueda($filtro);
+  $total_atenciones = $vet->totalAtencionesXBusqueda($vet_id, $filtro);
   if ($total_atenciones == 0) {
     $_SESSION['mensaje'] = 'No se encontraron resultados';
     $_SESSION['msg-color'] = 'warning';
   } else {
-    $atenciones = $vet->getAtencionesXBusqueda($filtro, $empezar_desde, $tamano_paginas);
+    $atenciones = $vet->getAtencionesXBusqueda($vet_id, $filtro, $empezar_desde, $tamano_paginas);
   }
 } else {
-  $total_atenciones = $vet->totalAtenciones();
-  $atenciones = $vet->getAllAtenciones($empezar_desde, $tamano_paginas);
+  $total_atenciones = $vet->totalAtenciones($vet_id);
+  $atenciones = $vet->getAllAtenciones($vet_id, $empezar_desde, $tamano_paginas);
   if (empty($atenciones)) {
     $_SESSION['mensaje'] = 'No hay atenciones registradas';
     $_SESSION['msg-color'] = 'warning';
@@ -54,7 +58,7 @@ if (isset($_GET['searchAtenciones']) && !empty($_GET['searchAtenciones'])) {
   <main class="pt-5">
     <div class="container">
       <div class="d-flex justify-content-lg-between px-2">
-        <h1 class="col-5 col-md-6">Atenciones</h1>
+        <h1 class="col-5 col-md-6">Mis atenciones</h1>
         <!-- Button trigger modal -->
         <button type="button" class="btn btn-success col-5 col-md-2 ms-auto" data-bs-toggle="modal" data-bs-target="#altaAtencionModal">
           <div class="d-flex align-items-center justify-content-center">
@@ -84,7 +88,6 @@ if (isset($_GET['searchAtenciones']) && !empty($_GET['searchAtenciones'])) {
                 <th scope="col">Servicio</th>
                 <th scope="col">Titulo</th>
                 <th scope="col">Descripción</th>
-                <th scope="col">Atenciones a cargo</th>
                 <th scope="col">Estado</th>
                 <th scope="col">Acciones</th>
               </tr>
@@ -100,9 +103,6 @@ if (isset($_GET['searchAtenciones']) && !empty($_GET['searchAtenciones'])) {
                 unset($_SESSION['msg-color']);
               }
               foreach ($atenciones as $atencion) {
-                if ($atencion['mascota_fecha_muerte']) {
-                  continue;
-                }
               ?>
                 <tr>
                   <td><?php echo $atencion['fecha_hora']; ?></td>
@@ -111,7 +111,6 @@ if (isset($_GET['searchAtenciones']) && !empty($_GET['searchAtenciones'])) {
                   <td><?php echo $atencion['servicio_nombre']; ?></td>
                   <td><?php echo ucfirst($atencion['titulo']); ?></td>
                   <td><?php echo ucfirst($atencion['descripcion']); ?></td>
-                  <td><?php echo ucfirst($atencion['personal_nombre']) . ' ' . ucfirst($atencion['personal_apellido']); ?></td>
                   <td><?php echo $atencion['estado']; ?></td>
                   <td>
                     <div class="row row-gap-2 column-gap-1 mx-1 justify-content-center">
@@ -150,20 +149,20 @@ if (isset($_GET['searchAtenciones']) && !empty($_GET['searchAtenciones'])) {
           for ($i = 1; $i <= $total_paginas; $i++) {
             if ($i == $pagina) { ?>
               <li class="page-item active">
-                <a class="page-link" href="gestion_atenciones.php?pagina=<?= $i ?>&searchAtenciones=<?= $_GET['searchAtenciones'] ?>"><?= $i ?></a>
+                <a class="page-link" href="gpagina=<?= $i ?>&searchAtenciones=<?= $_GET['searchAtenciones'] ?>"><?= $i ?></a>
               </li>
             <?php } else { ?>
               <li class="page-item">
-                <a class="page-link" href="gestion_atenciones.php?pagina=<?= $i ?>&searchAtenciones=<?= $_GET['searchAtenciones'] ?>"><?= $i ?></a>
+                <a class="page-link" href="?pagina=<?= $i ?>&searchAtenciones=<?= $_GET['searchAtenciones'] ?>"><?= $i ?></a>
               </li>
         <?php }
           }
         } else
           for ($i = 1; $i <= $total_paginas; $i++) {
             if ($i == $pagina) {
-              echo "<li class='page-item active'><a class='page-link' href='gestion_atenciones.php?pagina=$i'>$i</a></li>";
+              echo "<li class='page-item active'><a class='page-link' href='?pagina=$i'>$i</a></li>";
             } else {
-              echo "<li class='page-item'><a class='page-link' href='gestion_atenciones.php?pagina=$i'>$i</a></li>";
+              echo "<li class='page-item'><a class='page-link' href='?pagina=$i'>$i</a></li>";
             }
           } ?>
 

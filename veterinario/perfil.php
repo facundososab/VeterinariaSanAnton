@@ -3,20 +3,21 @@
 session_start();
 
 if (!isset($_SESSION['usuario'])) {
-  header('Location: index.php');
-} else if ($_SESSION['rol_id'] != 1) {
-  header('Location: index.php');
+  header('Location: ../index.php');
+} else if ($_SESSION['rol_id'] != 2) {
+  header('Location: ../index.php');
 }
 
-require_once './adminClass.php';
-$admin = new Admin();
+require_once 'vetClass.php';
+$vet = new Veterinario();
+$vet_id = $_SESSION['id'];
 
-$adminInfo = $admin->getAdminInfo();
+$vetInfo = $vet->getVetInfo($vet_id);
 
-$admin_nombre = $adminInfo['nombre'];
-$admin_apellido = $adminInfo['apellido'];
-$admin_email = $adminInfo['email'];
-$admin_clave = $adminInfo['clave'];
+$vet_nombre = $vetInfo['nombre'];
+$vet_apellido = $vetInfo['apellido'];
+$vet_email = $vetInfo['email'];
+$vet_clave = $vetInfo['clave'];
 
 
 
@@ -41,6 +42,7 @@ $admin_clave = $adminInfo['clave'];
   <link
     href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@300;400;500&display=swap"
     rel="stylesheet" />
+  <link rel="stylesheet" href="login.css" />
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="icon" href="../img/logo.svg" />
   <title>Editar Perfil</title>
@@ -74,7 +76,7 @@ $admin_clave = $adminInfo['clave'];
           class="form-control"
           id="nombre"
           name="nombre"
-          value="<?= $admin_nombre ?>" />
+          value="<?= $vet_nombre ?>" />
         <div id="nombreError" class="form-text text-danger"></div>
       </div>
       <div class="mb-3">
@@ -84,7 +86,7 @@ $admin_clave = $adminInfo['clave'];
           class="form-control"
           id="apellido"
           name="apellido"
-          value="<?= $admin_apellido ?>" />
+          value="<?= $vet_apellido ?>" />
         <div id="apellidoError" class="form-text text-danger"></div>
       </div>
       <div class="mb-3">
@@ -94,7 +96,7 @@ $admin_clave = $adminInfo['clave'];
           class="form-control"
           id="email"
           name="email"
-          value="<?= $admin_email ?>" />
+          value="<?= $vet_email ?>" />
         <div id="emailError" class="form-text text-danger"></div>
       </div>
       <div class="mb-3">
@@ -102,8 +104,35 @@ $admin_clave = $adminInfo['clave'];
       </div>
       <button type="submit" class="btn btn-primary">Actualizar</button>
   </main>
-  <script>
-    formulario = document.getElementById('formulario_perfil');
+  <script src="validacion_formularios.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
+
+<script>
+  formulario = document.getElementById('formulario_perfil');
+
+  const validate = (e) => {
+    let nombre = document.getElementById('nombre');
+    let apellido = document.getElementById('apellido');
+    let email = document.getElementById('email');
+
+    if (nombre.value.length < 3) {
+      e.preventDefault();
+      document.getElementById('nombreError').innerText = 'El nombre debe tener al menos 3 caracteres';
+    }
+
+    if (apellido.value.length < 3) {
+      e.preventDefault();
+      document.getElementById('apellidoError').innerText = 'El apellido debe tener al menos 3 caracteres';
+    }
+
+    if (email.value.length < 3) {
+      e.preventDefault();
+      document.getElementById('emailError').innerText = 'El email debe tener al menos 3 caracteres';
+    }
 
     const validate = (e) => {
       let nombre = document.getElementById('nombre');
@@ -136,9 +165,7 @@ $admin_clave = $adminInfo['clave'];
     };
 
     formulario.addEventListener('submit', validate);
-  </script>
+  };
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-
-</html>
+  formulario.addEventListener('submit', validate);
+</script>

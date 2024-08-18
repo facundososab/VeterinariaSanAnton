@@ -11,16 +11,14 @@ if (!isset($_SESSION['usuario'])) {
 require_once '../vetClass.php';
 $vet = new Veterinario();
 
-$vet_id = $_SESSION['id'];
+$atencion_id = $_POST['atencion_id'];
+$fecha_hora = $_POST['fecha_hora_modifica'];
+$titulo = $_POST['titulo_modifica'];
+$descripcion = $_POST['descripcion_modifica'];
+$mascota_id = $_POST['mascota_id_modifica'];
+$servicio_id = $_POST['servicio_id_modifica'];
 
-/***************** VALIDACIONES ***************/
-
-$fecha_hora = $_POST['fecha_hora'];
-$titulo = $_POST['titulo'];
-$descripcion = $_POST['descripcion'];
-$mascota_id = $_POST['mascota_id'];
-$servicio_id = $_POST['servicio_id'];
-
+/***** VALIDACIONES *****/
 
 $errores = [];
 
@@ -36,42 +34,37 @@ if (empty($descripcion)) {
   $errores[] = 'Debe ingresar una descripción';
 }
 
-if (empty($mascota_id)) {
-  $errores[] = 'Debe seleccionar una mascota';
-}
-
-if (empty($servicio_id)) {
-  $errores[] = 'Debe seleccionar un servicio';
-}
-
-if (!$vet->servicioExiste($servicio_id)) {
-  $errores[] = 'El servicio seleccionado no existe';
+if (!$vet->atencionExiste($atencion_id)) {
+  $errores[] = 'La atención que intenta modificar no existe';
 }
 
 if (!$vet->mascotaExiste($mascota_id)) {
   $errores[] = 'La mascota seleccionada no existe';
 }
 
-if (!empty($errores)) {
+if (!$vet->servicioExiste($servicio_id)) {
+  $errores[] = 'El servicio seleccionado no existe';
+}
+
+
+if (count($errores) > 0) {
   $_SESSION['mensaje'] = implode('<br>', $errores);
   $_SESSION['msg-color'] = 'danger';
   header('Location: index.php');
   exit;
 }
-/*************************************************/
 
 try {
 
-  if ($vet->altaAtencion($fecha_hora, $titulo, $descripcion, $mascota_id, $servicio_id, $vet_id)) {
+  if ($vet->modificaAtencion($atencion_id, $fecha_hora, $titulo, $descripcion, $mascota_id, $servicio_id)) {
 
-    $_SESSION['mensaje'] = 'Atención registrada con éxito';
+    $_SESSION['mensaje'] = 'Atención modificada con éxito';
     $_SESSION['msg-color'] = 'success';
   }
 } catch (Exception $e) {
 
-  $_SESSION['mensaje'] = 'Error al registrar atención: ' . $e->getMessage();
+  $_SESSION['mensaje'] = 'Error al modificar atención: ' . $e->getMessage();
   $_SESSION['msg-color'] = 'danger';
 }
-
 
 header('Location: index.php');

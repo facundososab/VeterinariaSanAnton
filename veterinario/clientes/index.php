@@ -134,17 +134,17 @@ if (isset($_GET['searchCliente']) && !empty($_GET['searchCliente'])) {
         if (isset($_GET['searchCliente']) && !empty($_GET['searchCliente'])) {
           for ($i = 1; $i <= $total_paginas; $i++) {
             if ($i == $pagina) { ?>
-              <li class="page-item active"><a class="page-link" href="gestion_clientes.php?pagina=<?= $i ?>&searchCliente=<?= $_GET['searchCliente'] ?>"><?= $i ?></a></li>
+              <li class="page-item active"><a class="page-link" href="?pagina=<?= $i ?>&searchCliente=<?= $_GET['searchCliente'] ?>"><?= $i ?></a></li>
             <?php } else { ?>
-              <li class="page-item"><a class="page-link" href="gestion_clientes.php?pagina=<?= $i ?>&searchCliente=<?= $_GET['searchCliente'] ?>"><?= $i ?></a></li>
+              <li class="page-item"><a class="page-link" href="?pagina=<?= $i ?>&searchCliente=<?= $_GET['searchCliente'] ?>"><?= $i ?></a></li>
         <?php }
           }
         } else {
           for ($i = 1; $i <= $total_paginas; $i++) {
             if ($i == $pagina) {
-              echo "<li class='page-item active'><a class='page-link' href='gestion_clientes.php?pagina=$i'>$i</a></li>";
+              echo "<li class='page-item active'><a class='page-link' href='?pagina=$i'>$i</a></li>";
             } else {
-              echo "<li class='page-item'><a class='page-link' href='gestion_clientes.php?pagina=$i'>$i</a></li>";
+              echo "<li class='page-item'><a class='page-link' href='?pagina=$i'>$i</a></li>";
             }
           }
         }

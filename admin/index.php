@@ -25,7 +25,7 @@ $atenciones_hoy = $admin->getAtencionesHoy();
 <body>
     <?php include_once 'header.html'; ?>
 
-    <main class="pt-5">
+    <main class="pt-5 px-2">
         <div class="container">
             <h1>Bienvenido al panel de administración</h1>
             <p>Desde aquí podrás gestionar las mascotas, clientes, personal, servicios de la veterinaria y más.</p>

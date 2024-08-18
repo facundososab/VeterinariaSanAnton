@@ -121,7 +121,9 @@ if (isset($_GET['searchHospitalizacion']) && !empty($_GET['searchHospitalizacion
                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#bajaHospitalizacionModal" data-bs-id="<?php echo $hospitalizacion['hospitalizacion_id']; ?>">
                       <i class="bi bi-trash-fill"></i> Eliminar
                     </button>
-                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#altaMedicaHospitalizacionModal" data-bs-id="<?php echo $hospitalizacion['hospitalizacion_id']; ?>">
+                    <button type="button" class="btn btn-info" <?php if (isset($hospitalizacion['fecha_hora_alta'])) {
+                                                                  echo 'disabled';
+                                                                } ?> data-bs-toggle="modal" data-bs-target="#altaMedicaHospitalizacionModal" data-bs-id="<?php echo $hospitalizacion['hospitalizacion_id']; ?>">
                       <i class="bi bi-check-circle-fill"></i> Dar de alta
                     </button>
                   </td>
@@ -180,7 +182,7 @@ if (isset($_GET['searchHospitalizacion']) && !empty($_GET['searchHospitalizacion
     modificaHospitalizacionModal.addEventListener('shown.bs.modal', event => {
       let button = event.relatedTarget
       let id = button.getAttribute('data-bs-id')
-      let hospitalizacion_id = document.getElementById('hospitalizacion_id')
+      let hospitalizacion_id = document.getElementById('hospitalizacion_id_modifica')
       let fecha_hora_ingreso_modifica = document.getElementById('fecha_hora_ingreso_modifica')
       let motivo = document.getElementById('motivo_modifica')
       let mascota_id = document.getElementById('mascota_id_modifica')
@@ -201,12 +203,13 @@ if (isset($_GET['searchHospitalizacion']) && !empty($_GET['searchHospitalizacion
           motivo.value = data.motivo
           mascota_id.value = data.mascota_id
           personal_id.value = data.personal_id
+
         })
         .catch(error => console.error('Error:', error));
     })
 
     modificaHospitalizacionModal.addEventListener('hide.bs.modal', event => {
-      let hospitalizacion_id = document.getElementById('hospitalizacion_id')
+      let hospitalizacion_id = document.getElementById('hospitalizacion_id_modifica')
       let fecha_hora_ingreso_modifica = document.getElementById('fecha_hora_ingreso_modifica')
       let motivo = document.getElementById('motivo_modifica')
 

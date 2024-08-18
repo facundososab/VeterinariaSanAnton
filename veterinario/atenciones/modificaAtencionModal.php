@@ -19,7 +19,7 @@
             <select class="form-select" id="mascota_id_modifica" name="mascota_id_modifica" required>
               <option value="" selected>Seleccionar mascota</option>
               <?php
-              $mascotas = $admin->showAllMascotasConCliente();
+              $mascotas = $vet->showAllMascotasConCliente();
               foreach ($mascotas as $mascota) {
                 if ($mascota['fecha_muerte']) {
                   continue;
@@ -40,10 +40,10 @@
           </div>
           <div class="mb-3">
             <label for="servicio_id_modifica" class="form-label"> Servicio </label>
-            <select class="form-select" id="servicio_id_modifica" name="servicio_id_modifica" onchange="selectItemModifica(this.value)" required>
+            <select class="form-select" id="servicio_id_modifica" name="servicio_id_modifica" required>
               <option value="" selected>Seleccionar servicio</option>
               <?php
-              $servicios = $admin->showAllServicios();
+              $servicios = $vet->showAllServiciosVeterinario();
               foreach (
                 $servicios as
                 $servicio
@@ -52,13 +52,6 @@
                   <?= ucfirst($servicio['nombre']) . ' - ' . $servicio['tipo'] ?>
                 </option>
               <?php } ?>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="personal_id_modifica" class="form-label"> Personal </label>
-            <input type="text" class="form-control" id="buscar-personal-modifica" onkeyup="filtrarPersonalesModifica()" placeholder="Ingrese nombre del personal..." onclick="event.stopPropagation()" />
-            <select class="form-select" id="personal_id_modifica" name="personal_id_modifica" required>
-              <option selected>Seleccionar personal</option>
             </select>
           </div>
           <div class="mb-3">
@@ -101,41 +94,6 @@
     }
   }
 
-  function filtrarPersonalesModifica() {
-    let buscarPersonal = document.getElementById('buscar-personal-modifica');
-    let filtro = buscarPersonal.value.toLowerCase();
-    let select = document.getElementById('personal_id_modifica');
-    let option = select.getElementsByTagName('option');
-    for (let i = 0; i < option.length; i++) {
-      let txtValue = option[i].textContent || option[i].innerText;
-      if (txtValue.toLowerCase().indexOf(filtro) > -1) {
-        option[i].style.display = '';
-      } else {
-        option[i].style.display = 'none';
-      }
-    }
-  }
-
-  function selectItemModifica(item) {
-    let servicio_id = item
-    let personal_id = document.getElementById('personal_id_modifica');
-
-    let url = './getPersonalByServicio.php'
-    let data = new FormData()
-    data.append('servicio_id', servicio_id)
-    fetch(url, {
-        method: 'POST',
-        body: data
-      })
-      .then(response => response.json())
-      .then(data => {
-        personal_id.innerHTML = ''
-        data.forEach(personal => {
-          personal_id.innerHTML += `<option value="${personal.personal_id}">${personal.nombre} ${personal.apellido} - ${personal.email}</option>`
-        })
-
-      })
-  }
 
   const formModificaAtencion = document.getElementById('formModificaAtencion')
   const validateModificaAtencion = (e) => {

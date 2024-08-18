@@ -84,6 +84,10 @@ textarea {
   background-color: var(--service-color);
 }
 
+.btn-disabled {
+  display: none;
+}
+
 .btn1-bg-color {
   background-color: var(--first-color);
 }

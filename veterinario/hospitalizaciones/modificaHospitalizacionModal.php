@@ -14,13 +14,13 @@
             <label for="mascota_id_modifica" class="form-label">
               Mascota
             </label>
-            <input type="text" class="form-control" id="buscar-mascota-modifica" onkeyup="filtrarMascotasModifica()" placeholder="Filtrar por nombre de la mascota..." onclick="event.stopPropagation()">
+            <input type="text" class="form-control" id="buscar-mascota-modifica" onkeyup="filtrarMascotas()" placeholder="Filtrar por nombre de la mascota..." onclick="event.stopPropagation()">
             <select class="form-select" id="mascota_id_modifica" name="mascota_id_modifica" required>
               <option value="" selected>
                 Seleccionar mascota
               </option>
               <?php
-              $mascotas = $admin->showAllMascotasConCliente();
+              $mascotas = $vet->showAllMascotasConCliente();
               foreach ($mascotas as $mascota) {
                 if ($mascota['fecha_muerte']) {
                   continue;
@@ -48,28 +48,13 @@
             <div id="fecha_hora_ingresoErrorModifica" class="form-text text-danger"></div>
           </div>
           <div class="mb-3">
-            <label for="personal_id_modifica" class="form-label">
-              Personal responsable
-            </label>
-            <input type="text" class="form-control" id="buscar-personal-modifica" onkeyup="filtrarPersonalesModifica()" placeholder="Filtrar personal por nombre..." onclick="event.stopPropagation()">
-            <select class="form-select" id="personal_id_modifica" name="personal_id_modifica" required>
-              <?php
-              $personal = $admin->showAllVeterinarios();
-              foreach ($personal as $persona) { ?>
-                <option value="<?= $persona['personal_id']; ?>">
-                  <?= ucfirst($persona['nombre']) . ' ' . ucfirst($persona['apellido']); ?>
-                </option>
-              <?php } ?>
-            </select>
-          </div>
-          <div class="mb-3">
             <label for="motivo_modifica" class="form-label">
               Motivo
             </label>
             <textarea class="form-control" id="motivo_modifica" name="motivo_modifica" rows="3" required></textarea>
             <div id="motivoErrorModifica" class="form-text text-danger"></div>
           </div>
-          <input type="hidden" name="hospitalizacion_id_modifica" id="hospitalizacion_id_modifica" value="">
+          <input type="hidden" name="hospitalizacion_id" id="hospitalizacion_id" value="">
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
             <button type="submit" class="btn btn-primary">Modificar</button>
@@ -81,38 +66,6 @@
 </div>
 
 <script>
-  function filtrarMascotasModifica() {
-    let buscarMascota = document.getElementById('buscar-mascota-modifica');
-    let filtro = buscarMascota.value.toLowerCase();
-    let select = document.getElementById('mascota_id_modifica');
-    let option = select.getElementsByTagName('option');
-
-    for (let i = 0; i < option.length; i++) {
-      let txtValue = option[i].textContent || option[i].innerText;
-      if (txtValue.toLowerCase().indexOf(filtro) > -1) {
-        option[i].style.display = '';
-      } else {
-        option[i].style.display = 'none';
-      }
-    }
-  }
-
-  function filtrarPersonalesModifica() {
-    let buscarPersonal = document.getElementById('buscar-personal-modifica');
-    let filtro = buscarPersonal.value.toLowerCase();
-    let select = document.getElementById('personal_id_modifica');
-    let option = select.getElementsByTagName('option');
-
-    for (let i = 0; i < option.length; i++) {
-      let txtValue = option[i].textContent || option[i].innerText;
-      if (txtValue.toLowerCase().indexOf(filtro) > -1) {
-        option[i].style.display = '';
-      } else {
-        option[i].style.display = 'none';
-      }
-    }
-  }
-
   const formModificaHospitalizacion = document.getElementById('formModificaHospitalizacion')
   const validateModificaHospitalizacion = (e) => {
     e.preventDefault()
@@ -131,7 +84,7 @@
     }
 
     if (motivo.value.trim() === '') {
-      document.getElementById('motivoErrorModifica').innerHTML = 'Campo obligatorio'
+      document.getElementById('motivoError').innerHTML = 'Campo obligatorio'
       return
     }
 

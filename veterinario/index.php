@@ -18,6 +18,10 @@ $vet = new Veterinario();
 
 $veterinario_id = $_SESSION['id'];
 
+$atenciones_hoy = $vet->getAtencionesHoy($veterinario_id);
+
+$proximas_atenciones = $vet->getProximasAtenciones($veterinario_id);
+
 ?>
 
 <!DOCTYPE html>
@@ -146,9 +150,88 @@ $veterinario_id = $_SESSION['id'];
     <main class="pt-5">
         <div class="container">
             <h1>Bienvenido, <?php echo ucfirst($_SESSION['nombre']); ?></h1>
+            <hr>
+            <article class="row mt-5">
+
+                <h2>Atenciones del día</h2>
+                <hr>
+                <?php if ($atenciones_hoy) { ?>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Fecha y hora</th>
+                                    <th scope="col">Mascota</th>
+                                    <th scope="col">Cliente</th>
+                                    <th scope="col">Servicio</th>
+                                    <th scope="col">Personal a cargo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                foreach ($atenciones_hoy as $atencion) { ?>
+
+                                    <tr>
+                                        <td><?= $atencion['fecha_hora']; ?></td>
+                                        <td><?= $atencion['mascota_nombre']; ?></td>
+                                        <td><?= $atencion['cliente_nombre'] . ' ' . $atencion['cliente_apellido']; ?></td>
+                                        <td><?= $atencion['servicio_nombre']; ?></td>
+                                        <td><?= $atencion['personal_nombre'] . ' ' . $atencion['personal_apellido']; ?></td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php } else {
+                ?>
+                    <div class="fs-5">
+                        <i>No hay atenciones pendientes para hoy</i>
+                    </div>
+                <?php } ?>
+            </article>
+            <hr>
+            <article class="row mt-5">
+                <h2>Próximas atenciones</h2>
+                <hr>
+                <?php if ($proximas_atenciones) { ?>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Fecha y hora</th>
+                                    <th scope="col">Mascota</th>
+                                    <th scope="col">Cliente</th>
+                                    <th scope="col">Servicio</th>
+                                    <th scope="col">Personal a cargo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                foreach ($proximas_atenciones as $atencion) { ?>
+
+                                    <tr>
+                                        <td><?= $atencion['fecha_hora']; ?></td>
+                                        <td><?= $atencion['mascota_nombre']; ?></td>
+                                        <td><?= $atencion['cliente_nombre'] . ' ' . $atencion['cliente_apellido']; ?></td>
+                                        <td><?= $atencion['servicio_nombre']; ?></td>
+                                        <td><?= $atencion['personal_nombre'] . ' ' . $atencion['personal_apellido']; ?></td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php } else {
+                ?>
+                    <div class="fs-5">
+                        <i>No hay proximas atenciones pendientes</i>
+                    </div>
+                <?php } ?>
+
 
         </div>
     </main>
 </body>
 
 </html>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
