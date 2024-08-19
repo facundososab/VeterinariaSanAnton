@@ -42,7 +42,6 @@ $vet_clave = $vetInfo['clave'];
   <link
     href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@300;400;500&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="login.css" />
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="icon" href="../img/logo.svg" />
   <title>Editar Perfil</title>
