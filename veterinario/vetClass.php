@@ -338,6 +338,18 @@ class Veterinario extends Database
 
   /************* SERVICIOS****************/
 
+  public function servicioExiste($id)
+  {
+    $sql = "SELECT * FROM servicios WHERE servicio_id = :id";
+    $result = $this->connect()->prepare($sql);
+    $result->execute([':id' => $id]);
+    if ($result->rowCount() > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   public function showAllServiciosVeterinario()
   {
     $sql = "SELECT s.servicio_id as servicio_id, s.nombre as nombre, s.tipo as tipo FROM servicios s
@@ -577,33 +589,6 @@ class Veterinario extends Database
     }
   }
 
-
-  /************* PERSONAL ****************/
-
-  public function getPersonalByServicioId($servicio_id)
-  {
-    $sql = "SELECT p.personal_id, p.nombre, p.apellido, p.email 
-                FROM personal p
-                INNER JOIN servicios s ON p.rol_id = s.rol_id 
-                WHERE s.servicio_id = :servicio_id";
-    $result = $this->connect()->prepare($sql);
-    $result->execute([':servicio_id' => $servicio_id]);
-    $row = $result->fetchAll(PDO::FETCH_ASSOC);
-    return $row;
-  }
-
-  public function personalExiste($id)
-  {
-    $sql = "SELECT * FROM personal WHERE personal_id = :id";
-    $result = $this->connect()->prepare($sql);
-    $result->execute([':id' => $id]);
-    if ($result->rowCount() > 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   /************* HOSPITALIZACIONES ****************/
 
   public function totalHospitalizaciones()
@@ -792,18 +777,6 @@ class Veterinario extends Database
     return $row;
   }
 
-  /************* SERVICIOS ****************/
-  public function servicioExiste($id)
-  {
-    $sql = "SELECT * FROM servicios WHERE servicio_id = :id";
-    $result = $this->connect()->prepare($sql);
-    $result->execute([':id' => $id]);
-    if ($result->rowCount() > 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
 
   /**************************HOTELERIA******************************/
 

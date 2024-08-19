@@ -4,13 +4,13 @@ session_start();
 
 if (!isset($_SESSION['usuario'])) {
   header('Location: ../index.php');
-} else if ($_SESSION['rol_id'] != 2) {
+} else if ($_SESSION['rol_id'] != 4) {
   header('Location: ../index.php');
 }
 
-require_once 'vetClass.php';
-$vet = new Veterinario();
-$vet_id = $_SESSION['id'];
+require_once 'clienteClass.php';
+$cliente = new Cliente();
+$cliente_id = $_SESSION['id'];
 
 if (isset($_POST['btn-cambiar'])) {
   $nueva_clave = $_POST['nueva_clave'];
@@ -19,7 +19,7 @@ if (isset($_POST['btn-cambiar'])) {
   if ($nueva_clave == $confirma_clave) {
     try {
       $claveCifrada = password_hash($nueva_clave, PASSWORD_DEFAULT, ['cost' => 12]);
-      if ($vet->updateVetPassword($vet_id, $claveCifrada)) {
+      if ($cliente->updateClientePassword($cliente_id, $claveCifrada)) {
         $_SESSION['mensaje'] = 'Contraseña cambiada con éxito';
         $_SESSION['msg-color'] = 'success';
       }
@@ -40,7 +40,7 @@ if (isset($_POST['btn-cambiar'])) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cambio Contraseña Veterinario</title>
+  <title>Cambio Contraseña</title>
   <?php include_once 'head.html'; ?>
 </head>
 

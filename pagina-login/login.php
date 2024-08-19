@@ -61,7 +61,7 @@ if (isset($_POST['enviar'])) {
             //Redirige al login
             //header("location:login.php");
             if ($row && password_verify($clave, $row['clave'])) {
-                $_SESSION['id'] = $row['cliente'];
+                $_SESSION['id'] = $row['cliente_id'];
                 $_SESSION['rol_id'] = 4;
                 $_SESSION['nombre'] = $row['nombre'];
                 $_SESSION['apellido'] = $row['apellido'];

@@ -1,0 +1,127 @@
+<div
+  class="modal fade"
+  id="modificaClienteModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modificaClienteModalLabel"
+  aria-modal="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modificaClienteModalLabel">
+          Modificar cliente
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <form
+        id="modificaClienteForm"
+        action="./modificaCliente.php"
+        method="post"
+      >
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nombre"
+              name="nombre"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="apellido" class="form-label">Apellido</label>
+            <input
+              type="text"
+              class="form-control"
+              id="apellido"
+              name="apellido"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              name="email"
+              required
+            />
+            <p id="emailError" class="form-text text-danger"></p>
+          </div>
+          <div class="mb-3">
+            <label for="telefono" class="form-label">Teléfono</label>
+            <input
+              type="text"
+              class="form-control"
+              id="telefono"
+              name="telefono"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="ciudad" class="form-label">Ciudad</label>
+            <input
+              type="text"
+              class="form-control"
+              id="ciudad"
+              name="ciudad"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="direccion" class="form-label">Dirección</label>
+            <input
+              type="text"
+              class="form-control"
+              id="direccion"
+              name="direccion"
+              required
+            />
+          </div>
+          <input type="hidden" name="cliente_id" id="cliente_id" />
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button type="submit" class="btn btn-primary">
+              Guardar cambios
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  const formModificaCliente = document.getElementById('modificaClienteForm');
+
+  const validateModificaCliente = (e) => {
+    const email = document.getElementById('email');
+
+    if (!emailValidoModifica(email.value.trim())) {
+      e.preventDefault();
+      emailError.innerHTML = 'Email inválido';
+    } else {
+      emailError.innerHTML = '';
+    }
+  };
+
+  const emailValidoModifica = (email) => {
+    return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
+  };
+
+  formModificaCliente.addEventListener('submit', validateModificaCliente);
+</script>

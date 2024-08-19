@@ -1,0 +1,41 @@
+<div
+  class="modal fade"
+  id="bajaMascotaModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="bajaMascotaLabel"
+  aria-modal="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="bajaMascotaLabel">
+          <b>Baja de mascota</b>
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        ¿Estás seguro de que desea dar de baja a esta mascota? Esto eliminará la
+        mascota y sus respectivas atenciones.
+      </div>
+      <div class="modal-footer">
+        <form action="./bajaMascota.php" method="post">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cancelar
+          </button>
+          <input type="hidden" name="id" id="id" />
+          <button type="submit" class="btn btn-danger">Eliminar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

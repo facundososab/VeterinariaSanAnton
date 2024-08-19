@@ -52,11 +52,13 @@ if (count($errores) > 0) {
   exit;
 }
 
+$clave_cifrada = password_hash($clave, PASSWORD_DEFAULT, ['cost' => 12]);
+
 /***********************/
 
 try {
 
-  if ($personal = $admin->modificaPersonal($personal_id, $nombre, $apellido, $email, $clave)) {
+  if ($personal = $admin->modificaPersonal($personal_id, $nombre, $apellido, $email, $clave_cifrada)) {
 
     $SESSION['mensaje'] = 'El personal se modificó correctamente';
     $SESSION['msg-color'] = 'success';

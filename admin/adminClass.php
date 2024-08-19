@@ -360,7 +360,7 @@ class Admin extends Database
 
     public function getMascota($id)
     {
-        $sql = "SELECT m.mascota_id, m.nombre, m.raza, m.color, m.fecha_nac, m.fecha_muerte, c.nombre as cliente_nombre, c.apellido as cliente_apellido, c.email as cliente_email FROM mascotas m
+        $sql = "SELECT m.mascota_id, m.nombre, m.raza, m.color, DATE_FORMAT(m.fecha_nac, '%d/%m/%Y') as fecha_nac, m.fecha_muerte, c.nombre as cliente_nombre, c.apellido as cliente_apellido, c.email as cliente_email FROM mascotas m
                 INNER JOIN clientes c ON m.cliente_id = c.cliente_id WHERE m.mascota_id = :id";
         $result = $this->connect()->prepare($sql);
         $result->execute([':id' => $id]);
@@ -1202,16 +1202,6 @@ class Admin extends Database
         } else {
             return [];
         }
-    }
-
-    public function getHospedajesXMascota($mascota_id)
-    {
-        $sql = "SELECT h.hospedaje_id, h.fecha_hora_ingreso, h.fecha_hora_salida, p.nombre as personal_nombre, p.apellido as personal_apellido FROM hoteleria h
-                INNER JOIN personal p ON h.personal_id = p.personal_id WHERE h.mascota_id = :mascota_id";
-        $result = $this->connect()->prepare($sql);
-        $result->execute([':mascota_id' => $mascota_id]);
-        $row = $result->fetchAll(PDO::FETCH_ASSOC);
-        return $row;
     }
 
     public function altaHospedaje($fecha_hora_ingreso, $fecha_hora_salida, $mascota_id, $personal_id)
