@@ -103,7 +103,6 @@ $cliente_clave = $clienteInfo['clave'];
       </div>
       <button type="submit" class="btn btn-primary">Actualizar</button>
   </main>
-  <script src="validacion_formularios.js"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

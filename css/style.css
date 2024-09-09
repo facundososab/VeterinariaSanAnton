@@ -153,6 +153,11 @@ textarea {
   color: white;
   background-color: black;
 }
+
+.required:after {
+  content: ' *';
+  color: red;
+}
 .contact-submit input:hover {
   color: white;
   background-color: black;
