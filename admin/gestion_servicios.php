@@ -66,7 +66,7 @@ if (isset($_GET['searchServicios']) && !empty($_GET['searchServicios'])) {
       <nav class="navbar">
         <div class="container-fluid justify-content-end">
           <form class="d-flex" role="search" id="formSearchServicios" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="GET">
-            <input class="form-control me-2" type="search" placeholder="Nombre o raza" aria-label="Buscar" name="searchServicios" value="<?= isset($_GET['searchServicios']) ? $_GET['searchServicios'] : ''; ?>">
+            <input class="form-control me-2" type="search" placeholder="Nombre" aria-label="Buscar" name="searchServicios" value="<?= isset($_GET['searchServicios']) ? $_GET['searchServicios'] : ''; ?>">
             <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i></button>
           </form>
         </div>

@@ -66,7 +66,7 @@ if (isset($_GET['searchPersonal']) && !empty($_GET['searchPersonal'])) {
         <nav class="navbar">
           <div class="container-fluid justify-content-end">
             <form class="d-flex" role="search" id="formSearchPersonal" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="GET">
-              <input class="form-control me-2" type="search" placeholder="Nombre o raza" aria-label="Buscar" name="searchPersonal" value="<?= isset($_GET['searchPersonal']) ? $_GET['searchPersonal'] : ''; ?>">
+              <input class="form-control me-2" type="search" aria-label="Buscar" name="searchPersonal" value="<?= isset($_GET['searchPersonal']) ? $_GET['searchPersonal'] : ''; ?>">
               <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i></button>
             </form>
           </div>
@@ -165,7 +165,6 @@ if (isset($_GET['searchPersonal']) && !empty($_GET['searchPersonal'])) {
       editaModal.querySelector('.modal-body #nombre').value = ""
       editaModal.querySelector('.modal-body #apellido').value = ""
       editaModal.querySelector('.modal-body #emailModificaPersonal').value = ""
-      editaModal.querySelector('.modal-body #claveModificaPersonal').value = ""
       editaModal.querySelector('.modal-body #rol').value = ""
     })
 
@@ -177,7 +176,6 @@ if (isset($_GET['searchPersonal']) && !empty($_GET['searchPersonal'])) {
       let inputNombre = editaModal.querySelector('.modal-body #nombre')
       let inputApellido = editaModal.querySelector('.modal-body #apellido')
       let inputEmail = editaModal.querySelector('.modal-body #emailModificaPersonal')
-      let inputClave = editaModal.querySelector('.modal-body #claveModificaPersonal')
 
       let url = "./getPersonal.php"
       let data = new FormData()

@@ -129,9 +129,15 @@ class Admin extends Database
 
     public function modificaPersonal($id, $nombre, $apellido, $email, $clave)
     {
-        $sql = "UPDATE personal SET nombre = :nombre, apellido = :apellido, email = :email, clave = :clave WHERE personal_id = :id";
-        $sentencia = $this->connect()->prepare($sql);
-        $sentencia->execute([':nombre' => $nombre, ':apellido' => $apellido, ':email' => $email, ':clave' => $clave, ':id' => $id]);
+        if (empty($clave)) {
+            $sql = "UPDATE personal SET nombre = :nombre, apellido = :apellido, email = :email WHERE personal_id = :id";
+            $sentencia = $this->connect()->prepare($sql);
+            $sentencia->execute([':nombre' => $nombre, ':apellido' => $apellido, ':email' => $email, ':id' => $id]);
+        } else {
+            $sql = "UPDATE personal SET nombre = :nombre, apellido = :apellido, email = :email, clave = :clave WHERE personal_id = :id";
+            $sentencia = $this->connect()->prepare($sql);
+            $sentencia->execute([':nombre' => $nombre, ':apellido' => $apellido, ':email' => $email, ':clave' => $clave, ':id' => $id]);
+        }
         $sentencia->closeCursor();
         if ($sentencia->rowCount() > 0) {
             return true;

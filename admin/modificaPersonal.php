@@ -33,10 +33,6 @@ if (empty($email)) {
   $errores[] = 'Debe ingresar un email';
 }
 
-if (empty($clave)) {
-  $errores[] = 'Debe ingresar una clave';
-}
-
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
   $errores[] = 'El email ingresado no es válido';
 }
@@ -52,13 +48,15 @@ if (count($errores) > 0) {
   exit;
 }
 
-$clave_cifrada = password_hash($clave, PASSWORD_DEFAULT, ['cost' => 12]);
+if (!empty($clave)) {
+  $clave = password_hash($clave, PASSWORD_DEFAULT, ['cost' => 12]);
+}
 
 /***********************/
 
 try {
 
-  if ($personal = $admin->modificaPersonal($personal_id, $nombre, $apellido, $email, $clave_cifrada)) {
+  if ($personal = $admin->modificaPersonal($personal_id, $nombre, $apellido, $email, $clave)) {
 
     $SESSION['mensaje'] = 'El personal se modificó correctamente';
     $SESSION['msg-color'] = 'success';
