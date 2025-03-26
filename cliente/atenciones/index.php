@@ -106,7 +106,7 @@ if (isset($_GET['searchAtenciones']) && !empty($_GET['searchAtenciones'])) {
                   <td><?php echo ucfirst($atencion['personal_nombre']) . ' ' . ucfirst($atencion['personal_apellido']); ?></td>
                   <td><?php echo $atencion['estado']; ?></td>
                   <td class="d-flex column-gap-3 py-3">
-                    <button type="button" class="btn btn-danger flex-grow-1" data-bs-toggle="modal" data-bs-target="#bajaAtencionModal" data-bs-id="<?= $atencion['atencion_id'] ?>">
+                    <button type="button" class="btn btn-danger flex-grow-1" <?php if ($atencion['estado'] != "PENDIENTE") echo 'disabled'; ?> data-bs-toggle="modal" data-bs-target="#bajaAtencionModal" data-bs-id="<?= $atencion['atencion_id'] ?>">
                       <i class="bi bi-x-lg"></i> Cancelar
                     </button>
                   </td>
