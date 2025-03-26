@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 session_start();
 
@@ -9,6 +12,15 @@ if (!isset($_SESSION['rol_id'])) {
         header('location: ../index.php');
     }
 }
+
+require('clienteClass.php');
+$cliente = new Cliente();
+
+$cliente_id = $_SESSION['id'];
+
+$atenciones_hoy = $cliente->getAtencionesHoy($cliente_id);
+
+$proximas_atenciones = $cliente->getProximasAtenciones($cliente_id);
 
 
 ?>
@@ -143,7 +155,6 @@ if (!isset($_SESSION['rol_id'])) {
                                 <tr>
                                     <th scope="col">Fecha y hora</th>
                                     <th scope="col">Mascota</th>
-                                    <th scope="col">Cliente</th>
                                     <th scope="col">Servicio</th>
                                     <th scope="col">Personal a cargo</th>
                                 </tr>
@@ -155,7 +166,6 @@ if (!isset($_SESSION['rol_id'])) {
                                     <tr>
                                         <td><?= $atencion['fecha_hora']; ?></td>
                                         <td><?= $atencion['mascota_nombre']; ?></td>
-                                        <td><?= $atencion['cliente_nombre'] . ' ' . $atencion['cliente_apellido']; ?></td>
                                         <td><?= $atencion['servicio_nombre']; ?></td>
                                         <td><?= $atencion['personal_nombre'] . ' ' . $atencion['personal_apellido']; ?></td>
                                     </tr>
@@ -180,7 +190,6 @@ if (!isset($_SESSION['rol_id'])) {
                                 <tr>
                                     <th scope="col">Fecha y hora</th>
                                     <th scope="col">Mascota</th>
-                                    <th scope="col">Cliente</th>
                                     <th scope="col">Servicio</th>
                                     <th scope="col">Personal a cargo</th>
                                 </tr>
@@ -192,7 +201,6 @@ if (!isset($_SESSION['rol_id'])) {
                                     <tr>
                                         <td><?= $atencion['fecha_hora']; ?></td>
                                         <td><?= $atencion['mascota_nombre']; ?></td>
-                                        <td><?= $atencion['cliente_nombre'] . ' ' . $atencion['cliente_apellido']; ?></td>
                                         <td><?= $atencion['servicio_nombre']; ?></td>
                                         <td><?= $atencion['personal_nombre'] . ' ' . $atencion['personal_apellido']; ?></td>
                                     </tr>

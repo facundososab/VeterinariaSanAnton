@@ -49,13 +49,13 @@ class Cliente extends Database
 
   public function getAtencionesHoy($cliente_id)
   {
-    $sql = "SELECT atencion.fecha_hora, mascota.nombre as mascota_nombre, cliente.nombre as cliente_nombre, cliente.apellido as cliente_apellido, servicio.nombre as servicio_nombre, personal.nombre as personal_nombre, personal.apellido as personal_apellido
+    $sql = "SELECT atenciones.fecha_hora, mascotas.nombre as mascota_nombre, clientes.nombre as cliente_nombre, clientes.apellido as cliente_apellido, servicios.nombre as servicio_nombre, personal.nombre as personal_nombre, personal.apellido as personal_apellido
               FROM atenciones
-              JOIN mascotas ON atencion.mascota_id = mascota.id
-              JOIN clientes ON mascota.cliente_id = cliente.id
-              JOIN servicios ON atencion.servicio_id = servicio.id
-              JOIN personal ON atencion.personal_id = personal.id
-              WHERE cliente.id = :cliente_id AND DATE(atencion.fecha_hora) = CURDATE()";
+              JOIN mascotas ON atenciones.mascota_id = mascotas.mascota_id
+              JOIN clientes ON mascotas.cliente_id = clientes.cliente_id
+              JOIN servicios ON atenciones.servicio_id = servicios.servicio_id
+              JOIN personal ON atenciones.personal_id = personal.personal_id
+              WHERE clientes.cliente_id = :cliente_id AND DATE(atenciones.fecha_hora) = CURDATE() AND atenciones.estado = 'PENDIENTE'";
     $result = $this->connect()->prepare($sql);
     $result->execute(['cliente_id' => $cliente_id]);
     $data = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -68,13 +68,13 @@ class Cliente extends Database
 
   public function getProximasAtenciones($cliente_id)
   {
-    $sql = "SELECT atencion.fecha_hora, mascota.nombre as mascota_nombre, cliente.nombre as cliente_nombre, cliente.apellido as cliente_apellido, servicio.nombre as servicio_nombre, personal.nombre as personal_nombre, personal.apellido as personal_apellido
-              FROM atencions
-              JOIN mascotas ON atencion.mascota_id = mascota.id
-              JOIN clientes ON mascota.cliente_id = cliente.id
-              JOIN servicios ON atencion.servicio_id = servicio.id
-              JOIN personal ON atencion.personal_id = personal.id
-              WHERE cliente.id = :cliente_id AND DATE(atencion.fecha_hora) > CURDATE()";
+    $sql = "SELECT atenciones.fecha_hora, mascotas.nombre as mascota_nombre, clientes.nombre as cliente_nombre, clientes.apellido as cliente_apellido, servicios.nombre as servicio_nombre, personal.nombre as personal_nombre, personal.apellido as personal_apellido
+              FROM atenciones
+              JOIN mascotas ON atenciones.mascota_id = mascotas.mascota_id
+              JOIN clientes ON mascotas.cliente_id = clientes.cliente_id
+              JOIN servicios ON atenciones.servicio_id = servicios.servicio_id
+              JOIN personal ON atenciones.personal_id = personal.personal_id
+              WHERE clientes.cliente_id = :cliente_id AND DATE(atenciones.fecha_hora)   > CURDATE() AND atenciones.estado = 'PENDIENTE'";
     $result = $this->connect()->prepare($sql);
     $result->execute(['cliente_id' => $cliente_id]);
     $data = $result->fetchAll(PDO::FETCH_ASSOC);

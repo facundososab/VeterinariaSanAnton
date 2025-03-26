@@ -164,7 +164,6 @@ $proximas_atenciones = $vet->getProximasAtenciones($veterinario_id);
                                     <th scope="col">Mascota</th>
                                     <th scope="col">Cliente</th>
                                     <th scope="col">Servicio</th>
-                                    <th scope="col">Personal a cargo</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -176,7 +175,6 @@ $proximas_atenciones = $vet->getProximasAtenciones($veterinario_id);
                                         <td><?= $atencion['mascota_nombre']; ?></td>
                                         <td><?= $atencion['cliente_nombre'] . ' ' . $atencion['cliente_apellido']; ?></td>
                                         <td><?= $atencion['servicio_nombre']; ?></td>
-                                        <td><?= $atencion['personal_nombre'] . ' ' . $atencion['personal_apellido']; ?></td>
                                     </tr>
                                 <?php } ?>
                             </tbody>
@@ -202,7 +200,6 @@ $proximas_atenciones = $vet->getProximasAtenciones($veterinario_id);
                                     <th scope="col">Mascota</th>
                                     <th scope="col">Cliente</th>
                                     <th scope="col">Servicio</th>
-                                    <th scope="col">Personal a cargo</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -214,7 +211,6 @@ $proximas_atenciones = $vet->getProximasAtenciones($veterinario_id);
                                         <td><?= $atencion['mascota_nombre']; ?></td>
                                         <td><?= $atencion['cliente_nombre'] . ' ' . $atencion['cliente_apellido']; ?></td>
                                         <td><?= $atencion['servicio_nombre']; ?></td>
-                                        <td><?= $atencion['personal_nombre'] . ' ' . $atencion['personal_apellido']; ?></td>
                                     </tr>
                                 <?php } ?>
                             </tbody>
