@@ -66,7 +66,7 @@ $admin_clave = $adminInfo['clave'];
     }
     ?>
 
-    <form action="actualiza_perfil.php" method="POST" class="formulario-perfil min-vh-75 p-4" id="formulario_perfil">
+    <form action="actualiza_perfil.php" method="POST" class="formulario-perfil bg-body-secondary min-vh-75 p-4" id="formulario_perfil">
       <div class="mb-3">
         <label for="nombre" class="form-label">Nombre</label>
         <input

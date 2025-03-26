@@ -13,7 +13,7 @@ if (!isset($_SESSION['rol_id'])) {
 require_once 'adminClass.php';
 $admin = new Admin();
 
-$hospitalizacion_id = $_POST['hospitalizacion_id'];
+$hospitalizacion_id = $_POST['hospitalizacion_id_modifica'];
 $fecha_hora_ingreso = $_POST['fecha_hora_ingreso_modifica'];
 $motivo = $_POST['motivo_modifica'];
 $mascota_id = $_POST['mascota_id_modifica'];
@@ -22,7 +22,7 @@ $personal_id = $_POST['personal_id_modifica'];
 /***** VALIDACIONES *****/
 
 $errores = [];
-
+echo $hospitalizacion_id, $fecha_hora_ingreso, $motivo, $mascota_id, $personal_id;
 if (empty($hospitalizacion_id)) {
   $errores[] = 'Debe seleccionar una hospitalización';
 }

@@ -69,7 +69,7 @@
             <textarea class="form-control" id="motivo_modifica" name="motivo_modifica" rows="3" required></textarea>
             <div id="motivoErrorModifica" class="form-text text-danger"></div>
           </div>
-          <input type="hidden" name="hospitalizacion_id_modifica" id="hospitalizacion_id_modifica" value="">
+          <input type="hidden" name="hospitalizacion_id_modifica" id="hospitalizacion_id_modifica">
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
             <button type="submit" class="btn btn-primary">Modificar</button>

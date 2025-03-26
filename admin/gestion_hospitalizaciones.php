@@ -116,7 +116,7 @@ if (isset($_GET['searchHospitalizacion']) && !empty($_GET['searchHospitalizacion
                   <td><?php echo ucfirst($hospitalizacion['personal_nombre']) . ' ' . ucfirst($hospitalizacion['personal_apellido']); ?></td>
                   <td class="d-flex gap-2">
                     <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modificaHospitalizacionModal" data-bs-id="<?php echo $hospitalizacion['hospitalizacion_id']; ?>">
-                      <i class="bi bi bi-pencil-fill"></i> Editar
+                      <i class="bi bi bi-pencil-fill"></i> Editarrr
                     </button>
                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#bajaHospitalizacionModal" data-bs-id="<?php echo $hospitalizacion['hospitalizacion_id']; ?>">
                       <i class="bi bi-trash-fill"></i> Eliminar
@@ -226,7 +226,7 @@ if (isset($_GET['searchHospitalizacion']) && !empty($_GET['searchHospitalizacion
     })
 
     bajaHospitalizacionModal.addEventListener('hide.bs.modal', event => {
-      let hospitalizacion_id = document.getElementById('hospitalizacion_id')
+      let hospitalizacion_id = document.getElementById('hospitalizacion_id_baja')
       hospitalizacion_id.value = ''
     })
 
