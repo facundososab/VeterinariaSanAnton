@@ -12,11 +12,11 @@ class Database
 
 	function __construct()
 	{
-		$this->server = DB_SERVER;
-		$this->db = DB_NAME;
-		$this->user = DB_USER;
-		$this->pass = DB_PASS;
-		$this->port = DB_PORT;
+		$this->server = getenv("DB_SERVER");
+		$this->db = getenv("DB_NAME");
+		$this->user = getenv("DB_USER");
+		$this->pass = getenv("DB_PASS");
+		$this->port = getenv("DB_PORT");
 	}
 
 	/*----------  Función para conectar a la BD  ----------*/
