@@ -4,10 +4,11 @@ require_once "config/server.php";
 
 class Database
 {
-	private $server = DB_SERVER;
-	private $db = DB_NAME;
-	private $user = DB_USER;
-	private $pass = DB_PASS;
+	private $server;
+	private $db;
+	private $user;
+	private $pass;
+	private $port;
 
 	function __construct()
 	{
@@ -15,14 +16,23 @@ class Database
 		$this->db = DB_NAME;
 		$this->user = DB_USER;
 		$this->pass = DB_PASS;
+		$this->port = DB_PORT;
 	}
 
-
-	/*----------  Funcion conectar a BD  ----------*/
+	/*----------  Función para conectar a la BD  ----------*/
 	function connect()
 	{
-		$conexion = new PDO("mysql:host=" . $this->server . ";dbname=" . $this->db, $this->user, $this->pass);
-		$conexion->exec("SET CHARACTER SET utf8");
-		return $conexion;
+		try {
+			$dsn = "mysql:host=" . $this->server . ";port=" . $this->port . ";dbname=" . $this->db . ";charset=utf8";
+			$conexion = new PDO($dsn, $this->user, $this->pass, [
+				PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, // Manejo de errores
+				PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, // Devolver resultados como array asociativo
+				PDO::ATTR_EMULATE_PREPARES => false // Mejor seguridad en consultas preparadas
+			]);
+
+			return $conexion;
+		} catch (PDOException $e) {
+			die("❌ Error de conexión: " . $e->getMessage());
+		}
 	}
 }
