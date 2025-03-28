@@ -5,11 +5,12 @@
 // const DB_USER = "if0_37138221";
 // const DB_PASS = "HFuZ1lHpmk";
 
-const DB_SERVER = getenv("DB_SERVER");
-const DB_NAME = getenv("DB_NAME");
-const DB_USER = getenv("DB_USER");
-const DB_PASS = getenv("DB_PASS");
-const DB_PORT = getenv("DB_PORT");
+define("DB_SERVER", getenv("DB_SERVER"));
+define("DB_NAME", getenv("DB_NAME"));
+define("DB_USER", getenv("DB_USER"));
+define("DB_PASS", getenv("DB_PASS"));
+define("DB_PORT", getenv("DB_PORT"));
+
 
 // const DB_NAME = "veterinaria";
 // const DB_USER = "root";
