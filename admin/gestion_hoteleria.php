@@ -159,7 +159,7 @@ if (isset($_GET['searchHospedaje']) && !empty($_GET['searchHospedaje'])) {
 
   <!-- Modales -->
   <?php include_once 'modales/altaHospedajeModal.php'; ?>
-  <?php include_once 'modales/modificahospedajeModal.php'; ?>
+  <?php include_once 'modales/modificaHospedajeModal.php'; ?>
   <?php include_once 'modales/bajaHospedajeModal.html'; ?>
 
   <script>

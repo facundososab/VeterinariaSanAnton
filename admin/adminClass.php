@@ -744,6 +744,7 @@ class Admin extends Database
                     a.estado, 
                     m.nombre as mascota_nombre,  
                     m.raza, 
+                    m.fecha_muerte as mascota_fecha_muerte,
                     p.nombre as personal_nombre, 
                     p.apellido as personal_apellido, 
                     c.nombre as cliente_nombre, 
