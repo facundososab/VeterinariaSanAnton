@@ -12,17 +12,18 @@ class Database
 
 	function __construct()
 	{
-		$this->server = "localhost";
-		$this->db = "veterinaria";
-		$this->user = "root";
-		$this->pass = "";
+		$this->server = DB_SERVER;
+		$this->db = DB_NAME;
+		$this->user = DB_USER;
+		$this->pass = DB_PASS;
+		$this->port = DB_PORT; // Se añade el puerto
 	}
 
 	/*----------  Función para conectar a la BD  ----------*/
 	function connect()
 	{
 		try {
-			$dsn = "mysql:host=" . $this->server . ";dbname=" . $this->db . ";charset=utf8";
+			$dsn = "mysql:host=" . $this->server . ";port=" . $this->port . ";dbname=" . $this->db . ";charset=utf8";
 			$conexion = new PDO($dsn, $this->user, $this->pass, [
 				PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, // Manejo de errores
 				PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, // Devolver resultados como array asociativo
