@@ -13,7 +13,6 @@ if (isset($_POST['enviar'])) {
         $clave = htmlentities(addslashes($_POST["password"]));
 
         $resultado->bindValue(":email", $email);
-
         $resultado->execute();
 
         $row = $resultado->fetch(PDO::FETCH_ASSOC);
@@ -31,35 +30,25 @@ if (isset($_POST['enviar'])) {
             switch ($_SESSION['rol_id']) {
                 case 1:
                     header('location:../admin/index.php');
-                    break;
-
+                    exit();
                 case 2:
                     header('location:../veterinario/index.php');
-                    break;
+                    exit();
                 case 3:
                     header('location:../peluquero/index.php');
-                    break;
-
+                    exit();
                 default:
                     header('location:../index.php');
+                    exit();
             }
         } else {
             $sql = "SELECT * FROM clientes WHERE email = :email";
-
             $resultado = $base->connect()->prepare($sql);
-
-            $email = htmlentities(addslashes($_POST["email"]));
-
-            $clave = htmlentities(addslashes($_POST["password"]));
-
             $resultado->bindValue(":email", $email);
-
             $resultado->execute();
 
             $row = $resultado->fetch(PDO::FETCH_ASSOC);
 
-            //Redirige al login
-            //header("location:login.php");
             if ($row && password_verify($clave, $row['clave'])) {
                 $_SESSION['id'] = $row['cliente_id'];
                 $_SESSION['rol_id'] = 4;
@@ -70,10 +59,9 @@ if (isset($_POST['enviar'])) {
                 $_SESSION['direccion'] = $row['direccion'];
                 $_SESSION['usuario'] = $row['cliente_id'];
 
-
                 header('location:../cliente/index.php');
+                exit();
             } else {
-
                 $_SESSION['error'] = "Error. Usuario o contraseña incorrectos";
             }
         }
@@ -81,10 +69,6 @@ if (isset($_POST['enviar'])) {
         die("Error: " . $e->getMessage());
     }
 }
+
+// Solo incluir el formulario si no hubo redirección
 include_once("formulario_login.php");
-?>
-
-
-</body>
-
-</html>
