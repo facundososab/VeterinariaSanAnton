@@ -1,19 +1,18 @@
 <?php
+ob_start(); // Inicia el buffer de salida
+session_start();
 include_once '../db.php';
 
 if (isset($_POST['enviar'])) {
-    session_start();
-
     try {
         $base = new Database();
 
         $resultado = $base->connect()->prepare('SELECT * FROM personal WHERE email = :email');
 
-        $email = htmlentities(addslashes($_POST["email"]));
-        $clave = htmlentities(addslashes($_POST["password"]));
+        $email = filter_var($_POST["email"], FILTER_SANITIZE_EMAIL);  // Sanitiza el email
+        $clave = htmlentities(addslashes($_POST["password"])); // Sanitiza la contraseña
 
         $resultado->bindValue(":email", $email);
-
         $resultado->execute();
 
         $row = $resultado->fetch(PDO::FETCH_ASSOC);
@@ -30,36 +29,25 @@ if (isset($_POST['enviar'])) {
 
             switch ($_SESSION['rol_id']) {
                 case 1:
-                    header('location:../admin/index.php');
-                    break;
-
+                    header('Location: ../admin/index.php');
+                    exit;
                 case 2:
-                    header('location:../veterinario/index.php');
-                    break;
+                    header('Location: ../veterinario/index.php');
+                    exit;
                 case 3:
-                    header('location:../peluquero/index.php');
-                    break;
-
+                    header('Location: ../peluquero/index.php');
+                    exit;
                 default:
-                    header('location:../index.php');
+                    header('Location: ../index.php');
+                    exit;
             }
         } else {
             $sql = "SELECT * FROM clientes WHERE email = :email";
-
             $resultado = $base->connect()->prepare($sql);
-
-            $email = htmlentities(addslashes($_POST["email"]));
-
-            $clave = htmlentities(addslashes($_POST["password"]));
-
             $resultado->bindValue(":email", $email);
-
             $resultado->execute();
-
             $row = $resultado->fetch(PDO::FETCH_ASSOC);
 
-            //Redirige al login
-            //header("location:login.php");
             if ($row && password_verify($clave, $row['clave'])) {
                 $_SESSION['id'] = $row['cliente_id'];
                 $_SESSION['rol_id'] = 4;
@@ -70,10 +58,9 @@ if (isset($_POST['enviar'])) {
                 $_SESSION['direccion'] = $row['direccion'];
                 $_SESSION['usuario'] = $row['cliente_id'];
 
-
-                header('location:../cliente/index.php');
+                header('Location: ../cliente/index.php');
+                exit;
             } else {
-
                 $_SESSION['error'] = "Error. Usuario o contraseña incorrectos";
             }
         }
