@@ -37,19 +37,8 @@
             <a class="nav-link" href="../sobre_nosotros.php">Sobre<br />nosotros</a>
           </li>
         </ul>
-
-        <?php
-        if (!isset($_SESSION['usuario'])) {
-          echo '
-            <a href="./pagina-login/login.php" 
-            class="registro col-lg-3 mx-auto btn btn1-bg-color rounded-pill p-2 mb-2 mb-lg-0 disabled">Ingresa</a>
-            ';
-        } else {
-          echo 'Usuario no registrado ';
-        }
-
-        ?>
-
+        <a href="./pagina-login/login.php"
+          class="registro col-lg-3 mx-auto btn btn1-bg-color rounded-pill p-2 mb-2 mb-lg-0 disabled">Ingresa</a>
       </div>
     </div>
   </nav>
