@@ -31,14 +31,14 @@ if (isset($_POST['enviar'])) {
             switch ($_SESSION['rol_id']) {
                 case 1:
                     header('location:../admin/index.php');
-                    break;
+                    exit();
 
                 case 2:
                     header('location:../veterinario/index.php');
-                    break;
+                    exit();
                 case 3:
                     header('location:../peluquero/index.php');
-                    break;
+                    exit();
 
                 default:
                     header('location:../index.php');
