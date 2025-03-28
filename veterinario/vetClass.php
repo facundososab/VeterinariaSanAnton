@@ -84,11 +84,12 @@ class Veterinario extends Database
     $sql = "SELECT m.mascota_id, m.nombre, m.raza, m.color, m.fecha_nac, c.nombre as cliente_nombre, c.apellido as cliente_apellido, c.email as cliente_email 
                 FROM mascotas m
                 INNER JOIN clientes c ON m.cliente_id = c.cliente_id 
-                WHERE m.fecha_muerte IS NULL AND m.nombre LIKE :nombreORaza OR m.raza LIKE :nombreORaza";
+                WHERE m.fecha_muerte IS NULL AND (m.nombre LIKE :f1 OR m.raza LIKE :f2)";
     $result = $this->connect()->prepare($sql);
 
     $searchTerm = '%' . $filtro . '%';
-    $result->bindValue(':nombreORaza', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f1', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f2', $searchTerm, PDO::PARAM_STR);
     $result->execute();
     $data = $result->fetchAll(PDO::FETCH_ASSOC);
 
@@ -100,30 +101,36 @@ class Veterinario extends Database
   }
 
 
+
   public function getMascotasXBusqueda($filtro, $empezar_desde, $tamano_paginas)
   {
     $sql = "SELECT m.mascota_id, m.nombre, m.raza, m.color, DATE_FORMAT(m.fecha_nac, '%d/%m/%Y') as fecha_nac, c.nombre as cliente_nombre, c.apellido as cliente_apellido, c.email as cliente_email 
                 FROM mascotas m
                 INNER JOIN clientes c ON m.cliente_id = c.cliente_id 
-                WHERE m.fecha_muerte IS NULL AND m.nombre LIKE :nombreORaza OR m.raza LIKE :nombreORaza
+                WHERE m.fecha_muerte IS NULL AND (m.nombre LIKE :f1 OR m.raza LIKE :f2)
                 LIMIT :empezar_desde, :tamano_paginas";
 
     $result = $this->connect()->prepare($sql);
 
-    // Bind parameters
+    // Definir el término de búsqueda
     $searchTerm = '%' . $filtro . '%';
-    $result->bindValue(':nombreORaza', $searchTerm, PDO::PARAM_STR);
+
+    // Vincular los parámetros para la búsqueda
+    $result->bindValue(':f1', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f2', $searchTerm, PDO::PARAM_STR);
     $result->bindValue(':empezar_desde', $empezar_desde, PDO::PARAM_INT);
     $result->bindValue(':tamano_paginas', $tamano_paginas, PDO::PARAM_INT);
+
+    // Ejecutar la consulta
     $result->execute();
+
+    // Obtener los resultados
     $data = $result->fetchAll(PDO::FETCH_ASSOC);
 
-    if ($data) {
-      return $data;
-    } else {
-      return [];
-    }
+    // Devolver los resultados encontrados
+    return $data ?: [];
   }
+
 
   public function getMascota($mascota_id)
   {
@@ -234,37 +241,55 @@ class Veterinario extends Database
 
   public function totalClientesXBusqueda($nombreOEmail)
   {
-    $sql = "SELECT * FROM clientes WHERE nombre LIKE :nombreOEmail OR email LIKE :nombreOEmail";
+    $sql = "SELECT * FROM clientes WHERE nombre LIKE :f1 OR email LIKE :f2 or apellido LIKE :f3";
     $result = $this->connect()->prepare($sql);
+
+    // Definir el término de búsqueda
     $searchTerm = '%' . $nombreOEmail . '%';
-    $result->bindValue(':nombreOEmail', $searchTerm, PDO::PARAM_STR);
+
+    // Vincular los parámetros para la búsqueda
+    $result->bindValue(':f1', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f2', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f3', $searchTerm, PDO::PARAM_STR);
+
+    // Ejecutar la consulta
     $result->execute();
+
+    // Obtener los resultados
     $data = $result->fetchAll(PDO::FETCH_ASSOC);
-    if ($data) {
-      return count($data);
-    } else {
-      return 0;
-    }
+
+    // Devolver la cantidad de resultados encontrados
+    return $data ? count($data) : 0;
   }
+
 
   public function getClientesXBusqueda($nombreOEmail, $empezar_desde, $tamano_paginas)
   {
     $sql = "SELECT * FROM clientes 
-                WHERE nombre LIKE :nombreOEmail OR email LIKE :nombreOEmail 
+                WHERE nombre LIKE :f1 OR email LIKE :f2 OR apellido LIKE :f3
                 LIMIT :empezar_desde, :tamano_paginas";
     $result = $this->connect()->prepare($sql);
+
+    // Definir el término de búsqueda
     $searchTerm = '%' . $nombreOEmail . '%';
-    $result->bindValue(':nombreOEmail', $searchTerm, PDO::PARAM_STR);
+
+    // Vincular los parámetros para la búsqueda
+    $result->bindValue(':f1', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f2', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f3', $searchTerm, PDO::PARAM_STR);
     $result->bindValue(':empezar_desde', $empezar_desde, PDO::PARAM_INT);
     $result->bindValue(':tamano_paginas', $tamano_paginas, PDO::PARAM_INT);
+
+    // Ejecutar la consulta
     $result->execute();
+
+    // Obtener los resultados
     $data = $result->fetchAll(PDO::FETCH_ASSOC);
-    if ($data) {
-      return $data;
-    } else {
-      return [];
-    }
+
+    // Devolver los resultados encontrados
+    return $data ?: [];
   }
+
 
   public function showAllClientes()
   {
@@ -414,19 +439,36 @@ class Veterinario extends Database
                 INNER JOIN clientes c ON m.cliente_id = c.cliente_id
                 INNER JOIN personal p ON a.personal_id = p.personal_id
                 INNER JOIN servicios s ON a.servicio_id = s.servicio_id
-                WHERE p.personal_id = :vet_id AND (a.titulo LIKE :filtro OR a.descripcion LIKE :filtro OR m.nombre LIKE :filtro OR m.raza LIKE :filtro OR p.nombre LIKE :filtro OR p.apellido LIKE :filtro OR c.nombre LIKE :filtro OR c.apellido LIKE :filtro OR s.nombre LIKE :filtro)
+                WHERE p.personal_id = :vet_id 
+                AND (a.titulo LIKE :f1 OR a.descripcion LIKE :f2 OR m.nombre LIKE :f3 OR m.raza LIKE :f4 
+                OR p.nombre LIKE :f5 OR p.apellido LIKE :f6 OR c.nombre LIKE :f7 OR c.apellido LIKE :f8 
+                OR s.nombre LIKE :f9)
                 ORDER BY a.fecha_hora DESC";
     $result = $this->connect()->prepare($sql);
+
+    // Definir el término de búsqueda
     $searchTerm = '%' . $filtro . '%';
+
+    // Vincular los parámetros para la búsqueda
     $result->bindValue(':vet_id', $vet_id, PDO::PARAM_INT);
-    $result->bindValue(':filtro', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f1', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f2', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f3', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f4', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f5', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f6', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f7', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f8', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f9', $searchTerm, PDO::PARAM_STR);
+
+    // Ejecutar la consulta
     $result->execute();
+
+    // Obtener los resultados
     $data = $result->fetch(PDO::FETCH_ASSOC);
-    if ($data) {
-      return $data['total'];
-    } else {
-      return 0;
-    }
+
+    // Devolver el total de atenciones encontradas
+    return $data ? $data['total'] : 0;
   }
 
   public function getAtencionesXBusqueda($vet_id, $filtro, $empezar_desde, $tamano_paginas)
@@ -449,24 +491,41 @@ class Veterinario extends Database
                 INNER JOIN clientes c ON m.cliente_id = c.cliente_id
                 INNER JOIN personal p ON a.personal_id = p.personal_id
                 INNER JOIN servicios s ON a.servicio_id = s.servicio_id
-                WHERE p.personal_id = :vet_id AND (a.titulo LIKE :filtro OR a.descripcion LIKE :filtro OR m.nombre LIKE :filtro OR m.raza LIKE :filtro OR p.nombre LIKE :filtro OR p.apellido LIKE :filtro OR c.nombre LIKE :filtro OR c.apellido LIKE :filtro OR s.nombre LIKE :filtro)
+                WHERE p.personal_id = :vet_id 
+                AND (a.titulo LIKE :f1 OR a.descripcion LIKE :f2 OR m.nombre LIKE :f3 OR m.raza LIKE :f4 
+                OR p.nombre LIKE :f5 OR p.apellido LIKE :f6 OR c.nombre LIKE :f7 OR c.apellido LIKE :f8 
+                OR s.nombre LIKE :f9)
                 ORDER BY a.fecha_hora DESC
                 LIMIT :empezar_desde, :tamano_paginas";
+
     $result = $this->connect()->prepare($sql);
+
+    // Definir el término de búsqueda
     $searchTerm = '%' . $filtro . '%';
+
+    // Vincular los parámetros para cada filtro
     $result->bindValue(':vet_id', $vet_id, PDO::PARAM_INT);
-    $result->bindValue(':filtro', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f1', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f2', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f3', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f4', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f5', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f6', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f7', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f8', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f9', $searchTerm, PDO::PARAM_STR);
     $result->bindValue(':empezar_desde', $empezar_desde, PDO::PARAM_INT);
     $result->bindValue(':tamano_paginas', $tamano_paginas, PDO::PARAM_INT);
-    $result->execute();
-    $data = $result->fetchAll(PDO::FETCH_ASSOC);
-    if ($data) {
-      return $data;
-    } else {
-      return [];
-    }
-  }
 
+    // Ejecutar la consulta
+    $result->execute();
+
+    // Obtener los resultados
+    $data = $result->fetchAll(PDO::FETCH_ASSOC);
+
+    // Devolver las atenciones encontradas
+    return $data ? $data : [];
+  }
 
 
   public function getAtencionesHoy($vet_id)
@@ -635,18 +694,27 @@ class Veterinario extends Database
                 INNER JOIN mascotas m ON h.mascota_id = m.mascota_id
                 INNER JOIN clientes c ON m.cliente_id = c.cliente_id
                 INNER JOIN personal p ON h.personal_id = p.personal_id
-                WHERE (m.nombre LIKE :filtro OR p.nombre LIKE :filtro OR p.apellido LIKE :filtro OR c.nombre LIKE :filtro OR c.apellido LIKE :filtro)";
+                WHERE (m.nombre LIKE :f1 OR p.nombre LIKE :f2 OR p.apellido LIKE :f3 OR c.nombre LIKE :f4 OR c.apellido LIKE :f5)";
     $result = $this->connect()->prepare($sql);
     $searchTerm = '%' . $filtro . '%';
-    $result->bindValue(':filtro', $searchTerm, PDO::PARAM_STR);
+
+    // Vincular los parámetros para cada filtro
+    $result->bindValue(':f1', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f2', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f3', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f4', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f5', $searchTerm, PDO::PARAM_STR);
+
     $result->execute();
     $data = $result->fetch(PDO::FETCH_ASSOC);
+
     if ($data) {
       return $data['total'];
     } else {
       return 0;
     }
   }
+
 
   public function getHospitalizacionesXBusqueda($filtro, $empezar_desde, $tamano_paginas)
   {
@@ -666,21 +734,30 @@ class Veterinario extends Database
                 INNER JOIN mascotas m ON h.mascota_id = m.mascota_id
                 INNER JOIN clientes c ON m.cliente_id = c.cliente_id
                 INNER JOIN personal p ON h.personal_id = p.personal_id
-                WHERE (m.nombre LIKE :filtro OR p.nombre LIKE :filtro OR p.apellido LIKE :filtro OR c.nombre LIKE :filtro OR c.apellido LIKE :filtro)
+                WHERE (m.nombre LIKE :f1 OR p.nombre LIKE :f2 OR p.apellido LIKE :f3 OR c.nombre LIKE :f4 OR c.apellido LIKE :f5)
                 LIMIT :empezar_desde, :tamano_paginas";
+
     $result = $this->connect()->prepare($sql);
     $searchTerm = '%' . $filtro . '%';
-    $result->bindValue(':filtro', $searchTerm, PDO::PARAM_STR);
+
+    // Vincular los parámetros para cada filtro
+    $result->bindValue(':f1', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f2', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f3', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f4', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f5', $searchTerm, PDO::PARAM_STR);
     $result->bindValue(':empezar_desde', $empezar_desde, PDO::PARAM_INT);
     $result->bindValue(':tamano_paginas', $tamano_paginas, PDO::PARAM_INT);
     $result->execute();
     $data = $result->fetchAll(PDO::FETCH_ASSOC);
+
     if ($data) {
       return $data;
     } else {
       return [];
     }
   }
+
 
   public function getHospitalizacion($id)
   {
@@ -830,18 +907,25 @@ class Veterinario extends Database
                 FROM hoteleria h
                 INNER JOIN mascotas m ON h.mascota_id = m.mascota_id
                 INNER JOIN personal p ON h.personal_id = p.personal_id
-                WHERE (m.nombre LIKE :filtro OR m.raza LIKE :filtro OR p.nombre LIKE :filtro OR p.apellido LIKE :filtro)";
+                WHERE (m.nombre LIKE :f1 OR m.raza LIKE :f2 OR p.nombre LIKE :f3 OR p.apellido LIKE :f4)";
     $result = $this->connect()->prepare($sql);
     $searchTerm = '%' . $filtro . '%';
-    $result->bindValue(':filtro', $searchTerm, PDO::PARAM_STR);
+
+    // Vincular los parámetros para cada filtro
+    $result->bindValue(':f1', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f2', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f3', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f4', $searchTerm, PDO::PARAM_STR);
     $result->execute();
     $data = $result->fetch(PDO::FETCH_ASSOC);
+
     if ($data) {
       return $data['total'];
     } else {
       return 0;
     }
   }
+
   public function getHospedajesXBusqueda($filtro, $empezar_desde, $tamano_paginas)
   {
     $sql = "SELECT 
@@ -855,21 +939,30 @@ class Veterinario extends Database
                 FROM hoteleria h
                 INNER JOIN mascotas m ON h.mascota_id = m.mascota_id
                 INNER JOIN personal p ON h.personal_id = p.personal_id
-                WHERE (m.nombre LIKE :filtro OR m.raza LIKE :filtro OR p.nombre LIKE :filtro OR p.apellido LIKE :filtro)
+                WHERE (m.nombre LIKE :f1 OR m.raza LIKE :f2 OR p.nombre LIKE :f3 OR p.apellido LIKE :f4)
                 LIMIT :empezar_desde, :tamano_paginas";
+
     $result = $this->connect()->prepare($sql);
     $searchTerm = '%' . $filtro . '%';
-    $result->bindValue(':filtro', $searchTerm, PDO::PARAM_STR);
+
+    // Vinculamos los parámetros a sus respectivos filtros
+    $result->bindValue(':f1', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f2', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f3', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f4', $searchTerm, PDO::PARAM_STR);
     $result->bindValue(':empezar_desde', $empezar_desde, PDO::PARAM_INT);
     $result->bindValue(':tamano_paginas', $tamano_paginas, PDO::PARAM_INT);
+
     $result->execute();
     $data = $result->fetchAll(PDO::FETCH_ASSOC);
+
     if ($data) {
       return $data;
     } else {
       return [];
     }
   }
+
 
   public function getHospedajesXMascota($mascota_id)
   {

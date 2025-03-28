@@ -79,13 +79,16 @@ class Peluquero extends Database
   public function totalMascotasXBusqueda($filtro)
   {
     $sql = "SELECT m.mascota_id, m.nombre, m.raza, m.color, m.fecha_nac, c.nombre as cliente_nombre, c.apellido as cliente_apellido, c.email as cliente_email 
-                FROM mascotas m
-                INNER JOIN clientes c ON m.cliente_id = c.cliente_id 
-                WHERE m.fecha_muerte IS NULL AND m.nombre LIKE :nombreORaza OR m.raza LIKE :nombreORaza";
+            FROM mascotas m
+            INNER JOIN clientes c ON m.cliente_id = c.cliente_id 
+            WHERE m.fecha_muerte IS NULL 
+            AND (m.nombre LIKE :f1 OR m.raza LIKE :f2)";
+
     $result = $this->connect()->prepare($sql);
 
     $searchTerm = '%' . $filtro . '%';
-    $result->bindValue(':nombreORaza', $searchTerm, PDO::PARAM_STR);
+    $result->bindParam(':f1', $searchTerm, PDO::PARAM_STR);
+    $result->bindParam(':f2', $searchTerm, PDO::PARAM_STR);
     $result->execute();
     $data = $result->fetchAll(PDO::FETCH_ASSOC);
 
@@ -97,21 +100,25 @@ class Peluquero extends Database
   }
 
 
+
   public function getMascotasXBusqueda($filtro, $empezar_desde, $tamano_paginas)
   {
-    $sql = "SELECT m.mascota_id, m.nombre, m.raza, m.color, DATE_FORMAT(m.fecha_nac, '%d/%m/%Y') as fecha_nac, c.nombre as cliente_nombre, c.apellido as cliente_apellido, c.email as cliente_email 
-                FROM mascotas m
-                INNER JOIN clientes c ON m.cliente_id = c.cliente_id 
-                WHERE m.fecha_muerte IS NULL AND m.nombre LIKE :nombreORaza OR m.raza LIKE :nombreORaza
-                LIMIT :empezar_desde, :tamano_paginas";
+    $sql = "SELECT m.mascota_id, m.nombre, m.raza, m.color, DATE_FORMAT(m.fecha_nac, '%d/%m/%Y') as fecha_nac, 
+                   c.nombre as cliente_nombre, c.apellido as cliente_apellido, c.email as cliente_email 
+            FROM mascotas m
+            INNER JOIN clientes c ON m.cliente_id = c.cliente_id 
+            WHERE m.fecha_muerte IS NULL 
+            AND (m.nombre LIKE :f1 OR m.raza LIKE :f2)
+            LIMIT :f3, :f4";
 
     $result = $this->connect()->prepare($sql);
 
     // Bind parameters
     $searchTerm = '%' . $filtro . '%';
-    $result->bindValue(':nombreORaza', $searchTerm, PDO::PARAM_STR);
-    $result->bindValue(':empezar_desde', $empezar_desde, PDO::PARAM_INT);
-    $result->bindValue(':tamano_paginas', $tamano_paginas, PDO::PARAM_INT);
+    $result->bindParam(':f1', $searchTerm, PDO::PARAM_STR);
+    $result->bindParam(':f2', $searchTerm, PDO::PARAM_STR);
+    $result->bindParam(':f3', $empezar_desde, PDO::PARAM_INT);
+    $result->bindParam(':f4', $tamano_paginas, PDO::PARAM_INT);
     $result->execute();
     $data = $result->fetchAll(PDO::FETCH_ASSOC);
 
@@ -121,6 +128,7 @@ class Peluquero extends Database
       return [];
     }
   }
+
 
   public function getMascota($mascota_id)
   {
@@ -229,10 +237,11 @@ class Peluquero extends Database
 
   public function totalClientesXBusqueda($nombreOEmail)
   {
-    $sql = "SELECT * FROM clientes WHERE nombre LIKE :nombreOEmail OR email LIKE :nombreOEmail";
+    $sql = "SELECT * FROM clientes WHERE (nombre LIKE :f1 OR email LIKE :f2)";
     $result = $this->connect()->prepare($sql);
     $searchTerm = '%' . $nombreOEmail . '%';
-    $result->bindValue(':nombreOEmail', $searchTerm, PDO::PARAM_STR);
+    $result->bindParam(':f1', $searchTerm, PDO::PARAM_STR);
+    $result->bindParam(':f2', $searchTerm, PDO::PARAM_STR);
     $result->execute();
     $data = $result->fetchAll(PDO::FETCH_ASSOC);
     if ($data) {
@@ -242,24 +251,32 @@ class Peluquero extends Database
     }
   }
 
+
+
   public function getClientesXBusqueda($nombreOEmail, $empezar_desde, $tamano_paginas)
   {
     $sql = "SELECT * FROM clientes 
-                WHERE nombre LIKE :nombreOEmail OR email LIKE :nombreOEmail 
-                LIMIT :empezar_desde, :tamano_paginas";
+                WHERE nombre LIKE :f1 OR email LIKE :f2 
+                LIMIT :f3, :f4";
     $result = $this->connect()->prepare($sql);
+
+    // Binding parameters
     $searchTerm = '%' . $nombreOEmail . '%';
-    $result->bindValue(':nombreOEmail', $searchTerm, PDO::PARAM_STR);
-    $result->bindValue(':empezar_desde', $empezar_desde, PDO::PARAM_INT);
-    $result->bindValue(':tamano_paginas', $tamano_paginas, PDO::PARAM_INT);
+    $result->bindParam(':f1', $searchTerm, PDO::PARAM_STR);
+    $result->bindParam(':f2', $searchTerm, PDO::PARAM_STR);
+    $result->bindParam(':f3', $empezar_desde, PDO::PARAM_INT);
+    $result->bindParam(':f4', $tamano_paginas, PDO::PARAM_INT);
+
     $result->execute();
     $data = $result->fetchAll(PDO::FETCH_ASSOC);
+
     if ($data) {
       return $data;
     } else {
       return [];
     }
   }
+
 
   public function showAllClientes()
   {

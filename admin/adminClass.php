@@ -41,41 +41,50 @@ class Admin extends Database
 
     public function totalPersonalXBusqueda($nombreOEmail)
     {
-        $sql = "SELECT p.personal_id, p.nombre, p.apellido, p.email, r.nombre as rol 
-                FROM personal p
-                INNER JOIN roles r ON p.rol_id = r.rol_id 
-                WHERE p.rol_id != 1 AND (p.nombre LIKE :nombreOEmail OR p.email LIKE :nombreOEmail)";
+        $sql = "SELECT COUNT(*) as total 
+            FROM personal p
+            INNER JOIN roles r ON p.rol_id = r.rol_id 
+            WHERE p.rol_id != 1 AND (p.nombre LIKE :f1 OR p.email LIKE :f2)";
+
         $result = $this->connect()->prepare($sql);
         $searchTerm = '%' . $nombreOEmail . '%';
-        $result->bindValue(':nombreOEmail', $searchTerm, PDO::PARAM_STR);
+
+        // Bind de los valores de búsqueda
+        $result->bindValue(':f1', $searchTerm, PDO::PARAM_STR);
+        $result->bindValue(':f2', $searchTerm, PDO::PARAM_STR);
+
         $result->execute();
-        $data = $result->fetchAll(PDO::FETCH_ASSOC);
-        if ($data) {
-            return count($data);
-        } else {
-            return 0;
-        }
+
+        $data = $result->fetch(PDO::FETCH_ASSOC);
+        return $data ? (int) $data['total'] : 0;
     }
+
+
     public function getPersonalXBusqueda($nombreOEmail, $empezar_desde, $tamano_paginas)
     {
         $sql = "SELECT p.personal_id, p.nombre, p.apellido, p.email, r.nombre as rol 
-                FROM personal p
-                INNER JOIN roles r ON p.rol_id = r.rol_id 
-                WHERE p.rol_id != 1 AND (p.nombre LIKE :nombreOEmail OR p.email LIKE :nombreOEmail)
-                LIMIT :empezar_desde, :tamano_paginas";
+            FROM personal p
+            INNER JOIN roles r ON p.rol_id = r.rol_id 
+            WHERE p.rol_id != 1 AND (p.nombre LIKE :f1 OR p.email LIKE :f2)
+            ORDER BY p.nombre
+            LIMIT :start, :size";
+
         $result = $this->connect()->prepare($sql);
         $searchTerm = '%' . $nombreOEmail . '%';
-        $result->bindValue(':nombreOEmail', $searchTerm, PDO::PARAM_STR);
-        $result->bindValue(':empezar_desde', $empezar_desde, PDO::PARAM_INT);
-        $result->bindValue(':tamano_paginas', $tamano_paginas, PDO::PARAM_INT);
+
+        // Bind de los valores de filtro
+        $result->bindValue(':f1', $searchTerm, PDO::PARAM_STR);
+        $result->bindValue(':f2', $searchTerm, PDO::PARAM_STR);
+
+        // Bind de los valores de paginación
+        $result->bindValue(':start', intval($empezar_desde), PDO::PARAM_INT);
+        $result->bindValue(':size', intval($tamano_paginas), PDO::PARAM_INT);
+
         $result->execute();
-        $data = $result->fetchAll(PDO::FETCH_ASSOC);
-        if ($data) {
-            return $data;
-        } else {
-            return [];
-        }
+
+        return $result->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
+
 
     public function getPersonal($id)
     {
@@ -181,37 +190,50 @@ class Admin extends Database
 
     public function totalClientesXBusqueda($nombreOEmail)
     {
-        $sql = "SELECT * FROM clientes WHERE nombre LIKE :nombreOEmail OR email LIKE :nombreOEmail";
+        $sql = "SELECT COUNT(*) as total 
+            FROM clientes 
+            WHERE nombre LIKE :f1 OR email LIKE :f2 OR apellido LIKE :f3";
+
         $result = $this->connect()->prepare($sql);
         $searchTerm = '%' . $nombreOEmail . '%';
-        $result->bindValue(':nombreOEmail', $searchTerm, PDO::PARAM_STR);
+
+        // Bind de los valores de búsqueda
+        $result->bindValue(':f1', $searchTerm, PDO::PARAM_STR);
+        $result->bindValue(':f2', $searchTerm, PDO::PARAM_STR);
+        $result->bindValue(':f3', $searchTerm, PDO::PARAM_STR);
+
         $result->execute();
-        $data = $result->fetchAll(PDO::FETCH_ASSOC);
-        if ($data) {
-            return count($data);
-        } else {
-            return 0;
-        }
+
+        $data = $result->fetch(PDO::FETCH_ASSOC);
+        return $data ? (int) $data['total'] : 0;
     }
+
 
     public function getClientesXBusqueda($nombreOEmail, $empezar_desde, $tamano_paginas)
     {
         $sql = "SELECT * FROM clientes 
-                WHERE nombre LIKE :nombreOEmail OR email LIKE :nombreOEmail 
-                LIMIT :empezar_desde, :tamano_paginas";
+            WHERE (nombre LIKE :f1 OR email LIKE :f2 OR apellido LIKE :f3) 
+            LIMIT :start, :size";
+
         $result = $this->connect()->prepare($sql);
         $searchTerm = '%' . $nombreOEmail . '%';
-        $result->bindValue(':nombreOEmail', $searchTerm, PDO::PARAM_STR);
-        $result->bindValue(':empezar_desde', $empezar_desde, PDO::PARAM_INT);
-        $result->bindValue(':tamano_paginas', $tamano_paginas, PDO::PARAM_INT);
+
+        // Bind de los valores de búsqueda
+        $result->bindValue(':f1', $searchTerm, PDO::PARAM_STR);
+        $result->bindValue(':f2', $searchTerm, PDO::PARAM_STR);
+        $result->bindValue(':f3', $searchTerm, PDO::PARAM_STR);
+
+        // Bind de los valores para el límite de resultados
+        $result->bindValue(':start', intval($empezar_desde), PDO::PARAM_INT);
+        $result->bindValue(':size', intval($tamano_paginas), PDO::PARAM_INT);
+
         $result->execute();
         $data = $result->fetchAll(PDO::FETCH_ASSOC);
-        if ($data) {
-            return $data;
-        } else {
-            return [];
-        }
+
+        return $data ?: [];
     }
+
+
 
     public function showAllClientes()
     {
@@ -312,47 +334,59 @@ class Admin extends Database
     public function totalMascotasByNombreORaza($nombreORaza)
     {
         $sql = "SELECT m.mascota_id, m.nombre, m.raza, m.color, m.fecha_nac, c.nombre as cliente_nombre, c.apellido as cliente_apellido, c.email as cliente_email 
-                FROM mascotas m
-                INNER JOIN clientes c ON m.cliente_id = c.cliente_id 
-                WHERE m.fecha_muerte IS NULL AND m.nombre LIKE :nombreORaza OR m.raza LIKE :nombreORaza";
+            FROM mascotas m
+            INNER JOIN clientes c ON m.cliente_id = c.cliente_id 
+            WHERE m.fecha_muerte IS NULL AND (m.nombre LIKE :f1 OR m.raza LIKE :f2)";
+
         $result = $this->connect()->prepare($sql);
 
+        // Definir el término de búsqueda
         $searchTerm = '%' . $nombreORaza . '%';
-        $result->bindValue(':nombreORaza', $searchTerm, PDO::PARAM_STR);
+
+        // Vincular los parámetros para la búsqueda
+        $result->bindValue(':f1', $searchTerm, PDO::PARAM_STR);
+        $result->bindValue(':f2', $searchTerm, PDO::PARAM_STR);
+
+        // Ejecutar la consulta
         $result->execute();
+
+        // Obtener los resultados
         $data = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        if ($data) {
-            return count($data);
-        } else {
-            return 0;
-        }
+        // Devolver el número de registros encontrados
+        return $data ? count($data) : 0;
     }
+
 
     public function getMascotasByNombreORaza($nombreORaza, $empezar_desde, $tamano_paginas)
     {
         $sql = "SELECT m.mascota_id, m.nombre, m.raza, m.color, DATE_FORMAT(m.fecha_nac, '%d/%m/%Y') as fecha_nac, c.nombre as cliente_nombre, c.apellido as cliente_apellido, c.email as cliente_email 
-                FROM mascotas m
-                INNER JOIN clientes c ON m.cliente_id = c.cliente_id 
-                WHERE m.fecha_muerte IS NULL AND m.nombre LIKE :nombreORaza OR m.raza LIKE :nombreORaza
-                LIMIT :empezar_desde, :tamano_paginas";
+            FROM mascotas m
+            INNER JOIN clientes c ON m.cliente_id = c.cliente_id 
+            WHERE m.fecha_muerte IS NULL AND (m.nombre LIKE :f1 OR m.raza LIKE :f2)
+            LIMIT :empezar_desde, :tamano_paginas";
 
         $result = $this->connect()->prepare($sql);
 
-        // Bind parameters
+        // Definir el término de búsqueda
         $searchTerm = '%' . $nombreORaza . '%';
-        $result->bindValue(':nombreORaza', $searchTerm, PDO::PARAM_STR);
+
+        // Vincular los parámetros para la búsqueda
+        $result->bindValue(':f1', $searchTerm, PDO::PARAM_STR);
+        $result->bindValue(':f2', $searchTerm, PDO::PARAM_STR);
         $result->bindValue(':empezar_desde', $empezar_desde, PDO::PARAM_INT);
         $result->bindValue(':tamano_paginas', $tamano_paginas, PDO::PARAM_INT);
+
+        // Ejecutar la consulta
         $result->execute();
+
+        // Obtener los resultados
         $data = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        if ($data) {
-            return $data;
-        } else {
-            return [];
-        }
+        // Devolver los resultados encontrados
+        return $data ?: [];
     }
+
 
 
 
@@ -464,33 +498,46 @@ class Admin extends Database
 
     public function totalInsumosXBusqueda($descripcion)
     {
-        $sql = "SELECT * FROM insumos WHERE descripcion LIKE :descripcion";
+        $sql = "SELECT COUNT(*) as total FROM insumos WHERE descripcion LIKE :descripcion";
         $result = $this->connect()->prepare($sql);
+
+        // Definir el término de búsqueda
         $searchTerm = '%' . $descripcion . '%';
+
+        // Vincular el parámetro para la búsqueda
         $result->bindValue(':descripcion', $searchTerm, PDO::PARAM_STR);
+
+        // Ejecutar la consulta
         $result->execute();
-        if ($result->rowCount() > 0) {
-            return $result->rowCount();
-        } else {
-            return 0;
-        }
+
+        // Obtener el resultado
+        $data = $result->fetch(PDO::FETCH_ASSOC);
+
+        // Retornar el total de insumos encontrados
+        return $data ? (int) $data['total'] : 0;
     }
+
 
     public function getInsumosXBusqueda($descripcion, $empezar_desde, $tamano_paginas)
     {
-        $sql = "SELECT * FROM insumos WHERE descripcion LIKE :descripcion LIMIT :empezar_desde, :tamano_paginas";
+        $sql = "SELECT * 
+            FROM insumos 
+            WHERE descripcion LIKE :descripcion 
+            LIMIT :empezar_desde, :tamano_paginas";
+
         $result = $this->connect()->prepare($sql);
         $searchTerm = '%' . $descripcion . '%';
         $result->bindValue(':descripcion', $searchTerm, PDO::PARAM_STR);
         $result->bindValue(':empezar_desde', $empezar_desde, PDO::PARAM_INT);
         $result->bindValue(':tamano_paginas', $tamano_paginas, PDO::PARAM_INT);
         $result->execute();
-        if ($result->rowCount() > 0) {
-            return $result;
-        } else {
-            return false;
-        }
+
+        $data = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        return $data ?: [];
     }
+
+
 
     public function getInsumo($id)
     {
@@ -618,42 +665,45 @@ class Admin extends Database
 
     public function totalServiciosXBusqueda($nombreOTipo)
     {
-        $sql = "SELECT s.servicio_id, s.nombre, s.tipo, s.precio, r.nombre as rol 
-                FROM servicios s
-                INNER JOIN roles r ON s.rol_id = r.rol_id
-                WHERE s.activo = 1 AND (s.nombre LIKE :nombreOTipo OR s.tipo LIKE :nombreOTipo)";
+        $sql = "SELECT COUNT(*) as total 
+            FROM servicios s
+            INNER JOIN roles r ON s.rol_id = r.rol_id
+            WHERE s.activo = 1 AND (s.nombre LIKE :f1 OR s.tipo LIKE :f2)";
+
         $result = $this->connect()->prepare($sql);
         $searchTerm = '%' . $nombreOTipo . '%';
-        $result->bindValue(':nombreOTipo', $searchTerm, PDO::PARAM_STR);
+        $result->bindValue(':f1', $searchTerm, PDO::PARAM_STR);
+        $result->bindValue(':f2', $searchTerm, PDO::PARAM_STR);
         $result->execute();
-        $data = $result->fetchAll(PDO::FETCH_ASSOC);
-        if ($data) {
-            return count($data);
-        } else {
-            return 0;
-        }
+
+        $data = $result->fetch(PDO::FETCH_ASSOC);
+
+        return $data ? (int) $data['total'] : 0;
     }
+
+
 
     public function getServiciosXBusqueda($nombreOTipo, $empezar_desde, $tamano_paginas)
     {
         $sql = "SELECT s.servicio_id, s.nombre, s.tipo, s.precio, r.nombre as rol 
-                FROM servicios s
-                INNER JOIN roles r ON s.rol_id = r.rol_id
-                WHERE s.activo = 1 AND (s.nombre LIKE :nombreOTipo OR s.tipo LIKE :nombreOTipo)
-                LIMIT :empezar_desde, :tamano_paginas";
+            FROM servicios s
+            INNER JOIN roles r ON s.rol_id = r.rol_id
+            WHERE s.activo = 1 AND (s.nombre LIKE :f1 OR s.tipo LIKE :f2)
+            LIMIT :empezar_desde, :tamano_paginas";
+
         $result = $this->connect()->prepare($sql);
         $searchTerm = '%' . $nombreOTipo . '%';
-        $result->bindValue(':nombreOTipo', $searchTerm, PDO::PARAM_STR);
+        $result->bindValue(':f1', $searchTerm, PDO::PARAM_STR);
+        $result->bindValue(':f2', $searchTerm, PDO::PARAM_STR);
         $result->bindValue(':empezar_desde', $empezar_desde, PDO::PARAM_INT);
         $result->bindValue(':tamano_paginas', $tamano_paginas, PDO::PARAM_INT);
         $result->execute();
+
         $data = $result->fetchAll(PDO::FETCH_ASSOC);
-        if ($data) {
-            return $data;
-        } else {
-            return [];
-        }
+
+        return $data ?: [];
     }
+
 
     public function showAllServicios()
     {
@@ -775,16 +825,27 @@ class Admin extends Database
             INNER JOIN clientes c ON m.cliente_id = c.cliente_id
             INNER JOIN personal p ON a.personal_id = p.personal_id
             INNER JOIN servicios s ON a.servicio_id = s.servicio_id
-            WHERE (a.titulo LIKE :filtro OR a.descripcion LIKE :filtro OR m.nombre LIKE :filtro 
-            OR m.raza LIKE :filtro OR p.nombre LIKE :filtro OR p.apellido LIKE :filtro 
-            OR c.nombre LIKE :filtro OR c.apellido LIKE :filtro OR s.nombre LIKE :filtro)
-            ORDER BY a.fecha_hora DESC";
+            WHERE (a.titulo LIKE :f1 OR a.descripcion LIKE :f2 OR m.nombre LIKE :f3 
+            OR m.raza LIKE :f4 OR p.nombre LIKE :f5 OR p.apellido LIKE :f6 
+            OR c.nombre LIKE :f7 OR c.apellido LIKE :f8 OR s.nombre LIKE :f9)";
 
         $result = $this->connect()->prepare($sql);
         $searchTerm = '%' . $filtro . '%';
 
-        // Pasamos el valor con execute()
-        $result->execute([':filtro' => $searchTerm]);
+        // Pasamos cada :filtro con un alias diferente
+        $params = [
+            ':f1' => $searchTerm,
+            ':f2' => $searchTerm,
+            ':f3' => $searchTerm,
+            ':f4' => $searchTerm,
+            ':f5' => $searchTerm,
+            ':f6' => $searchTerm,
+            ':f7' => $searchTerm,
+            ':f8' => $searchTerm,
+            ':f9' => $searchTerm,
+        ];
+
+        $result->execute($params);
 
         $data = $result->fetch(PDO::FETCH_ASSOC);
 
@@ -813,20 +874,33 @@ class Admin extends Database
             INNER JOIN clientes c ON m.cliente_id = c.cliente_id
             INNER JOIN personal p ON a.personal_id = p.personal_id
             INNER JOIN servicios s ON a.servicio_id = s.servicio_id
-            WHERE (a.titulo LIKE :filtro OR a.descripcion LIKE :filtro OR m.nombre LIKE :filtro 
-            OR m.raza LIKE :filtro OR p.nombre LIKE :filtro OR p.apellido LIKE :filtro 
-            OR c.nombre LIKE :filtro OR c.apellido LIKE :filtro OR s.nombre LIKE :filtro)
+            WHERE (a.titulo LIKE :f1 OR a.descripcion LIKE :f2 OR m.nombre LIKE :f3 
+            OR m.raza LIKE :f4 OR p.nombre LIKE :f5 OR p.apellido LIKE :f6 
+            OR c.nombre LIKE :f7 OR c.apellido LIKE :f8 OR s.nombre LIKE :f9)
             ORDER BY a.fecha_hora DESC
             LIMIT " . intval($empezar_desde) . ", " . intval($tamano_paginas);
 
         $result = $this->connect()->prepare($sql);
         $searchTerm = '%' . $filtro . '%';
 
-        // Pasar el parámetro usando execute()
-        $result->execute([':filtro' => $searchTerm]);
+        // Asignar los valores a cada parámetro
+        $params = [
+            ':f1' => $searchTerm,
+            ':f2' => $searchTerm,
+            ':f3' => $searchTerm,
+            ':f4' => $searchTerm,
+            ':f5' => $searchTerm,
+            ':f6' => $searchTerm,
+            ':f7' => $searchTerm,
+            ':f8' => $searchTerm,
+            ':f9' => $searchTerm
+        ];
+
+        $result->execute($params);
 
         return $result->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
+
 
     public function getAtencionesHoy()
     {
@@ -972,57 +1046,70 @@ class Admin extends Database
     public function totalHospitalizacionesXBusqueda($filtro)
     {
         $sql = "SELECT 
-                    count(*) as total
-                FROM hospitalizaciones h
-                INNER JOIN mascotas m ON h.mascota_id = m.mascota_id
-                INNER JOIN clientes c ON m.cliente_id = c.cliente_id
-                INNER JOIN personal p ON h.personal_id = p.personal_id
-                WHERE (m.nombre LIKE :filtro OR p.nombre LIKE :filtro OR p.apellido LIKE :filtro OR c.nombre LIKE :filtro OR c.apellido LIKE :filtro)";
+                count(*) as total
+            FROM hospitalizaciones h
+            INNER JOIN mascotas m ON h.mascota_id = m.mascota_id
+            INNER JOIN clientes c ON m.cliente_id = c.cliente_id
+            INNER JOIN personal p ON h.personal_id = p.personal_id
+            WHERE (m.nombre LIKE :f1 OR p.nombre LIKE :f2 OR p.apellido LIKE :f3 
+            OR c.nombre LIKE :f4 OR c.apellido LIKE :f5)";
+
         $result = $this->connect()->prepare($sql);
         $searchTerm = '%' . $filtro . '%';
-        $result->bindValue(':filtro', $searchTerm, PDO::PARAM_STR);
-        $result->execute();
+
+        // Pasamos cada parámetro con un alias distinto
+        $params = [
+            ':f1' => $searchTerm,
+            ':f2' => $searchTerm,
+            ':f3' => $searchTerm,
+            ':f4' => $searchTerm,
+            ':f5' => $searchTerm
+        ];
+
+        $result->execute($params);
         $data = $result->fetch(PDO::FETCH_ASSOC);
-        if ($data) {
-            return $data['total'];
-        } else {
-            return 0;
-        }
+
+        return $data ? $data['total'] : 0;
     }
 
     public function getHospitalizacionesXBusqueda($filtro, $empezar_desde, $tamano_paginas)
     {
         $sql = "SELECT 
-                    h.hospitalizacion_id, 
-                    DATE_FORMAT(h.fecha_hora_ingreso, '%d/%m/%Y %H:%i:%s') as fecha_hora_ingreso, 
-                    h.motivo, 
-                    DATE_FORMAT(h.fecha_hora_alta, '%d/%m/%Y %H:%i:%s') as fecha_hora_alta, 
-                    h.observaciones, 
-                    m.nombre as mascota_nombre, 
-                    m.raza, 
-                    p.nombre as personal_nombre, 
-                    p.apellido as personal_apellido, 
-                    c.nombre as cliente_nombre, 
-                    c.apellido as cliente_apellido 
-                FROM hospitalizaciones h
-                INNER JOIN mascotas m ON h.mascota_id = m.mascota_id
-                INNER JOIN clientes c ON m.cliente_id = c.cliente_id
-                INNER JOIN personal p ON h.personal_id = p.personal_id
-                WHERE (m.nombre LIKE :filtro OR p.nombre LIKE :filtro OR p.apellido LIKE :filtro OR c.nombre LIKE :filtro OR c.apellido LIKE :filtro)
-                LIMIT :empezar_desde, :tamano_paginas";
+                h.hospitalizacion_id, 
+                DATE_FORMAT(h.fecha_hora_ingreso, '%d/%m/%Y %H:%i:%s') as fecha_hora_ingreso, 
+                h.motivo, 
+                DATE_FORMAT(h.fecha_hora_alta, '%d/%m/%Y %H:%i:%s') as fecha_hora_alta, 
+                h.observaciones, 
+                m.nombre as mascota_nombre, 
+                m.raza, 
+                p.nombre as personal_nombre, 
+                p.apellido as personal_apellido, 
+                c.nombre as cliente_nombre, 
+                c.apellido as cliente_apellido 
+            FROM hospitalizaciones h
+            INNER JOIN mascotas m ON h.mascota_id = m.mascota_id
+            INNER JOIN clientes c ON m.cliente_id = c.cliente_id
+            INNER JOIN personal p ON h.personal_id = p.personal_id
+            WHERE (m.nombre LIKE :f1 OR p.nombre LIKE :f2 OR p.apellido LIKE :f3 
+            OR c.nombre LIKE :f4 OR c.apellido LIKE :f5)
+            ORDER BY h.fecha_hora_ingreso DESC
+            LIMIT " . intval($empezar_desde) . ", " . intval($tamano_paginas);
+
         $result = $this->connect()->prepare($sql);
         $searchTerm = '%' . $filtro . '%';
-        $result->bindValue(':filtro', $searchTerm, PDO::PARAM_STR);
-        $result->bindValue(':empezar_desde', $empezar_desde, PDO::PARAM_INT);
-        $result->bindValue(':tamano_paginas', $tamano_paginas, PDO::PARAM_INT);
-        $result->execute();
-        $data = $result->fetchAll(PDO::FETCH_ASSOC);
-        if ($data) {
-            return $data;
-        } else {
-            return [];
-        }
+
+        $params = [
+            ':f1' => $searchTerm,
+            ':f2' => $searchTerm,
+            ':f3' => $searchTerm,
+            ':f4' => $searchTerm,
+            ':f5' => $searchTerm
+        ];
+
+        $result->execute($params);
+        return $result->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
+
 
     public function getHospitalizacion($id)
     {
@@ -1167,50 +1254,63 @@ class Admin extends Database
     public function totalHospedajesXBusqueda($filtro)
     {
         $sql = "SELECT 
-                    count(*) as total
-                FROM hoteleria h
-                INNER JOIN mascotas m ON h.mascota_id = m.mascota_id
-                INNER JOIN personal p ON h.personal_id = p.personal_id
-                WHERE (m.nombre LIKE :filtro OR m.raza LIKE :filtro OR p.nombre LIKE :filtro OR p.apellido LIKE :filtro)";
+                count(*) as total
+            FROM hoteleria h
+            INNER JOIN mascotas m ON h.mascota_id = m.mascota_id
+            INNER JOIN personal p ON h.personal_id = p.personal_id
+            WHERE (m.nombre LIKE :f1 OR m.raza LIKE :f2 
+            OR p.nombre LIKE :f3 OR p.apellido LIKE :f4)";
+
         $result = $this->connect()->prepare($sql);
         $searchTerm = '%' . $filtro . '%';
-        $result->bindValue(':filtro', $searchTerm, PDO::PARAM_STR);
-        $result->execute();
+
+        $params = [
+            ':f1' => $searchTerm,
+            ':f2' => $searchTerm,
+            ':f3' => $searchTerm,
+            ':f4' => $searchTerm
+        ];
+
+        $result->execute($params);
         $data = $result->fetch(PDO::FETCH_ASSOC);
-        if ($data) {
-            return $data['total'];
-        } else {
-            return 0;
-        }
+
+        return $data ? $data['total'] : 0;
     }
+
     public function getHospedajesXBusqueda($filtro, $empezar_desde, $tamano_paginas)
     {
         $sql = "SELECT 
-                    h.hospedaje_id, 
-                    DATE_FORMAT(h.fecha_hora_ingreso, '%d/%m/%Y') as fecha_hora_ingreso, 
-                    DATE_FORMAT(h.fecha_hora_salida, '%d/%m/%Y') as fecha_hora_salida, 
-                    m.nombre as mascota_nombre, 
-                    m.raza, 
-                    p.nombre as personal_nombre, 
-                    p.apellido as personal_apellido 
-                FROM hoteleria h
-                INNER JOIN mascotas m ON h.mascota_id = m.mascota_id
-                INNER JOIN personal p ON h.personal_id = p.personal_id
-                WHERE (m.nombre LIKE :filtro OR m.raza LIKE :filtro OR p.nombre LIKE :filtro OR p.apellido LIKE :filtro)
-                LIMIT :empezar_desde, :tamano_paginas";
+                h.hospedaje_id, 
+                DATE_FORMAT(h.fecha_hora_ingreso, '%d/%m/%Y') as fecha_hora_ingreso, 
+                DATE_FORMAT(h.fecha_hora_salida, '%d/%m/%Y') as fecha_hora_salida, 
+                m.nombre as mascota_nombre, 
+                m.raza, 
+                p.nombre as personal_nombre, 
+                p.apellido as personal_apellido 
+            FROM hoteleria h
+            INNER JOIN mascotas m ON h.mascota_id = m.mascota_id
+            INNER JOIN personal p ON h.personal_id = p.personal_id
+            WHERE (m.nombre LIKE :f1 OR m.raza LIKE :f2 OR p.nombre LIKE :f3 OR p.apellido LIKE :f4)
+            ORDER BY h.fecha_hora_ingreso DESC
+            LIMIT :start, :size";
+
         $result = $this->connect()->prepare($sql);
         $searchTerm = '%' . $filtro . '%';
-        $result->bindValue(':filtro', $searchTerm, PDO::PARAM_STR);
-        $result->bindValue(':empezar_desde', $empezar_desde, PDO::PARAM_INT);
-        $result->bindValue(':tamano_paginas', $tamano_paginas, PDO::PARAM_INT);
+
+        $result->bindValue(':f1', $searchTerm, PDO::PARAM_STR);
+        $result->bindValue(':f2', $searchTerm, PDO::PARAM_STR);
+        $result->bindValue(':f3', $searchTerm, PDO::PARAM_STR);
+        $result->bindValue(':f4', $searchTerm, PDO::PARAM_STR);
+
+        // En algunos casos, es necesario hacer `intval()`
+        $result->bindValue(':start', intval($empezar_desde), PDO::PARAM_INT);
+        $result->bindValue(':size', intval($tamano_paginas), PDO::PARAM_INT);
+
         $result->execute();
-        $data = $result->fetchAll(PDO::FETCH_ASSOC);
-        if ($data) {
-            return $data;
-        } else {
-            return [];
-        }
+
+        return $result->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
+
 
     public function altaHospedaje($fecha_hora_ingreso, $fecha_hora_salida, $mascota_id, $personal_id)
     {

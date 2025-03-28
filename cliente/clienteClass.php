@@ -195,66 +195,104 @@ class Cliente extends Database
 
   public function totalAtencionesXBusqueda($cliente_id, $filtro)
   {
-    $sql = "SELECT 
-                    count(*) as total
-                FROM atenciones a
-                INNER JOIN mascotas m ON a.mascota_id = m.mascota_id
-                INNER JOIN clientes c ON m.cliente_id = c.cliente_id
-                INNER JOIN personal p ON a.personal_id = p.personal_id
-                INNER JOIN servicios s ON a.servicio_id = s.servicio_id
-                WHERE (a.titulo LIKE :filtro OR a.descripcion LIKE :filtro OR m.nombre LIKE :filtro OR m.raza LIKE :filtro OR p.nombre LIKE :filtro OR p.apellido LIKE :filtro OR c.nombre LIKE :filtro OR c.apellido LIKE :filtro OR s.nombre LIKE :filtro)
-                AND c.cliente_id = :cliente_id
-                ORDER BY a.fecha_hora DESC";
+    $sql = "SELECT count(*) as total
+            FROM atenciones a
+            INNER JOIN mascotas m ON a.mascota_id = m.mascota_id
+            INNER JOIN clientes c ON m.cliente_id = c.cliente_id
+            INNER JOIN personal p ON a.personal_id = p.personal_id
+            INNER JOIN servicios s ON a.servicio_id = s.servicio_id
+            WHERE (a.titulo LIKE :f1 OR a.descripcion LIKE :f2 OR m.nombre LIKE :f3 OR m.raza LIKE :f4 
+                OR p.nombre LIKE :f5 OR p.apellido LIKE :f6 OR c.nombre LIKE :f7 OR c.apellido LIKE :f8 
+                OR s.nombre LIKE :f9)
+            AND c.cliente_id = :cliente_id
+            ORDER BY a.fecha_hora DESC";
+
     $result = $this->connect()->prepare($sql);
+
+    // Definir el término de búsqueda para cada filtro
     $searchTerm = '%' . $filtro . '%';
-    $result->bindValue(':filtro', $searchTerm, PDO::PARAM_STR);
+
+    // Vincular los parámetros con los filtros respectivos
+    $result->bindValue(':f1', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f2', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f3', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f4', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f5', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f6', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f7', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f8', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f9', $searchTerm, PDO::PARAM_STR);
     $result->bindValue(':cliente_id', $cliente_id, PDO::PARAM_INT);
+
+    // Ejecutar la consulta
     $result->execute();
+
+    // Obtener el resultado
     $data = $result->fetch(PDO::FETCH_ASSOC);
-    if ($data) {
-      return $data['total'];
-    } else {
-      return 0;
-    }
+
+    // Devolver el total de atenciones encontradas
+    return $data ? (int) $data['total'] : 0;
   }
+
 
   public function getAtencionesXBusqueda($cliente_id, $filtro, $empezar_desde, $tamano_paginas)
   {
     $sql = "SELECT 
-                    a.atencion_id, 
-                    DATE_FORMAT(a.fecha_hora, '%d/%m/%Y %H:%i:%s') as fecha_hora, 
-                    a.titulo, 
-                    a.descripcion, 
-                    a.estado, 
-                    m.nombre as mascota_nombre, 
-                    m.fecha_muerte as mascota_fecha_muerte, 
-                    m.raza, 
-                    p.nombre as personal_nombre, 
-                    p.apellido as personal_apellido, 
-                    c.nombre as cliente_nombre, 
-                    c.apellido as cliente_apellido, 
-                    s.nombre as servicio_nombre 
-                FROM atenciones a
-                INNER JOIN mascotas m ON a.mascota_id = m.mascota_id
-                INNER JOIN clientes c ON m.cliente_id = c.cliente_id
-                INNER JOIN personal p ON a.personal_id = p.personal_id
-                INNER JOIN servicios s ON a.servicio_id = s.servicio_id
-                WHERE (a.titulo LIKE :filtro OR a.descripcion LIKE :filtro OR m.nombre LIKE :filtro OR m.raza LIKE :filtro OR p.nombre LIKE :filtro OR p.apellido LIKE :filtro OR c.nombre LIKE :filtro OR c.apellido LIKE :filtro OR s.nombre LIKE :filtro)
-                ORDER BY a.fecha_hora DESC
-                LIMIT :empezar_desde, :tamano_paginas";
+                a.atencion_id, 
+                DATE_FORMAT(a.fecha_hora, '%d/%m/%Y %H:%i:%s') as fecha_hora, 
+                a.titulo, 
+                a.descripcion, 
+                a.estado, 
+                m.nombre as mascota_nombre, 
+                m.fecha_muerte as mascota_fecha_muerte, 
+                m.raza, 
+                p.nombre as personal_nombre, 
+                p.apellido as personal_apellido, 
+                c.nombre as cliente_nombre, 
+                c.apellido as cliente_apellido, 
+                s.nombre as servicio_nombre 
+            FROM atenciones a
+            INNER JOIN mascotas m ON a.mascota_id = m.mascota_id
+            INNER JOIN clientes c ON m.cliente_id = c.cliente_id
+            INNER JOIN personal p ON a.personal_id = p.personal_id
+            INNER JOIN servicios s ON a.servicio_id = s.servicio_id
+            WHERE (a.titulo LIKE :f1 OR a.descripcion LIKE :f2 OR m.nombre LIKE :f3 OR m.raza LIKE :f4 
+                OR p.nombre LIKE :f5 OR p.apellido LIKE :f6 OR c.nombre LIKE :f7 OR c.apellido LIKE :f8 
+                OR s.nombre LIKE :f9)
+            AND c.cliente_id = :cliente_id
+            ORDER BY a.fecha_hora DESC
+            LIMIT :empezar_desde, :tamano_paginas";
+
     $result = $this->connect()->prepare($sql);
+
+    // Definir el término de búsqueda para cada filtro
     $searchTerm = '%' . $filtro . '%';
-    $result->bindValue(':filtro', $searchTerm, PDO::PARAM_STR);
+
+    // Vincular los parámetros con los filtros respectivos
+    $result->bindValue(':f1', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f2', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f3', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f4', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f5', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f6', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f7', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f8', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f9', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':cliente_id', $cliente_id, PDO::PARAM_INT);
     $result->bindValue(':empezar_desde', $empezar_desde, PDO::PARAM_INT);
     $result->bindValue(':tamano_paginas', $tamano_paginas, PDO::PARAM_INT);
-    $result->bindValue(':cliente_id', $cliente_id, PDO::PARAM_INT);
+
+    // Ejecutar la consulta
     $result->execute();
+
+    // Verificar si hay resultados y devolverlos
     if ($result->rowCount() > 0) {
-      return $result;
+      return $result->fetchAll(PDO::FETCH_ASSOC);
     } else {
       return false;
     }
   }
+
 
   public function cancelaAtencion($atencion_id)
   {
@@ -314,25 +352,36 @@ class Cliente extends Database
   public function totalHospedajesXBusqueda($cliente_id, $filtro)
   {
     $sql = "SELECT 
-                    count(*) as total
-                FROM hoteleria h
-                INNER JOIN mascotas m ON h.mascota_id = m.mascota_id
-                INNER JOIN clientes c ON m.cliente_id = c.cliente_id
-                INNER JOIN personal p ON h.personal_id = p.personal_id
-                WHERE (m.nombre LIKE :filtro OR m.raza LIKE :filtro OR p.nombre LIKE :filtro OR p.apellido LIKE :filtro)
-                AND c.cliente_id = :cliente_id";
+                count(*) as total
+            FROM hoteleria h
+            INNER JOIN mascotas m ON h.mascota_id = m.mascota_id
+            INNER JOIN clientes c ON m.cliente_id = c.cliente_id
+            INNER JOIN personal p ON h.personal_id = p.personal_id
+            WHERE (m.nombre LIKE :f1 OR m.raza LIKE :f2 OR p.nombre LIKE :f3 OR p.apellido LIKE :f4)
+            AND c.cliente_id = :cliente_id";
+
     $result = $this->connect()->prepare($sql);
+
+    // Definir el término de búsqueda para cada filtro
     $searchTerm = '%' . $filtro . '%';
-    $result->bindValue(':filtro', $searchTerm, PDO::PARAM_STR);
+
+    // Vincular los parámetros con los filtros respectivos
+    $result->bindValue(':f1', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f2', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f3', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f4', $searchTerm, PDO::PARAM_STR);
     $result->bindValue(':cliente_id', $cliente_id, PDO::PARAM_INT);
+
+    // Ejecutar la consulta
     $result->execute();
+
+    // Obtener el resultado
     $data = $result->fetch(PDO::FETCH_ASSOC);
-    if ($data) {
-      return $data['total'];
-    } else {
-      return 0;
-    }
+
+    // Devolver el total o 0 si no se encontró
+    return $data ? (int) $data['total'] : 0;
   }
+
   public function getHospedajesXBusqueda($cliente_id, $filtro, $empezar_desde, $tamano_paginas)
   {
     $sql = "SELECT 
@@ -347,21 +396,21 @@ class Cliente extends Database
                 INNER JOIN mascotas m ON h.mascota_id = m.mascota_id
                 INNER JOIN clientes c ON m.cliente_id = c.cliente_id
                 INNER JOIN personal p ON h.personal_id = p.personal_id
-                WHERE (m.nombre LIKE :filtro OR m.raza LIKE :filtro OR p.nombre LIKE :filtro OR p.apellido LIKE :filtro)
+                WHERE (m.nombre LIKE :f1 OR m.raza LIKE :f2 OR p.nombre LIKE :f3 OR p.apellido LIKE :f4)
                 AND c.cliente_id = :cliente_id
                 LIMIT :empezar_desde, :tamano_paginas";
+
     $result = $this->connect()->prepare($sql);
     $searchTerm = '%' . $filtro . '%';
-    $result->bindValue(':filtro', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f1', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f2', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f3', $searchTerm, PDO::PARAM_STR);
+    $result->bindValue(':f4', $searchTerm, PDO::PARAM_STR);
     $result->bindValue(':empezar_desde', $empezar_desde, PDO::PARAM_INT);
     $result->bindValue(':tamano_paginas', $tamano_paginas, PDO::PARAM_INT);
     $result->bindValue(':cliente_id', $cliente_id, PDO::PARAM_INT);
     $result->execute();
     $data = $result->fetchAll(PDO::FETCH_ASSOC);
-    if ($data) {
-      return $data;
-    } else {
-      return [];
-    }
+    return $data ?: [];
   }
 }
