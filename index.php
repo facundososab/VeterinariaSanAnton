@@ -301,7 +301,7 @@ require_once('./config/app.php');
             <img src="./img/img_contacto.svg" alt="Contacto" class="img-fluid">
           </div>
           <div class="col-12 col-md-6 py-4 px-5 d-flex justify-content-center align-items-center">
-            <form action="https://formsubmit.co/sanantonveterinaria123@gmail.com" id="formulario" method="post" class="w-100">
+            <form action="https://formsubmit.co/9d131753bf0611193f7e0ba9d9998dd4" id="formulario" method="post" class="w-100">
               <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
                 <input type="email" class="form-control" id="email" name="email" required>
