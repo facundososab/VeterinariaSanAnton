@@ -7,7 +7,7 @@
          </div>
 
          <div class="col-12 col-lg-8 order-lg-1 mt-3 justify-self-center">
-           <form action="https://formsubmit.co/facundososabianciotto@gmail.com" method="POST" class="row justify-content-center align-items-center mx-2">
+           <form action="https://formsubmit.co/facundososabianciotto@gmail.com" method="POST" class="row justify-content-center align-items-center mx-2" id="contact-form">
              <div class="col-9">
                <label class="form-label" for="email">¡Dejanos tu mail para no perderte de todas las
                  novedades!</label>
