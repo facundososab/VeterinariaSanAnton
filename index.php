@@ -54,7 +54,7 @@ require_once('./config/app.php');
           <p class="pb-1">Dirección de la veterinaria</p>
           <p class="pb-1">Teléfono de contacto</p>
           <a class="btn btn-danger rounded-pill fs-4 p-2 mt-3 d-md-none" href="tel:+543413531061">TENGO UNA EMERGENCIA</a>
-          <p class="fs-5 my-4"><b>Lugar seguro para tu mascota</b></p>
+          <p class="fs-5 my-4"><strong>Lugar seguro para tu mascota</strong></p>
           <div class="reseñas bg-third-color border border-black rounded-4 mb-4 w-50 align-items-center pt-2 ms-auto">
             <img src="./img/Avatars1.svg" alt="Reseñas" class="col-12">
             <p class="fs-5 text-center col-12">+100 Reseñas</p>
@@ -142,31 +142,31 @@ require_once('./config/app.php');
                 </div>
                 <ul class="list-unstyled mb-0">
                   <li class="d-flex align-items-center mb-3">
-                    <i class="bi bi-arrow-right-short service-text-color me-2"></i>
+                    <i class="bi bi-arrow-right-short service-text-color me-2" aria-hidden="true"></i>
                     <span class="service-text-color">Servicios de cuidado de animales</span>
                   </li>
                   <li class="d-flex align-items-center mb-3">
-                    <i class="bi bi-arrow-right-short service-text-color me-2"></i>
+                    <i class="bi bi-arrow-right-short service-text-color me-2" aria-hidden="true"></i>
                     <span class="service-text-color">Inmunización pasiva con suero</span>
                   </li>
                   <li class="d-flex align-items-center mb-3">
-                    <i class="bi bi-arrow-right-short service-text-color me-2"></i>
+                    <i class="bi bi-arrow-right-short service-text-color me-2" aria-hidden="true"></i>
                     <span class="service-text-color">Micro y macro terapia de llenado</span>
                   </li>
                   <li class="d-flex align-items-center mb-3">
-                    <i class="bi bi-arrow-right-short service-text-color me-2"></i>
+                    <i class="bi bi-arrow-right-short service-text-color me-2" aria-hidden="true"></i>
                     <span class="service-text-color">Rehabilitación y mantenimiento diario</span>
                   </li>
                   <li class="d-flex align-items-center mb-3">
-                    <i class="bi bi-arrow-right-short service-text-color me-2"></i>
+                    <i class="bi bi-arrow-right-short service-text-color me-2" aria-hidden="true"></i>
                     <span class="service-text-color">Transfusión de sangre</span>
                   </li>
                   <li class="d-flex align-items-center mb-3">
-                    <i class="bi bi-arrow-right-short service-text-color me-2"></i>
+                    <i class="bi bi-arrow-right-short service-text-color me-2" aria-hidden="true"></i>
                     <span class="service-text-color">Dietología</span>
                   </li>
                   <li class="d-flex align-items-center">
-                    <i class="bi bi-arrow-right-short service-text-color me-2"></i>
+                    <i class="bi bi-arrow-right-short service-text-color me-2" aria-hidden="true"></i>
                     <span class="service-text-color">Ayuda urgente</span>
                   </li>
                 </ul>
@@ -250,7 +250,7 @@ require_once('./config/app.php');
             <div class="row mx-auto">
               <img src="img/garra_gris.svg" alt="Garra decoración" class="col-3 w-auto h-25">
               <h2 class="col-8 align-self-center fs-2 mx-lg-auto">
-                <b>Nuestra historia</b>
+                <strong>Nuestra historia</strong>
               </h2>
             </div>
             <p class="text-lg-end my-3">
