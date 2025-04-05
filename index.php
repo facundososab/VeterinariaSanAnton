@@ -6,26 +6,26 @@ require_once('./config/app.php');
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?php echo APP_NAME; ?></title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@300;400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css" />
-  <link rel="icon" href="img/logo.svg" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="img/logo.svg" alt="Veterinaria San Antón" type="image/x-icon">
 </head>
 
 <body>
-  <nav class="navbar sticky-top navbar-expand-lg navbar-bg-color d-lg-flex justify-content-lg-between rounded-4 rounded-top-0 nav-shadow" role="navigation">
+  <nav class="navbar sticky-top navbar-expand-lg navbar-bg-color d-lg-flex justify-content-lg-between rounded-4 rounded-top-0 nav-shadow">
     <div class="container">
 
-      <a class="navbar-brand" href="index.php"><img src="./img/logo.svg" alt="Veterinaria San Antón" /></a>
+      <a class="navbar-brand" href="index.php"><img src="./img/logo.svg" alt="Veterinaria San Antón"></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -35,7 +35,7 @@ require_once('./config/app.php');
             <a class="nav-link" aria-current="page" href="#servicios">Servicios</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#sobrenosotros">Sobre<br />nosotros</a>
+            <a class="nav-link" href="#sobrenosotros">Sobre<br>nosotros</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#contacto">Contacto</a>
@@ -50,30 +50,30 @@ require_once('./config/app.php');
     <div class="container align-items-center justify-content-center bg-primary-color rounded-4 mb-5">
       <section class="row main-content">
         <article class="col-12 col-lg-6 order-lg-1 text-end d-flex flex-column align-items-end align-self-center px-4 pt-3">
-          <h1 class="mt-3 display-1">Veterinaria<br />San Antón</h1>
+          <h1 class="mt-3 display-1">Veterinaria<br>San Antón</h1>
           <p class="pb-1">Dirección de la veterinaria</p>
           <p class="pb-1">Teléfono de contacto</p>
           <a class="btn btn-danger rounded-pill fs-4 p-2 mt-3 d-md-none" href="tel:+543413531061">TENGO UNA EMERGENCIA</a>
           <p class="fs-5 my-4"><b>Lugar seguro para tu mascota</b></p>
           <div class="reseñas bg-third-color border border-black rounded-4 mb-4 w-50 align-items-center pt-2 ms-auto">
-            <img src="./img/Avatars1.svg" alt="" class="col-12" />
+            <img src="./img/Avatars1.svg" alt="Reseñas" class="col-12">
             <p class="fs-5 text-center col-12">+100 Reseñas</p>
           </div>
           <div class="ubicacion d-flex align-items-center ms-auto justify-content-center mt-3">
-            <img src="./img/garra_izq.svg" alt="" class="img-fluid" />
+            <img src="./img/garra_izq.svg" alt="Garra izquierda decoración" class="img-fluid">
             <h5 class="mx-2 text-center">
               Ubicada en la ciudad de Rosario, Santa Fe
             </h5>
-            <img src="./img/garra_der.svg" alt="" class="img-fluid" />
+            <img src="./img/garra_der.svg" alt="Garra derecha decoración" class="img-fluid">
           </div>
         </article>
-        <article class="img col-12 col-lg-6 d-flex">
-          <img src="./img/dog 1.png" alt="Veterinaria San Antón" class="h-75 align-self-end img-fluid" />
-        </article>
+        <div class="img col-12 col-lg-6 d-flex">
+          <img src="./img/dog1.png" alt="Veterinaria San Antón" class="h-75 align-self-end img-fluid">
+        </div>
       </section>
     </div>
     <article class="py-5" id="servicios">
-      <section id="servicios" class="container py-4">
+      <div id="servicios" class="container py-4">
         <!-- Hero Section -->
         <div class="bg-service-color rounded-4 p-4 p-md-5 mb-5">
           <div class="row align-items-center">
@@ -86,7 +86,7 @@ require_once('./config/app.php');
               </p>
             </div>
             <div class="col-md-6 text-center">
-              <img src="img/ser1.svg" alt="Veterinary Care" class="img-servicios-1 mx-auto img-fluid" />
+              <img src="img/ser1.svg" alt="Veterinary Care" class="img-servicios-1 mx-auto img-fluid">
             </div>
           </div>
         </div>
@@ -124,7 +124,7 @@ require_once('./config/app.php');
               </div>
               <!-- Image at the bottom of the card -->
               <div class="mb-4 text-center">
-                <img src="img/ser2.svg" alt="Sanidad" class="mx-auto img-fluid" />
+                <img src="img/ser2.svg" alt="Sanidad" class="mx-auto img-fluid">
               </div>
             </div>
           </div>
@@ -171,7 +171,7 @@ require_once('./config/app.php');
                   </li>
                 </ul>
                 <div class="mt-4 text-center">
-                  <img src="img/ser4.svg" alt="Hospitalización" class="mx-auto img-fluid" />
+                  <img src="img/ser4.svg" alt="Hospitalización" class="mx-auto img-fluid">
                 </div>
               </div>
             </div>
@@ -216,7 +216,7 @@ require_once('./config/app.php');
               </div>
               <!-- Image with margin above it -->
               <div class="mb-4 text-center">
-                <img src="img/ser5.svg" alt="Peluquería" class="w-75 mx-auto img-fluid" />
+                <img src="img/ser5.svg" alt="Peluquería" class="w-75 mx-auto img-fluid">
               </div>
             </div>
 
@@ -237,21 +237,21 @@ require_once('./config/app.php');
               </p>
             </div>
             <div class="col-md-6 text-center">
-              <img src="img/ser3.svg" alt="Home Veterinary Service" class="img-servicios-3 mx-auto img-fluid" />
+              <img src="img/ser3.svg" alt="Home Veterinary Service" class="img-servicios-3 mx-auto img-fluid">
             </div>
           </div>
         </div>
-      </section>
+      </div>
     </article>
     <article class="py-5" id="sobrenosotros">
       <div class="container pt-4">
         <section class="row mb-4 p-3">
-          <article class="col-12 col-lg-6 nuestra-historia order-lg-1">
+          <div class="col-12 col-lg-6 nuestra-historia order-lg-1">
             <div class="row mx-auto">
-              <img src="img/garra_gris.svg" alt="" class="col-3 w-auto h-25" />
-              <h1 class="col-8 align-self-center fs-2 mx-lg-auto">
+              <img src="img/garra_gris.svg" alt="Garra decoración" class="col-3 w-auto h-25">
+              <h2 class="col-8 align-self-center fs-2 mx-lg-auto">
                 <b>Nuestra historia</b>
-              </h1>
+              </h2>
             </div>
             <p class="text-lg-end my-3">
               La veterinaria San Antón es una clínica veterinaria que se dedica
@@ -268,13 +268,13 @@ require_once('./config/app.php');
               prestigiosas universidades, los cuales prestan servicios a la
               clínica y están disponibles para consultas a domicilio.
             </p>
-          </article>
+          </div>
           <div class="sobre-nosotros-1 col-12 col-lg-6 d-flex mt-4 mt-lg-0">
-            <img src="img/sobre_nosotros_1.svg" alt="" class="img-fluid mx-auto" />
+            <img src="img/sobre_nosotros_1.svg" alt="Sobre nosotros" class="img-fluid mx-auto">
           </div>
         </section>
         <section class="row mb-5">
-          <article class="col-12 col-lg-6 nuestro-equipo align-self-center">
+          <div class="col-12 col-lg-6 nuestro-equipo align-self-center">
             <h2 class="mb-3">Mira el equipo de San Antón</h2>
             <p class="mb-4">
               Trabajando en colaboración con los profesionales, cuidamos de las
@@ -286,10 +286,10 @@ require_once('./config/app.php');
               clientes.
             </p>
             <a href="./404.php" class="bg-black rounded-pill text-light ver-equipo px-3 py-1 text-center"><b>Ver equipo</b></a>
-          </article>
-          <div class="sobre-nosotros-2 col-12 col-lg-6 d-flex mt-4">
-            <img src="img/sobre_nosotros_2.svg" alt="" class="img-fluid mx-auto" />
-          </div>
+            </>
+            <div class="sobre-nosotros-2 col-12 col-lg-6 d-flex mt-4">
+              <img src="img/sobre_nosotros_2.svg" alt="Sobre nosotros" class="img-fluid mx-auto">
+            </div>
         </section>
       </div>
     </article>
@@ -297,7 +297,7 @@ require_once('./config/app.php');
       <div class="container d-flex mx-2">
         <section class="row flex-grow-1 bg-primary-color rounded-5">
           <div class="col-12 col-md-6 d-flex flex-column justify-content-between pt-4 ps-4">
-            <h1 class="text-center m-5">Contactanos</h1>
+            <h5 class="text-center m-5 fs-1">Contactanos</h5>
             <img src="./img/img_contacto.svg" alt="Contacto" class="img-fluid">
           </div>
           <div class="col-12 col-md-6 py-4 px-5 d-flex justify-content-center align-items-center">
@@ -325,7 +325,7 @@ require_once('./config/app.php');
           </div>
         </section>
       </div>
-      </>
+    </article>
   </main>
 
   <?php include_once('./footer.php'); ?>

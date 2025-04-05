@@ -11,7 +11,7 @@
              <div class="col-9">
                <label class="form-label" for="email">¡Dejanos tu mail para no perderte de todas las
                  novedades!</label>
-               <input type="text" class="form-control rounded-pill inline-block mt-2" id="email" name="email" required />
+               <input type="text" class="form-control rounded-pill inline-block mt-2" id="emailContact" name="email" required />
              </div>
              <div class="col-2 align-self-end contact-submit">
                <input type="submit" class="btn rounded-pill btn1-bg-color" />
