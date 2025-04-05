@@ -18,7 +18,7 @@ require_once('./config/app.php');
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
-  <link rel="icon" href="img/logo.svg" alt="Veterinaria San Antón" type="image/x-icon">
+  <link rel="icon" href="img/logo.svg" type="image/x-icon">
 </head>
 
 <body>
@@ -48,7 +48,7 @@ require_once('./config/app.php');
   </nav>
   <main class="pt-5 mx-2">
     <div class="container align-items-center justify-content-center bg-primary-color rounded-4 mb-5">
-      <section class="row main-content">
+      <div class="row main-content">
         <article class="col-12 col-lg-6 order-lg-1 text-end d-flex flex-column align-items-end align-self-center px-4 pt-3">
           <h1 class="mt-3 display-1">Veterinaria<br>San Antón</h1>
           <p class="pb-1">Dirección de la veterinaria</p>
@@ -70,10 +70,10 @@ require_once('./config/app.php');
         <div class="img col-12 col-lg-6 d-flex">
           <img src="./img/dog1.png" alt="Veterinaria San Antón" class="h-75 align-self-end img-fluid">
         </div>
-      </section>
+      </div>
     </div>
     <article class="py-5" id="servicios">
-      <div id="servicios" class="container py-4">
+      <div class="container py-4">
         <!-- Hero Section -->
         <div class="bg-service-color rounded-4 p-4 p-md-5 mb-5">
           <div class="row align-items-center">
@@ -286,10 +286,10 @@ require_once('./config/app.php');
               clientes.
             </p>
             <a href="./404.php" class="bg-black rounded-pill text-light ver-equipo px-3 py-1 text-center"><b>Ver equipo</b></a>
-            </>
-            <div class="sobre-nosotros-2 col-12 col-lg-6 d-flex mt-4">
-              <img src="img/sobre_nosotros_2.svg" alt="Sobre nosotros" class="img-fluid mx-auto">
-            </div>
+          </div>
+          <div class="sobre-nosotros-2 col-12 col-lg-6 d-flex mt-4">
+            <img src="img/sobre_nosotros_2.svg" alt="Sobre nosotros" class="img-fluid mx-auto">
+          </div>
         </section>
       </div>
     </article>
