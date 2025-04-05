@@ -301,45 +301,27 @@
               <img src="./img/img_contacto.svg" alt="Contacto" class="img-fluid">
             </div>
             <div class="col-12 col-md-6 py-4 px-5 d-flex justify-content-center align-items-center">
-              <form action="https://formsubmit.co/9d131753bf0611193f7e0ba9d9998dd4" id="formulario" method="post" class="w-100" novalidate>
-                <!-- Campo Email -->
+              <form action="https://formsubmit.co/9d131753bf0611193f7e0ba9d9998dd4" id="formulario" method="post" class="w-100">
                 <div class="mb-3">
-                  <label for="email" class="form-label">
-                    Email <span class="text-danger" aria-hidden="true">*</span>
-                  </label>
-                  <input type="email" class="form-control" id="email" name="email" required aria-describedby="emailError">
-                  <p id="emailError" class="text-danger visually-hidden">Por favor, ingresá un email válido.</p>
+                  <label for="email" class="form-label">Email</label>
+                  <input type="email" class="form-control" id="email" name="email" required>
+                  <p id="emailError" class="text-danger"></p>
                 </div>
-
-                <!-- Campo Asunto -->
                 <div class="mb-3">
-                  <label for="asunto" class="form-label">
-                    Asunto <span class="text-danger" aria-hidden="true">*</span>
-                  </label>
-                  <input type="text" class="form-control" id="asunto" name="asunto" required aria-describedby="asuntoError">
-                  <p id="asuntoError" class="text-danger visually-hidden">El asunto es obligatorio.</p>
+                  <label for="asunto" class="form-label">Asunto</label>
+                  <input type="text" class="form-control" id="asunto" name="asunto" required>
+                  <p id="asuntoError" class="text-danger"></p>
                 </div>
-
-                <!-- Campo Mensaje -->
                 <div class="mb-3">
-                  <label for="mensaje" class="form-label">
-                    Mensaje <span class="text-danger" aria-hidden="true">*</span>
-                  </label>
-                  <textarea class="form-control" id="mensaje" name="mensaje" rows="5" required aria-describedby="mensajeError"></textarea>
-                  <p id="mensajeError" class="text-danger visually-hidden">El mensaje no puede estar vacío.</p>
+                  <label for="mensaje" class="form-label">Mensaje</label>
+                  <textarea class="form-control" id="mensaje" name="mensaje" required></textarea>
+                  <p id="mensajeError" class="text-danger"></p>
                 </div>
-
-                <!-- Botón de envío -->
-                <div class="text-center">
-                  <button type="submit" class="btn btn-primary w-75">Enviar mensaje</button>
-                </div>
-
-                <!-- Campos ocultos de FormSubmit -->
+                <button type="submit" class="btn btn-primary w-75 mx-auto">Enviar</button>
                 <input type="hidden" name="_template" value="box">
                 <input type="hidden" name="_subject" value="Nueva consulta!">
                 <input type="hidden" name="_autoresponse" value="Gracias por contactarse con Veterinaria San Antón. Trataremos de darte una respuesta lo más pronto posible!">
               </form>
-
             </div>
           </section>
         </div>
