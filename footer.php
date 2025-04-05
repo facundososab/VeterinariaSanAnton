@@ -9,7 +9,7 @@
          <div class="col-12 col-lg-8 order-lg-1 mt-3 justify-self-center">
            <form action="https://formsubmit.co/facundososabianciotto@gmail.com" method="POST" class="row justify-content-center align-items-center mx-2" id="contact-form">
              <div class="col-9">
-               <label class="form-label" for="email">¡Dejanos tu mail para no perderte de todas las
+               <label class="form-label" for="emailContact">¡Dejanos tu mail para no perderte de todas las
                  novedades!</label>
                <input type="text" class="form-control rounded-pill inline-block mt-2" id="emailContact" name="email" required>
              </div>
@@ -21,9 +21,21 @@
          <div class="col-12 col-lg-4 mt-3">
            <h4 class="text-center">Nuestras redes</h4>
            <nav class="d-flex justify-content-evenly">
-             <a href="https://facebook.com" target="_blank" aria-label="Facebook"><i class="bi bi-facebook fs-3"></i></a>
-             <a href="https://tiktok.com" target="_blank" aria-label="TikTok"><i class="bi bi-tiktok fs-3"></i></a>
-             <a href="https://instagram.com" target="_blank" aria-label="Instagram"><i class="bi bi-instagram fs-3"></i></a>
+             <a href="https://facebook.com" target="_blank" aria-label="Facebook">
+               <i class="bi bi-facebook fs-3"></i>
+               <span class="visually-hidden">Facebook</span>
+             </a>
+
+             <a href="https://tiktok.com" target="_blank" aria-label="TikTok">
+               <i class="bi bi-tiktok fs-3"></i>
+               <span class="visually-hidden">TikTok</span>
+             </a>
+
+             <a href="https://instagram.com" target="_blank" aria-label="Instagram">
+               <i class="bi bi-instagram fs-3"></i>
+               <span class="visually-hidden">Instagram</span>
+             </a>
+
            </nav>
          </div>
        </div>
